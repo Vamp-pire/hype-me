@@ -3,7 +3,7 @@
 **Ship small web products without the forgotten steps.**
 A Claude Code plugin for solo developers and small teams: it plans big changes before building, proves that your checks really ran, confirms the deploy is live, and shows how each release did.
 
-> Status: **0.0.1 early preview** — setup, help, planning mode and recommendations work today; the rest is on the roadmap below. Name is provisional. Plan: [docs/plan.md](docs/plan.md) (Korean).
+> Status: **0.1 early version** — setup, planning, proof-based checks, deploy check, notifications and recommendations work; the rest is on the roadmap below. Name is provisional. Plan: [docs/plan.md](docs/plan.md) (Korean).
 
 ## Why install it
 Claude Code can already write the code. What usually goes wrong on a small product is everything around it:
@@ -24,7 +24,7 @@ It stays out of the way: nothing is installed, posted, deployed or paid for with
 
 ## Two commands to remember
 1. `/fullship:setup` — once per project. Detects your stack, asks at most 2 questions, sets up your checks.
-2. `/fullship:ship` — when you finish a change *(coming in v0.1)*. Or just say "check it".
+2. `/fullship:ship` — when you finish a change. Or just say "check it".
 
 Stuck? `/fullship:help` shows where you are and the one thing to do next.
 
@@ -33,21 +33,23 @@ Occasionally: `/fullship:mode` (when to plan first: **big changes only** by defa
 ## Roadmap
 | | feature |
 |---|---|
-| ✅ now | setup · help · planning mode · recommendations · session status line |
-| 🔜 v0.1 | ship checklist with proof · plans for big changes · live-deploy check · finish notification |
+| ✅ now | setup · help · planning mode · plans for big changes (`/fullship:spec`) · ship checklist with proof (`/fullship:ship`) · live-deploy check (`/fullship:deploy`) · notifications (`/fullship:notify`) · recommendations and one-line pointers to existing tools · session status line |
 | later | session handoff · before/after output compare · screen matrix (phone/desktop × language × theme) · release guard · free-tier quota warnings · release insights · promo plan (audience, share moments, viral loop, hooks, timing, measurement) · launch post drafts · trailer prep |
 
-## Try it locally
+## Install
 ```
-/plugin marketplace add D:\fullship
-/plugin install fullship@fullship-local
+/plugin marketplace add Vamp-pire/fullship
+/plugin install fullship@fullship
 ```
-Or start Claude Code with `claude --plugin-dir D:\fullship`.
+The repository is private for now, so you need access to it. For local development: `claude --plugin-dir <path to this folder>`.
 
 ## Layout
 ```
-.claude-plugin/   plugin.json, marketplace.json (local)
+.claude-plugin/   plugin.json, marketplace.json
 commands/         setup, help, mode, recommend
+skills/           spec, ship, deploy, notify, guide
+agents/           verifier, plan-checker, scout
+scripts/          run-checks, deploy-check, notify (Node 18+, no dependencies)
 hooks/            hooks.json, session-start.mjs
 templates/        config.json, claude-md-section.md
 references/       recommended.md

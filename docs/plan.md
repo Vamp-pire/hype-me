@@ -158,8 +158,8 @@ fullship/
 - 특정 프로젝트 규칙(워크트리 금지, main 직접 커밋 등)은 플러그인에 하드코딩하지 않고 설정·CLAUDE.md에서.
 
 ## 8. 만드는 순서 (v0.1 = 개발·출시 핵심)
-1. 뼈대 + `/fullship:setup` + `/fullship:mode` + `/fullship:recommend`(11절 목록) + SessionStart 훅 + `.fullship/config.json` 형식
-2. `spec-first`, `ship-checklist`, `deploy-verify`, `notify` + 에이전트 `plan-checker`, `verifier`, `scout` + `fullship-guide` → **이 프로젝트에서 한 주 써 보기** (v0.1)
+1. ✅ 뼈대 + `/fullship:setup` + `/fullship:mode` + `/fullship:recommend`(11절 목록) + SessionStart 훅 + `.fullship/config.json` 형식
+2. ✅ (2026-11-08, v0.1.0: 스킬 이름은 짧게 spec·ship·deploy·notify·guide) `spec-first`, `ship-checklist`, `deploy-verify`, `notify` + 에이전트 `plan-checker`, `verifier`, `scout` + `fullship-guide` → **이 프로젝트에서 한 주 써 보기** (v0.1)
 3. `handoff`, `golden-compare`, `release-guard`, `session-guard`
 4. `screen-matrix`, `quota-watch`, `feedback-inbox`
 5. `release-insights` + `insights-scout`, `site-report` 이전(원본 삭제)

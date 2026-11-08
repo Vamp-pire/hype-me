@@ -1,7 +1,19 @@
 {
   "name": "fullship",
-  "version": "0.0.1",
-  "description": "Early preview. Ship small web products without the forgotten steps: plan big changes before building, run your project's own checks with proof instead of 'should work', confirm the deploy is actually live, catch license, privacy and missing-translation gaps, see downloads and users per release, and get pointed to existing plugins instead of reinventing them.",
-  "keywords": ["workflow", "shipping", "checklist", "release", "indie", "small-team"],
-  "license": "MIT"
+  "version": "0.1.0",
+  "description": "Early version. Ship small web products without the forgotten steps: plan big changes before building, run your project's own checks with proof instead of \"should work\", confirm the deploy is actually live, get a finish report in Discord or Slack, and get pointed to existing plugins instead of reinventing them. Coming next: release guard, per-release numbers, promo plans.",
+  "keywords": [
+    "workflow",
+    "shipping",
+    "checklist",
+    "release",
+    "indie",
+    "small-team"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Vamp-pire",
+    "url": "https://github.com/Vamp-pire"
+  },
+  "repository": "https://github.com/Vamp-pire/fullship"
 }

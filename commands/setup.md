@@ -35,6 +35,8 @@ Keep this easy: the user should not need to know about modules, agents or the co
 Start from `${CLAUDE_PLUGIN_ROOT}/templates/config.json`. Fill `stack`, `deploy`, `commands`, `languages`, `modules`, `mode`.
 Build `checks` as **runnable** items: each has `id`, `name`, `run` (a shell command, or a fullship skill name like `skill:screen-matrix`), `pass` (`exit0` unless stated), and `heavy` (true if it takes over ~1 minute or needs a browser).
 Only include checks whose command you actually found or the user confirmed.
+Fill `deploy.checkPaths` with the home page plus one or two important pages (for example a second-language home), and `deploy.buildDir` with the build output folder if the site is built locally (for example `dist`). Leave `notify.type` empty; the notify skill sets it up when asked.
+Add `.fullship/evidence/` and `.fullship/screens/` to `.gitignore` (append; create the file if missing) so logs are not committed. `.fullship/config.json` itself is meant to be committed.
 
 ## 4. Project rules section
 Propose a short fullship section for `CLAUDE.md` from `${CLAUDE_PLUGIN_ROOT}/templates/claude-md-section.md`.

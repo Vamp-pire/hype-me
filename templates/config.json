@@ -1,8 +1,12 @@
 {
   "version": 1,
   "mode": "big-only",
-  "modules": ["core"],
-  "languages": ["en"],
+  "modules": [
+    "core"
+  ],
+  "languages": [
+    "en"
+  ],
   "stack": {
     "framework": null,
     "hosting": null,
@@ -11,7 +15,11 @@
   },
   "deploy": {
     "url": null,
-    "branch": "main"
+    "branch": "main",
+    "checkPaths": [
+      "/"
+    ],
+    "buildDir": null
   },
   "commands": {
     "build": null,
@@ -20,13 +28,30 @@
     "preview": null
   },
   "checks": [
-    { "id": "build", "name": "Build passes", "run": "npm run build", "pass": "exit0", "heavy": false },
-    { "id": "test", "name": "Tests pass", "run": "npm test", "pass": "exit0", "heavy": true }
+    {
+      "id": "build",
+      "name": "Build passes",
+      "run": "npm run build",
+      "pass": "exit0",
+      "heavy": false
+    },
+    {
+      "id": "test",
+      "name": "Tests pass",
+      "run": "npm test",
+      "pass": "exit0",
+      "heavy": true
+    }
   ],
   "release": {
     "channels": []
   },
   "recommendations": {
     "dismissed": []
+  },
+  "notify": {
+    "type": null,
+    "urlEnv": "FULLSHIP_WEBHOOK_URL",
+    "onFinish": false
   }
 }
