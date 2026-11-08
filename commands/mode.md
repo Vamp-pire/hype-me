@@ -1,21 +1,22 @@
 ---
-description: Show or change the fullship work mode for this project (manual, auto, heavy-only)
-argument-hint: "[manual|auto|heavy-only]"
+description: Choose when fullship plans before building — only for big changes (default), always, or only when asked
+argument-hint: "[big-only|always|manual]"
 ---
 
-# fullship mode
+# fullship planning mode
 
-Modes decide how much fullship does on its own in this project:
+The mode decides **one thing: when to show a plan before building.** A plan is short: goal, options with a recommendation, files that will change, how "done" will be checked. Nothing is built until the user approves it.
 
-| mode | what happens |
+| mode | when a plan comes first |
 |---|---|
-| `manual` (default) | Nothing runs by itself. Use `/fullship:*` commands when you want them. |
-| `auto` | Skills may step in on their own: planning before large features, the ship checklist when a feature is done. |
-| `heavy-only` | Light checks may run by themselves; heavy ones (full test suite, screen matrix, release insights) are proposed and wait for a yes. |
+| `big-only` (default) | Only for big changes: a new screen or feature, several files, server/database or stored-data changes, anything hard to undo. Small fixes and clear instructions go straight ahead. |
+| `always` | For every request that changes code, even small ones (a 3-line plan is fine). |
+| `manual` | Never on its own. Only when the user says "plan it first" or runs `/fullship:spec`. |
+
+Other fullship features (checks, deploy verification, recommendations) do not depend on this mode: they run when asked, and at most get a one-line offer when a feature is finished.
 
 Steps:
-1. Read `.fullship/config.json`. If it does not exist, tell the user to run `/fullship:setup` first and stop.
-2. If `$ARGUMENTS` is one of `manual`, `auto`, `heavy-only`, set `mode` to it.
-   Otherwise show the current mode and ask which one to use (AskUserQuestion, current mode first).
-3. Update only the `mode` field; keep the rest of the file as it is.
-4. Confirm in one line, in the project's language. The session-start line will show the new mode from the next session.
+1. Read `.fullship/config.json`. If it does not exist, say `/fullship:setup` comes first and stop.
+2. If `$ARGUMENTS` is `big-only`, `always` or `manual`, use it. Otherwise show the current mode in plain words and ask (AskUserQuestion, recommended `big-only` first). Accept plain requests too, like "always plan first" → `always`.
+3. Change only the `mode` field and keep the rest of the file.
+4. Confirm in one line, in the project's language, describing the behaviour (not the keyword).

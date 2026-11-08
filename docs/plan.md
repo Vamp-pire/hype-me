@@ -12,8 +12,7 @@
 | 프로젝트 설정 | `/fullship:setup`이 `.fullship/config.json` + CLAUDE.md 구간을 만들어 줌 (기본 `/init`보다 나은 판) |
 | 쉽게 쓰기 | **외울 명령은 두 개**(`/fullship:setup` 처음 한 번, `/fullship:ship` 끝낼 때) + 막히면 `/fullship:help`. 나머지는 말로("다 됐어, 점검해 줘"). 에이전트·묶음·설정 파일은 사용자에게 안 보이게(14절) |
 | 라이선스 | **MIT** (2026-11-08 확정, `LICENSE` 추가) |
-| 작업 모드 | 자동 / 수동 / 무거운 것만. **프로젝트당 한 번 묻고 저장**, 세션 시작 때 "모드: 수동" 한 줄 표시, `/fullship:mode`로 변경 |
-| 계획 | 모드에 따름(자동이면 스킬이 큰 요청에 개입, 수동이면 `/spec`으로만) |
+| 계획 모드 | **"계획을 언제 먼저 세우나"만 정함**: 큰 작업만(기본) / 항상 / 수동. 프로젝트당 한 번 묻고 저장, 세션 시작 때 한 줄 표시, `/fullship:mode`로 변경(4절) |
 | 검증 | **점수 대신 통과/실패 + 실행한 명령 근거**. 완료 기준은 먼저 실패하는 테스트로(TDD 빨강→초록). 화면은 스크린샷 비교가 근거 |
 | 영상·이미지 | `trailer`, `share-card`는 **같은 플러그인 안 별도 묶음(media)**, 기본 꺼짐 |
 | 출시 분석 | `release-insights` — 채널: GitHub Releases, 브라우저 확장 스토어, 자체 자동 업데이트 서버, npm 등 패키지 + 사이트 통계. 어떤 API를 연결할지 **에이전트가 제안** |
@@ -35,10 +34,10 @@ fullship/
                    release-guard, deploy-verify, handoff, quota-watch,
                    session-guard, feedback-inbox
     release/       release-insights, site-report, notify
-    marketing/     launch-post, outreach-log, seo-content
+    marketing/     promo-plan, promo-review, launch-post, outreach-log, seo-content
     media/         trailer, share-card          ← 별도 묶음, 기본 꺼짐
   agents/          plan-checker, reviewer, insights-scout, marketer
-  hooks/hooks.json SessionStart 하나만 (모드 한 줄 표시)
+  hooks/hooks.json SessionStart 하나만 (계획 모드 한 줄 표시)
   references/adapters/<스택>.md
   references/recommended.md     추천 플러그인·스킬 목록(11절)
   templates/       config.json, CLAUDE.md 구간, spec.md, handoff.md
@@ -49,17 +48,19 @@ fullship/
 
 ## 3. 프로젝트 설정: `/fullship:setup` (기본 /init보다 나은 점)
 1. **감지**: package.json·lockfile·배포 설정(wrangler.toml, vercel.json, netlify.toml, supabase/)·테스트 러너·i18n 구조·manifest.json(확장)·릴리스 워크플로를 읽어 스택과 명령을 추정.
-2. **모르는 것만 질문**: 배포 주소, 작업 모드, 켤 묶음, 브랜드 말투, 지원 언어.
+2. **모르는 것만 질문**: 배포 주소, 계획 모드, 켤 묶음, 브랜드 말투, 지원 언어.
 3. **실행 가능한 점검표 생성**: `.fullship/config.json`의 `checks`에 `{ id, 이름, 명령, 통과 조건 }` 목록. 예: `build: npm run build (exit 0)`, `test: npx vitest run`, `mobile: screen-matrix 375px 가로 스크롤 0`.
 4. **덮어쓰지 않음**: 이미 CLAUDE.md가 있으면 `<!-- fullship -->` 구간만 추가 제안, 충돌하면 `CLAUDE.md.fullship-new`로 둠.
 5. 다시 돌리면 바뀐 것만 갱신(새 스택·새 언어 감지).
 6. **추천**: 감지한 스택·작업에 맞는 기존 플러그인·스킬을 골라 제안(11절). 설치는 사용자가 고른 것만.
 
-## 4. 작업 모드
-- `auto`: spec-first가 큰 요청에 스스로 개입, ship-checklist를 기능 끝에 자동 제안.
-- `manual`: 아무것도 자동으로 안 부름. `/spec`, `/ship`, `/handoff`로만.
-- `heavy-only`: 화면 조합 촬영·전체 테스트·출시 분석 같은 무거운 것만 사람 확인 후, 가벼운 검사는 자동.
-- SessionStart 훅: 설정이 없으면 "`/fullship:setup`로 시작" 안내, 있으면 `fullship: 모드 manual · 켠 묶음 core, release` 한 줄만.
+## 4. 계획 모드 (`/fullship:mode`)
+**모드는 "계획을 언제 먼저 세우나"만 정한다** (원래 결정: v1 평가 3번 답변, 2026-11-08 바로잡음 — v2 초안에서 모든 기능의 자동 여부로 잘못 넓혔음).
+- `big-only` (**기본**): 큰 작업일 때만 만들기 전에 계획(목표·선택지·추천·바뀌는 파일·완료 기준)을 보여 주고 승인받는다. 큰 작업 = 새 화면·새 기능, 파일 여러 개, 서버·DB·저장 정보 변경, 되돌리기 어려운 일. 작은 수정·명확한 지시는 바로.
+- `always`: 코드를 바꾸는 요청이면 작은 것도 짧은 계획부터.
+- `manual`: 자동으로 계획하지 않음. "계획 먼저 짜 줘"라고 하거나 `/fullship:spec`일 때만.
+- 점검·배포 확인·추천 같은 **다른 기능은 모드와 상관없이** 시킬 때 하거나, 기능을 끝냈을 때 한 줄로 "점검할까요?" 제안만.
+- SessionStart 훅: 설정이 없으면 "`/fullship:setup`로 시작", 있으면 `fullship · planning: big changes only · /fullship:help` 한 줄.
 
 ## 5. 스킬
 
@@ -91,8 +92,22 @@ fullship/
 12. **site-report** (기존 스킬 이전) — SEO·Lighthouse·Search Console·Cloudflare·Clarity.
 13. **notify** (기존 discord-bot 이전) — 작업 보고 DM. 키는 이름으로만, 키 파일 경로는 설정에.
 
-### marketing — 홍보
-14. **launch-post** — 패치노트에서 커뮤니티별 글 초안(말투·길이·금지 사항 다르게). **게시는 사람이 직접**.
+### marketing — 홍보 (중심은 **홍보 계획 짜기**, 글쓰기는 그 다음)
+13-1. **promo-plan** (`/fullship:promo`) — **이번 출시를 어떻게 퍼뜨릴지 계획**을 짠다. 결과는 `docs/promo/<날짜>-<이름>.md` 한 파일.
+   1. **재료 찾기**: 패치노트·화면·출시 분석을 읽고 "사람들이 남에게 보여 주고 싶어 할 순간"을 찾는다(예: Stylish의 4글자 유형 결과·결과 이미지 = 공유하고 싶은 것).
+   2. **누구에게**: 대상 2~3무리(예: 체스 커뮤니티, MBTI·성격 유형 좋아하는 사람, 개발자)와 그들이 모이는 곳.
+   3. **바이럴 장치 점검** — 글보다 **제품 안에서 퍼지는 구조**가 먼저:
+      - 공유할 이유: 결과가 나를 드러내나, 친구와 비교하고 싶나(유형·순위·도전)
+      - 공유가 쉬운가: 한 번 눌러 공유, 미리보기(OG) 이미지가 예쁘게 뜨나, 링크 받은 사람이 바로 해 볼 수 있나
+      - 되돌아오는 고리: 공유받은 사람이 자기 결과를 다시 공유하게 되나(친구 초대·비교·"너는 뭐 나왔어?")
+      - 빠진 장치는 **제품 개선 제안**으로 돌린다(spec-first로 이어짐)
+   4. **훅 만들기**: 채널별 첫 줄·썸네일 문구 후보 5개씩(호기심·비교·의외의 결과·숫자). 짧은 영상이 맞으면 media 묶음 trailer로.
+   5. **채널·타이밍 표**: 채널마다 규칙(자기 홍보 허용 여부, 요일·시간, 길이, 금지 사항), 올리는 순서(작은 커뮤니티로 반응 보고 → 큰 곳), 날짜.
+   6. **측정**: 채널별 UTM 링크, 볼 숫자(방문·공유 버튼 클릭·전환), 며칠 뒤 release-insights로 결과 확인 → 다음 계획에 반영.
+   7. **하지 않을 것**: 가짜 계정·조작 후기·도배·커뮤니티 규칙 위반·과장. 게시·DM은 **사람이 직접**.
+   - 바이럴은 보장할 수 없다고 분명히 말하고, "가설 → 작게 시험 → 숫자로 확인" 방식으로 쓴다.
+13-2. **promo-review** — 지난 홍보 결과(outreach-log + 출시 분석)를 보고 무엇이 먹혔는지·다음엔 뭘 바꿀지 한 쪽 요약.
+14. **launch-post** — promo-plan의 채널 표대로 글 초안(말투·길이·금지 사항 다르게). **게시는 사람이 직접**.
 15. **outreach-log** — 보낸 기록을 먼저 읽고 이미 한 홍보를 다시 제안 안 함.
 16. **seo-content** — 검색어 조사 → 가이드 글 개요 → 내부 링크·구조화 데이터 점검.
 
@@ -128,10 +143,10 @@ fullship/
 | **scout** | 추천 조사: 설치된 것 확인 → 11절 목록 대조 → skills.sh·디렉터리에서 새 후보 찾기 → 후보 표(신뢰도·감사 결과 포함). 설치는 안 함 | Read, Glob, WebFetch | haiku | `/fullship:recommend`, `fullship-guide` | core |
 | **insights-scout** | 프로젝트를 읽고 "연결하면 볼 수 있는 출시 데이터와 필요한 API·키 이름" 제안 | Read, Glob, Grep, WebFetch | inherit | `release-insights` 처음 설정 | release |
 | **release-analyst** | 설정된 채널(GitHub 다운로드, 스토어, 업데이트 서버, npm, 사이트 통계)에서 숫자를 모아 출시 전후 비교표 | Bash(gh·curl), Read, Write(reports만) | haiku | `release-insights` | release |
-| **marketer** | 패치노트·방문·출시 분석을 읽고 이번 주 홍보 제안 3개(게시 안 함) | Read, WebFetch | inherit | 사용자 요청 | marketing |
+| **marketer** | promo-plan 재료 조사: 대상 커뮤니티의 규칙·잘 된 글 유형·비슷한 제품의 퍼진 사례를 읽어 요약(게시 안 함) | Read, WebFetch | inherit | `promo-plan` 1·2·5단계 | marketing |
 | **shot-lister** | 화면·패치노트로 15~30초 장면 목록과 필요한 캡처 목록 | Read, Glob | inherit | `trailer` | media |
 
-- `handoff`, `spec-first`, `launch-post`는 대화 맥락이 필요해서 **스킬로** 둔다.
+- `handoff`, `spec-first`, `promo-plan`, `launch-post`는 대화 맥락이 필요해서 **스킬로** 둔다.
 - 여러 개를 동시에 돌릴 수 있는 조합: verifier + screen-tester + guard (`/fullship:ship`에서 병렬, 결과를 한 표로 합침).
 
 ## 7. 넣지 말 것 / 주의
@@ -148,7 +163,7 @@ fullship/
 3. `handoff`, `golden-compare`, `release-guard`, `session-guard`
 4. `screen-matrix`, `quota-watch`, `feedback-inbox`
 5. `release-insights` + `insights-scout`, `site-report` 이전(원본 삭제)
-6. marketing 묶음
+6. marketing 묶음 — `promo-plan` 먼저, 그다음 launch-post·outreach-log·promo-review
 7. media 묶음 (Remotion 플러그인으로 먼저 시험)
 8. 공개 준비: 영어 README, 다른 스택 예제 프로젝트 1~2개에서 `/fullship:setup` 시험, 평가 케이스 정리, 마켓플레이스 등록
 - 각 단계마다 스킬별 평가 케이스를 같이 만든다(마지막에 몰아서 하지 않음).
@@ -194,7 +209,7 @@ fullship/
 - **복사해 넣지 않는다**(라이선스·원본 갱신 문제). 경로만 든다.
 - **모음 마켓플레이스**: `marketplace.json`에 fullship 자신 + 외부 플러그인 항목(원본 GitHub 저장소를 가리킴)을 넣는다. 사용자는 fullship 마켓플레이스 하나만 추가하면 추천 플러그인도 같은 곳에서 고를 수 있다. 원본 저장소·경로는 넣기 전에 확인.
 - **skills.sh 스킬**은 마켓플레이스에 못 넣으므로 `references/recommended.md`에 `owner/repo --skill 이름` + 감사 결과로 둔다.
-- **`fullship-guide` 스킬**(대화 중 추천): 설명문을 "이런 요청이면 불린다"로 써서 — 예: "계획 빡세게 따져 봐" → grill-me, "트레일러에 효과" → hyperframes/Remotion — 짧은 색인만 읽고 "이건 X가 잘해요, 설치할까요?" 한 줄. 이미 설치돼 있으면 그걸 쓰라고만, 거절한 건 다시 안 꺼냄. `manual` 모드에선 꺼짐(명령으로만).
+- **`fullship-guide` 스킬**(대화 중 추천): 설명문을 "이런 요청이면 불린다"로 써서 — 예: "계획 빡세게 따져 봐" → grill-me, "트레일러에 효과" → hyperframes/Remotion — 짧은 색인만 읽고 "이건 X가 잘해요, 설치할까요?" 한 줄. 이미 설치돼 있으면 그걸 쓰라고만, 거절한 건 다시 안 꺼냄. 물어볼 때만 길게, 평소엔 한 줄 제안(계획 모드와 무관).
 - **설치는 확인 한 번까지**: 설정 `install: "ask"`(기본, 하나씩) / `"trusted-batch"`(공식·파트너·감사 Pass인 것만 묶어서 한 번 확인). 확인 없는 완전 자동 설치는 넣지 않는다(남의 코드 실행, 디렉터리 심사 문제).
 - skills.sh 상세 페이지엔 **라이선스가 안 나온다**(감사 3종 Gen·Socket·Snyk만). 라이선스는 저장소에서 확인해 목록에 적는다.
 
@@ -217,7 +232,8 @@ fullship/
 | Vercel 배포 | `deploy-to-vercel` | skills.sh | adapters/vercel |
 | Cloudflare | (2026-11 조사 땐 skills.sh에서 못 찾음) | — | 우리 adapters/cloudflare가 직접 |
 | SEO | `seo-audit`, `ai-seo`, `schema-markup`, `programmatic-seo` (coreyhaines31/marketingskills), **SEO-AEO-GEO Ultimate** | skills.sh·디렉터리 | seo-content는 이것들이 있으면 연결만 |
-| 홍보 글·카피 | **Marketing**(Anthropic), `copywriting`·`launch-strategy`(coreyhaines31), **Social Media Skills** | 디렉터리·skills.sh | launch-post는 패치노트→초안·outreach-log만 |
+| 홍보 계획·바이럴 | `launch-strategy`·`marketing-psychology`·`social-content`·`content-strategy`(coreyhaines31/marketingskills), **Social Media Skills**의 `viral-reverse-engineering`·`hook-writer`·`campaign-and-launch-planning`·`reddit-marketing`·`content-calendar`, **Marketing**(Anthropic) `campaign-plan` | skills.sh·디렉터리 | promo-plan이 있으면 함께: 일반 전략·훅 기법은 이것들, fullship은 **우리 제품의 공유 순간·바이럴 장치 점검·출시 숫자로 결과 확인**만 |
+| 홍보 글·카피 | **Marketing**(Anthropic), `copywriting`(coreyhaines31) | 디렉터리·skills.sh | launch-post는 패치노트→초안·outreach-log만 |
 | 영상 | **Remotion**(`remotion-dev/skills`, 약 77만), **video-shotcraft**, HeyGen `hyperframes` | 디렉터리·skills.sh | trailer는 장면 목록·화면 소재 준비, 렌더는 이것들 |
 | 계획 따져 묻기 | `grill-me`(약 150만, 감사 3종 Pass), `grill-with-docs`, `to-spec`, `to-prd` (mattpocock/skills) | skills.sh | spec-first 전에 "계획 검증" 단계로 추천. 있으면 plan-checker는 빠진 항목만 |
 | 인수인계 | `handoff`(약 110만), `claude-handoff` (mattpocock/skills) | skills.sh | 우리 `handoff`와 겹침 → 만들기 전에 써 보고 모자란 것만(HANDOFF.md 형식·결정 이유) |
@@ -255,16 +271,16 @@ fullship/
 | 어려운 점 | 바꾼 것 |
 |---|---|
 | 명령 7개(setup·mode·recommend·spec·ship·handoff·idea) | 자주 쓰는 건 **setup·ship 두 개** + `help`. 나머지는 말로 부르면 스킬이 알아서 불림, 명령은 지름길로만 |
-| 모드 3개 + 묶음 4개 + 설정 JSON | 묶음은 **감지해서 자동으로 켬**(확장 있으면 release, 영상 요청하면 media 켤지 물어봄). 모드는 기본 `manual` 하나로 시작, 바꾸고 싶으면 말로("자동으로 해 줘") |
+| 모드 3개 + 묶음 4개 + 설정 JSON | 묶음은 **감지해서 자동으로 켬**(확장 있으면 release, 영상 요청하면 media 켤지 물어봄). 계획 모드는 기본 `big-only`(큰 작업만 계획), 바꾸고 싶으면 말로("항상 계획부터 해 줘") |
 | 에이전트 10개 | **사용자 눈에 안 보임**. 이름도 몰라도 됨. 결과 표에 "누가 했는지"는 안 씀 |
-| setup 질문 | **최대 2개**(감지 못 한 배포 주소, 모드). 나머지는 감지한 값으로 채워 "이렇게 할게요" 한 화면 → [좋아요 / 고칠래요] |
+| setup 질문 | **최대 2개**(감지 못 한 배포 주소, 계획 모드). 나머지는 감지한 값으로 채워 "이렇게 할게요" 한 화면 → [좋아요 / 고칠래요] |
 | 긴 결과 | **첫 줄에 결론**: `통과 6 · 실패 1 · 안 돌림 1`. 실패한 것만 아래에 한 줄씩 + "다음에 할 일". 로그 전체는 파일로 |
 | 영어 용어 | 사용자 말은 프로젝트 언어·쉬운 말로. "evidence"→"근거", "DEBT"→"보완 필요" |
-| 추천이 귀찮을 수 있음 | 한 번에 최대 3개, 거절하면 다시 안 꺼냄, `manual` 모드에선 물어볼 때만 |
+| 추천이 귀찮을 수 있음 | 한 번에 최대 3개, 거절하면 다시 안 꺼냄 |
 
 ### 규칙 (모든 스킬·명령에 적용)
 1. **말로 해도 된다**: 모든 기능은 자연어로 부를 수 있어야 한다. 명령은 지름길.
-2. **기본값이 안전하고 쓸 만하다**: 아무것도 안 정해도 동작. 자동으로 뭘 하진 않음(`manual`).
+2. **기본값이 안전하고 쓸 만하다**: 아무것도 안 정해도 동작. 기본은 "큰 작업만 계획 먼저"(`big-only`), 점검·배포 확인·설치·게시는 시킬 때만.
 3. **물을 땐 버튼으로, 한 번에**: 질문은 묶어서 한 번, 추천 답을 첫 번째에.
 4. **결론 먼저, 다음 할 일 하나**: 결과마다 "그래서 다음은?" 한 줄.
 5. **숨길 건 숨긴다**: 설정 파일·에이전트·묶음 이름을 몰라도 쓸 수 있다. 바꾸고 싶으면 말로.

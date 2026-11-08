@@ -1,5 +1,5 @@
 ---
-description: Recommend existing Claude plugins and skills.sh skills that fit this project, instead of rebuilding them
+description: Find existing plugins and skills.sh skills that fit this project (design, testing, SEO, video…) so you do not rebuild them — shows trust and install commands, installs nothing by itself
 argument-hint: "[area, e.g. design | testing | seo | video]"
 ---
 

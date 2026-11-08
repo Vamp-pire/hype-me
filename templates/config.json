@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "mode": "manual",
+  "mode": "big-only",
   "modules": ["core"],
   "languages": ["en"],
   "stack": {

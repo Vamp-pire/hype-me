@@ -1,5 +1,5 @@
 ---
-description: Set up fullship for this project — detect the stack, ask only what is missing, and write an executable checklist to .fullship/config.json
+description: One-time project setup (about a minute) — detects your stack, deploy and tests, asks at most 2 questions, and turns your release checklist into checks that actually run
 argument-hint: "[--refresh]"
 ---
 
@@ -28,8 +28,8 @@ Keep this easy: the user should not need to know about modules, agents or the co
 - **Modules are chosen automatically** from what you detected: `core` always; `release` if there is a deploy target, extension, package or release workflow; `marketing` and `media` stay off until the user asks for that kind of work.
 - Ask **only** what you could not detect, in one AskUserQuestion round, at most 2 questions, recommended answer first:
   - the production URL (only if not found), and
-  - the work mode: `manual` (recommended: nothing runs by itself) / `auto` / `heavy-only`, in plain words.
-- Then show one summary screen ("I'll set it up like this": stack, deploy URL, checks, mode) and ask **[Looks good / Change something]**. Write files only after "Looks good".
+  - the planning mode: `big-only` (recommended: plan first only for big changes) / `always` / `manual` (only when asked), in plain words.
+- Then show one summary screen ("I'll set it up like this": stack, deploy URL, checks, planning mode) and ask **[Looks good / Change something]**. Write files only after "Looks good".
 
 ## 3. Write `.fullship/config.json`
 Start from `${CLAUDE_PLUGIN_ROOT}/templates/config.json`. Fill `stack`, `deploy`, `commands`, `languages`, `modules`, `mode`.

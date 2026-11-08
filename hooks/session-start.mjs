@@ -3,7 +3,22 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
-const MODES = new Set(['manual', 'auto', 'heavy-only']);
+// The mode only decides when to plan before building.
+const MODES = {
+  'big-only': {
+    label: 'planning: big changes only',
+    rule:
+      'Before building a big change (new screen or feature, several files, server/database or stored-data changes, anything hard to undo), show a short plan (goal, options with a recommendation, files to change, how done is checked) and wait for approval. Small fixes and clear instructions: go ahead.',
+  },
+  always: {
+    label: 'planning: always',
+    rule: 'Before any change to code, show a short plan and wait for approval.',
+  },
+  manual: {
+    label: 'planning: when asked',
+    rule: 'Do not plan on your own; plan first only when the user asks or runs /fullship:spec.',
+  },
+};
 
 function readStdin() {
   try {
@@ -40,21 +55,17 @@ function main() {
     return;
   }
 
-  const mode = MODES.has(config.mode) ? config.mode : 'manual';
+  const mode = MODES[config.mode] ? config.mode : 'big-only';
   const modules = Array.isArray(config.modules) && config.modules.length ? config.modules : ['core'];
 
   out({
-    systemMessage: `fullship · ${mode} · /fullship:help`,
+    systemMessage: `fullship · ${MODES[mode].label} · /fullship:help`,
     hookSpecificOutput: {
       hookEventName: 'SessionStart',
       additionalContext:
-        `fullship is set up in this project (.fullship/config.json). Work mode: ${mode}. ` +
+        `fullship is set up in this project (.fullship/config.json). Planning mode: ${mode}. ${MODES[mode].rule} ` +
         `Enabled modules: ${modules.join(', ')}. ` +
-        (mode === 'manual'
-          ? 'Do not start fullship skills on your own; wait for /fullship:* commands or an explicit request.'
-          : mode === 'heavy-only'
-            ? 'Light fullship checks may run on their own; ask before heavy ones (checks with "heavy": true).'
-            : 'fullship skills may step in on their own when they clearly apply.'),
+        'Run checks, deploy verification and installs only when asked; when a feature is finished you may offer a check in one line.',
     },
   });
 }

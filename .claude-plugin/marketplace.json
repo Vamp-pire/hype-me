@@ -7,7 +7,7 @@
     {
       "name": "fullship",
       "source": "./",
-      "description": "Build, verify, ship and grow a small web product end to end."
+      "description": "Ship small web products without the forgotten steps: plans first, proof-based checks, live-deploy checks, per-release numbers."
     }
   ],
   "metadata": {

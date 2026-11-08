@@ -31,6 +31,8 @@ Sources:
 | hosting | Cloudflare | — | none found on skills.sh (2026-11) | Cloudflare | fullship `adapters/cloudflare` covers it | — |
 | seo | seo-audit, ai-seo, schema-markup, programmatic-seo | skills.sh | `coreyhaines31/marketingskills` | `marketing` module | `seo-content` hands over to these | community |
 | seo | SEO-AEO-GEO Ultimate | plugin directory | "SEO-AEO-GEO Ultimate" | deep SEO work | optional | community |
+| promotion | launch-strategy, marketing-psychology, social-content, content-strategy | skills.sh | `coreyhaines31/marketingskills` | planning a launch or campaign | works with `promo-plan`: general strategy here, fullship adds the product's share moments, viral-loop check and per-release numbers | community |
+| promotion | Social Media Skills (viral-reverse-engineering, hook-writer, campaign-and-launch-planning, reddit-marketing, content-calendar) | plugin directory | "Social Media Skills" | social channels, hooks | works with `promo-plan` and `launch-post` | community |
 | marketing | Marketing | plugin directory | Anthropic "Marketing" | campaigns, content | `launch-post` keeps only patch-notes → drafts and the outreach log | official |
 | marketing | copywriting, launch-strategy | skills.sh | `coreyhaines31/marketingskills` | launch copy | works with `launch-post` | community |
 | marketing | Social Media Skills | plugin directory | "Social Media Skills" | many social channels | optional | community |
