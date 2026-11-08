@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "mode": "manual",
+  "modules": ["core"],
+  "languages": ["en"],
+  "stack": {
+    "framework": null,
+    "hosting": null,
+    "backend": null,
+    "packageManager": null
+  },
+  "deploy": {
+    "url": null,
+    "branch": "main"
+  },
+  "commands": {
+    "build": null,
+    "test": null,
+    "dev": null,
+    "preview": null
+  },
+  "checks": [
+    { "id": "build", "name": "Build passes", "run": "npm run build", "pass": "exit0", "heavy": false },
+    { "id": "test", "name": "Tests pass", "run": "npm test", "pass": "exit0", "heavy": true }
+  ],
+  "release": {
+    "channels": []
+  },
+  "recommendations": {
+    "dismissed": []
+  }
+}

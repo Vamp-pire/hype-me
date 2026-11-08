@@ -1,0 +1,16 @@
+{
+  "name": "fullship-local",
+  "owner": {
+    "name": "fullship"
+  },
+  "plugins": [
+    {
+      "name": "fullship",
+      "source": "./",
+      "description": "Build, verify, ship and grow a small web product end to end."
+    }
+  ],
+  "metadata": {
+    "description": "fullship and the plugins it recommends"
+  }
+}

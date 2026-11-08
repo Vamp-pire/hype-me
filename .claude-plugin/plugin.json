@@ -1,0 +1,7 @@
+{
+  "name": "fullship",
+  "version": "0.0.1",
+  "description": "Build, verify, ship and grow a small web product end to end: project setup, work modes, evidence-based checks, release insights, and recommendations for existing plugins and skills.",
+  "keywords": ["workflow", "shipping", "checklist", "release", "indie", "small-team"],
+  "license": "MIT"
+}
