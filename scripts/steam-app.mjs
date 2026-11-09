@@ -55,6 +55,9 @@ async function info(appid) {
     reviews: data.recommendations?.total ?? null,
     metacritic: data.metacritic?.score ?? null,
     shortDescription: data.short_description || null,
+    headerImage: data.header_image || null,
+    screenshots: (data.screenshots || []).length,
+    hasTrailer: (data.movies || []).length > 0,
     store: `https://store.steampowered.com/app/${appid}/`,
   };
   console.log(JSON.stringify(out, null, 2));

@@ -29,7 +29,7 @@ Then show one summary ("Here's your game profile") and ask **[Looks good / Chang
 Start from `${CLAUDE_PLUGIN_ROOT}/templates/profile.json`. Fill what you know, leave the rest null/empty.
 - `data.keys` stores only environment-variable **names** for any API keys, never values.
 - `context.add` / `context.skip` start empty; they hold the user's own "also look at X" / "skip Y".
-- If the folder is a git repo, add `.hype-me/reports/` and `.hype-me/cache/` to `.gitignore` (append; create if missing). The profile itself can be committed.
+- If the folder is a git repo, add `.hype-me/reports/`, `.hype-me/cache/` and `.hype-me/data/` to `.gitignore` (append; create if missing). The profile itself can be committed.
 - Never overwrite an existing file; write `<name>.hype-me-new` next to it instead.
 
 ## 4. Context check (only when needed)

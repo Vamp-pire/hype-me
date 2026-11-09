@@ -3,7 +3,7 @@
 **"Hype me" — help people find your game.**
 A Claude Code plugin for indie games and small projects (web, Steam/itch.io, mobile): it finds where your players come from, where to promote, how similar games took off, who is talking about you, and turns that into a promo plan you can actually run.
 
-> Status: **0.3 early version** — game profile, success-story research and where-to-promote research work today; the rest is on the roadmap. Private for now.
+> Status: **0.9 — feature complete, testing.** Everything below works as an early version; public release after real-game testing. Private for now.
 
 ## The six questions it answers
 | ask it | what you get |
@@ -21,15 +21,23 @@ It never posts, DMs, installs or spends money without your yes, and it follows e
 
 ## Commands
 1. `/hype-me:setup` — once per game. A short game profile (at most 3 questions).
-2. `/hype-me:report` — a summary any time: traffic changes, new mentions, last promo results, three things to do this week *(coming)*.
+2. `/hype-me:report` — a summary any time: traffic changes, new mentions, last promo results, three things to do this week. Add `--send` for Discord/Slack, `--schedule weekly` to run it every week.
 
 Everything else: just ask in plain words. Stuck? `/hype-me:help`. Looking for an existing tool for something? `/hype-me:recommend`.
 
-## Roadmap
-| | feature |
+## What is inside
+| ask | skill |
 |---|---|
-| ✅ now | game profile · **similar-game success stories** (`cases`) · **where to promote** (`channels`) · help · recommendations of existing tools (incl. design resources) · one-line pointers · notifications to Discord/Slack |
-| then | promo plan + launch check (page, links, share preview) + UTM links · mentions + report · traffic (CSV first, then APIs) · design feedback |
+| where do players come from? | `traffic` (CSV exports or a connected analytics tool) |
+| where should I promote? | `channels` |
+| how did similar games take off? | `cases` |
+| who is talking about my game? | `mentions` |
+| make a promo plan / how did it go? | `promo-plan`, `promo-review` |
+| is my page ready to share? | `launch-check` (page, share preview, tracking, links) |
+| check my thumbnail / store images | `design` |
+| find an existing tool for X | `/hype-me:recommend`, `guide` |
+
+Limits, honestly: Steam and itch analytics have no public API, so traffic reads their CSV exports; Reddit blocks automated reading, so those places come with links to check by hand; virality is never promised.
 
 ## Install
 ```
@@ -40,14 +48,15 @@ The repository is private for now, so you need access to it. For local developme
 
 ## Layout
 ```
-.claude-plugin/   plugin.json, marketplace.json
-commands/         setup, help, recommend
-skills/           cases, channels, guide, notify
-agents/           case-researcher, channel-scout, scout
-scripts/          steam-app, reddit-sub, launch-check, notify (Node 18+, no dependencies)
-hooks/            hooks.json, session-start.mjs
-templates/        profile.json, case.md, claude-md-section.md
-references/       channels.md, recommended.md, design-resources.md
+.claude-plugin/   plugin.json, marketplace.json, icon.png
+commands/         setup, report, help, recommend
+skills/           traffic, channels, cases, mentions, promo-plan, promo-review, launch-check, design, guide, notify
+agents/           traffic-analyst, channel-scout, case-researcher, mention-tracker, scout
+scripts/          traffic-csv, steam-app, reddit-sub, utm, launch-check, mentions-seen, image-size, notify (Node 18+, no dependencies)
+hooks/            session start line
+templates/        profile, case, promo-plan, CLAUDE.md section
+references/       channels, image-specs, design-resources, recommended
+evals/            trigger and safety cases (claude plugin eval)
 docs/             plan.md (Korean), archive/
 ```
 

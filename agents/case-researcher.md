@@ -23,7 +23,7 @@ Input you get: the subject (name, maybe a store link), our game's profile summar
 ## Write
 Fill `${CLAUDE_PLUGIN_ROOT}/templates/case.md` and save it to the output path you were given (create the folder if needed; if the file exists, write `<name>.hype-me-new.md`).
 - Every timeline row and every "what made it spread" item has a link.
-- Label each claim: **fact** (source says it), **likely** (strong circumstantial evidence), **guess** (your reading). Never present a guess as a fact.
+- Label each claim: **fact** (a page you actually opened says it), **likely** (strong circumstantial evidence, or only seen in a search-result snippet), **guess** (your reading). Never present a guess as a fact, and never call something a fact from a search snippet alone.
 - "What we can try" must fit a small team and our game's platforms/markets.
 - "What does not transfer" is required (money, existing fame, publisher, timing).
 

@@ -16,4 +16,4 @@ Answer in the user's language, plain words, at most 10 lines. No jargon.
 3. **What you can say** — the six questions hype-me answers, one short line each:
    "where do my players come from?" · "where should I promote?" · "how did similar games take off?" · "who's talking about my game?" · "make a promo plan" · "check my thumbnail/store image".
 
-Success stories and where-to-promote are ready; the others are still being built. If a request has no skill yet, do it directly with the profile as context and say it is an early version.
+All six are available as early versions.
