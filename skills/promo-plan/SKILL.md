@@ -1,6 +1,6 @@
 ---
 name: promo-plan
-description: Make a promotion plan for a game launch, update, event or demo — measurable goal, audience, the moment players want to share, a viral-loop check, hooks per channel, channel order and timing with each place's rules, tracking links and how to measure; post drafts on request. Use for "홍보 계획 짜 줘", "어떻게 바이럴 시켜?", "launch plan", "how do I market my game".
+description: Make a promotion PLAN for a game launch, update, event or demo — goal, audience, the moment players want to share, a viral-loop check, hooks per channel, order and timing, tracking links and how to measure; post drafts on request. Use for "홍보 계획 짜 줘", "홍보 어떻게 해?", "어떻게 바이럴 시켜?", "launch plan", "how do I market my game". If the user only wants a list of places, use channels.
 argument-hint: "[what to promote: launch | update | event | demo]"
 ---
 
@@ -11,6 +11,10 @@ Answer in the user's language. Be honest: virality cannot be promised — write 
 ## 1. Gather inputs (do not ask what you can read)
 - `.hype-me/profile.json` (game, platforms, markets, audience, share moments, links).
 - Latest `.hype-me/reports/channels-*.md` and `.hype-me/cases/*.md`. If neither exists, say the plan will be stronger with them and offer to run `channels` and/or `cases` first; continue if the user wants a plan now.
+- **Past promotion** — read earlier plans in `docs/promo/*.md` (their channel tables and "Result" sections) and `.hype-me/links.json`:
+  - do not plan the same place with the same kind of post within 30 days, unless that place's rules welcome it (e.g. a weekly showcase thread) — say so when you skip one;
+  - put places that worked before first, and drop places that clearly did not (say why, with the numbers);
+  - if a past plan has no "Result" yet and its check date has passed, offer `promo-review` first in one line.
 - What is being promoted (`$ARGUMENTS` or the request): launch, update, event, demo — and a date if there is one.
 - **Do not block on questions.** If there is no profile and little information, still write a short draft plan now with every assumption marked (e.g. "assuming a web game, Korea first"), covering all sections below, then ask at most 3 questions that would change the plan most (AskUserQuestion, recommended answer first) and offer `/hype-me:setup` for next time.
 

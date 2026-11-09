@@ -9,6 +9,10 @@ Everything in hype-me (where players come from, where to promote, similar games'
 
 Reply in the user's language, in plain words. Do not mention file names, keys or agents unless asked.
 
+## 0. Say what this is (one or two sentences, first time only)
+Before anything else, tell the user what a game profile is, for example:
+"A game profile is a one-page note about your game — what it is, where it lives, who it's for, which games it resembles. Every hype-me answer (where to promote, success stories, promo plans) uses it, so the answers fit your game instead of being generic. It takes about a minute and lives in your project; you can change it any time by just telling me."
+
 ## 1. Detect (read only)
 From the current folder and anything the user already said:
 - **Name, one-line pitch, genre/tags**: README, package/store metadata, page `<title>`/`<meta name="description">`, `manifest.json`, Steam/itch/app-store links.

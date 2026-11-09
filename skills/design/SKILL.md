@@ -9,6 +9,7 @@ argument-hint: "[image files or page URL]"
 Answer in the user's language. Be direct and kind: say what works, then the 1–3 changes that matter most.
 
 ## 1. Sizes and formats
+If the reference's "Last checked" date is more than 6 months before today, say in one line that the figures may be out of date and, before a store submission, confirm on the official page linked in image-specs.md.
 For each image (`$ARGUMENTS` or files the user points to):
 - `node "${CLAUDE_PLUGIN_ROOT}/scripts/image-size.mjs" <files> --expect <WxH>` using `${CLAUDE_PLUGIN_ROOT}/references/image-specs.md` for the asset type (ask once if the type is unclear).
 - Report matches / wrong size / wrong shape, and which assets each platform in the profile still needs.

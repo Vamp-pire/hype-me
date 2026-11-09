@@ -1,5 +1,7 @@
 # Image sizes per platform
 
+Last checked: 2026-11-09
+
 Written 2026-11 from the platforms' published guidelines as known then. Platforms change these — when it matters (a store submission), open the official page linked and confirm.
 
 | platform | asset | size (px) | notes |

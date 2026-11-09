@@ -1,5 +1,7 @@
 # Design resources
 
+Last checked: 2026-11-09
+
 The user's chosen starting set (2026-11-09). Agents use it as a default, not a fixed list:
 add or drop a resource only when the project clearly needs it, and say why in one line.
 Licence notes are as known on 2026-11-09 — confirm on the site before shipping commercial work.

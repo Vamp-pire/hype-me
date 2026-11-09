@@ -35,5 +35,16 @@ Saved: .hype-me/cases/<a>.md, <b>.md
 - Keep "fact / likely / guess" labels when you quote a case.
 - If an idea needs a change in the game itself (e.g. a share button, a daily challenge), say so — it may matter more than any post.
 
+Example (one case, from a trial on Shotgun King for a free browser chess-variant game — shape only):
+```
+What worked (single case — treat as a lead, not a pattern)
+1. Game-jam first: it won Ludum Dare 50 (fact), and the free jam build kept working as a demo (fact) that pointed players to the paid version (likely)
+2. A content update ~6 months after launch lines up with a second review spike (likely, not proven)
+Try next (for our game)
+1. Enter the next game jam with one variant as the jam entry; keep that build as the free sample — effort: medium
+2. One short devlog per variant "chapter", each ending with a clear next step — effort: small
+Doesn't apply to us: a publisher deal and console ports
+```
+
 ## 4. Offer the next step (one line)
 "Want a promo plan built on these?" (promo-plan) or "Find where to promote?" (channels).

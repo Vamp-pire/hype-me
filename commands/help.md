@@ -7,7 +7,7 @@ description: What can hype-me do for this game right now? Shows the profile stat
 Answer in the user's language, plain words, at most 10 lines. No jargon.
 
 1. **Status** — read `.hype-me/profile.json` and the newest files in `.hype-me/reports/`, `.hype-me/cases/`, `docs/promo/`.
-   - No profile: say so and suggest `/hype-me:setup` (about a minute). Stop.
+   - No profile: say there is no game profile yet, explain it in one sentence ("a one-page note about your game that makes every answer specific to it"), and suggest `/hype-me:setup` (about a minute). Stop.
    - Profile: one line with the game name and platforms, and one line with the last thing done (e.g. "last report: Nov 9", "2 case studies saved").
 2. **One next step** — the single most useful action for where the game is:
    - nothing done yet → "find how similar games took off" or "where should I promote?"

@@ -1,5 +1,7 @@
 # Recommended plugins and skills
 
+Last checked: 2026-11-09
+
 hype-me does not rebuild these. `/hype-me:recommend` and the `guide` skill pick rows that match the game profile.
 Install counts are skills.sh all-time totals, rounded, as of 2026-11-08/09 — recheck before quoting.
 
