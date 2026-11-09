@@ -134,7 +134,7 @@
 
 ## 9. 만드는 순서
 1. ✅ (2026-11-09, v0.2.0) 정리: 개발 기능 삭제, setup → 게임 프로필, help·hook·README 고치기
-2. **cases + channels** (조사 두 가지, 데이터 연결 없이 바로 쓸 수 있음) → Stylish·변형 체스 게임 하나로 시험
+2. ✅ (2026-11-09, v0.3.0: Steam 공개 데이터·레딧 규칙 스크립트, 레딧은 익명 읽기를 막아 페이지 읽기로 대체) **cases + channels** (조사 두 가지, 데이터 연결 없이 바로 쓸 수 있음) → Stylish·변형 체스 게임 하나로 시험
 3. promo-plan + launch-check + UTM 링크
 4. mentions + report + notify 연결
 5. traffic (CSV 읽기부터, 그다음 API)

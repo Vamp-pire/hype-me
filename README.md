@@ -3,7 +3,7 @@
 **"Hype me" — help people find your game.**
 A Claude Code plugin for indie games and small projects (web, Steam/itch.io, mobile): it finds where your players come from, where to promote, how similar games took off, who is talking about you, and turns that into a promo plan you can actually run.
 
-> Status: **0.2 early version** — the game profile and recommendations work today; the research skills are being built (see Roadmap). Private for now.
+> Status: **0.3 early version** — game profile, success-story research and where-to-promote research work today; the rest is on the roadmap. Private for now.
 
 ## The six questions it answers
 | ask it | what you get |
@@ -28,8 +28,7 @@ Everything else: just ask in plain words. Stuck? `/hype-me:help`. Looking for an
 ## Roadmap
 | | feature |
 |---|---|
-| ✅ now | game profile · help · recommendations of existing tools (incl. design resources) · one-line pointers · notifications to Discord/Slack |
-| next | similar-game case studies · where to promote |
+| ✅ now | game profile · **similar-game success stories** (`cases`) · **where to promote** (`channels`) · help · recommendations of existing tools (incl. design resources) · one-line pointers · notifications to Discord/Slack |
 | then | promo plan + launch check (page, links, share preview) + UTM links · mentions + report · traffic (CSV first, then APIs) · design feedback |
 
 ## Install
@@ -43,12 +42,12 @@ The repository is private for now, so you need access to it. For local developme
 ```
 .claude-plugin/   plugin.json, marketplace.json
 commands/         setup, help, recommend
-skills/           guide, notify
-agents/           scout
-scripts/          launch-check, notify (Node 18+, no dependencies)
+skills/           cases, channels, guide, notify
+agents/           case-researcher, channel-scout, scout
+scripts/          steam-app, reddit-sub, launch-check, notify (Node 18+, no dependencies)
 hooks/            hooks.json, session-start.mjs
-templates/        profile.json, claude-md-section.md
-references/       recommended.md, design-resources.md
+templates/        profile.json, case.md, claude-md-section.md
+references/       channels.md, recommended.md, design-resources.md
 docs/             plan.md (Korean), archive/
 ```
 
