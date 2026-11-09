@@ -31,4 +31,4 @@ This week
 Save as `.hype-me/reports/report-<YYYY-MM-DD>.md`.
 
 ## Send
-With `--send`, or when `report.notify` is true: use the `notify` skill to send the short version (at most 8 lines). If notifications are not set up, say how, and do not send anywhere else.
+With `--send`, or when `report.notify` is true: use the `notify` skill to send it as a card (title = game and period, status from the overall trend, sections Traffic / Mentions / Last promo / This week). If notifications are not set up, say how, and do not send anywhere else.
