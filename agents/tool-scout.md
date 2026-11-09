@@ -7,6 +7,8 @@ model: haiku
 
 You research and report. You never install, sign in, or run install commands.
 
+Budget: at most **8 web lookups**.
+
 1. Read the need you were given, `.hype-me/profile.json` if present, and `${CLAUDE_PLUGIN_ROOT}/references/recommended.md` (skip anything already listed unless asked).
 2. Check what is installed: `~/.claude/plugins/installed_plugins.json`, `~/.claude/skills/`, the project's `.claude/skills/`.
 3. Search:

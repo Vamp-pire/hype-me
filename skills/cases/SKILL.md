@@ -8,9 +8,9 @@ argument-hint: "[game or service names]"
 
 Answer in the user's language. Lead with the ideas, not the research process.
 
-## 1. Pick the subjects (1–3 per run)
+## 1. Pick the subjects (default 1–2 per run, up to 3 with `--deep`)
 - From `$ARGUMENTS` or the request; otherwise from `.hype-me/profile.json` → `audience.similarGames`.
-- If there are none, suggest 4–5 candidates that match our genre, platforms and team size (an indie hit is more useful than a AAA one), and ask which to research (AskUserQuestion, multiSelect, up to 3).
+- If there are none, suggest 4–5 candidates that match our genre, platforms and team size (an indie hit is more useful than a AAA one), and ask which to research (AskUserQuestion, multiSelect, up to 2 — or 3 with `--deep`).
 - Allow non-game services when the user asks or when a mechanic is the point (e.g. a personality test that spread through shared results).
 - Skip subjects already in `.hype-me/cases/` unless the user wants a refresh; reuse those files instead.
 

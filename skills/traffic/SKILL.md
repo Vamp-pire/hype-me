@@ -1,38 +1,41 @@
 ---
 name: traffic
-description: Answer "where do my players come from?" — visits, players, downloads or wishlists by source, search term and tracking link vs the previous period, from analytics CSV exports (GA4, Cloudflare, Search Console, Steamworks, itch.io, app stores) or a connected analytics tool. Use for "유저 어디서 와?", "유입 경로", "which post brought people".
-argument-hint: "[CSV files] [--since YYYY-MM-DD]"
+description: Answer "where do my players come from?" — visits, clicks or sessions by referrer, search term, source and tracking link vs the previous period, straight from Cloudflare Web Analytics, Google Search Console or GA4, or from CSV exports (Steamworks, itch.io, app stores, any analytics tool). Use for "유저 어디서 와?", "유입 경로", "which post brought people".
+argument-hint: "[cloudflare | search-console | ga4 | CSV files] [--days N]"
 ---
 
 # Where do players come from?
 
 Answer in the user's language. Numbers with their metric name; no made-up figures.
 
-## 1. Find the data
-- Files in `$ARGUMENTS`, or CSVs the user drops in the project (look in `.hype-me/data/`, the project root, Downloads only if the user points there).
-- A connected analytics tool in this session (MCP) — use it if present.
-- `.hype-me/profile.json` → `data` lists what the user has.
-If there is nothing, say which export to get and how, for their platforms (one or two lines each), then stop:
-- **Web**: Cloudflare Web Analytics or GA4 → export "traffic by source/referrer" for the last 4 weeks as CSV; Search Console → Performance → Export (queries).
-- **Steam**: Steamworks → UTM Analytics and Traffic Breakdown → download CSV (no public API).
-- **itch.io**: Analytics → referrers (copy or export).
-- **Mobile**: App Store Connect → Sources; Play Console → Store performance → traffic sources (export).
-Suggest saving exports in `.hype-me/data/` (git-ignored by setup).
+## 1. Direct connections first (cheap: one script call each, no agent)
+`node "${CLAUDE_PLUGIN_ROOT}/scripts/analytics.mjs" status --cwd "<project>"` shows what is connected (names only, never values).
+Then run each connected source (in parallel):
+- `analytics.mjs cloudflare --cwd "<project>" --days 7` — visits by referrer, top pages, countries
+- `analytics.mjs search-console --cwd "<project>" --days 28` — Google search clicks by search term
+- `analytics.mjs ga4 --cwd "<project>" --days 28` — sessions by source / medium, tracking-link campaigns
+A `not connected` line comes with a one-line "how"; pass it on only if the user wants that source.
 
-## 2. Analyse
-Period: `--since` or the last 7/28 days, compared with the same length before. Start the `traffic-analyst` agent with the files/tools and periods (or follow `agents/traffic-analyst.md` yourself).
+## 2. CSV for everything else
+Steam, itch.io and app stores have no public analytics API. Use exports in `$ARGUMENTS` or `.hype-me/data/`:
+`node "${CLAUDE_PLUGIN_ROOT}/scripts/traffic-csv.mjs" <file> --cwd "<project>" [--before <older file> | --from … --to … --vs-from … --vs-to …]` (`--by` / `--metric` if it cannot tell the columns).
+Where to get them: Steamworks → UTM Analytics / Traffic Breakdown; itch.io → Analytics → referrers; App Store Connect → Sources; Play Console → Store performance. Save them in `.hype-me/data/` (git-ignored).
+Use the `traffic-analyst` agent only when there are several large files to combine; otherwise run the scripts yourself.
 
-## 3. Reply
+## 3. Nothing connected and no files
+Say which one source would help most for their platform and how to connect it (two lines), then stop. Do not guess numbers.
+
+## 4. Reply
 ```
 <metric> · <period> vs before
 Total <n> (<±%>)
 Top: <source> <n> · <source> <n> · <source> <n>
 Up: <source> +x%   Down: <source> −y%   New: <source>
-From your tracking links: <place> <n>, <place> <n>
-So: <1–2 sentences of meaning, e.g. "the lichess team post brought more than all of Reddit">
+From your tracking links: <place> <n>
+So: <1–2 sentences of meaning>
 Missing: <what would make this better>
 ```
-Label guesses ("likely because…"). Small numbers: say they are small.
+Never add numbers from different metrics (visits vs clicks vs sessions). Label guesses; say when numbers are small.
 
-## 4. Next
-One line: a promo idea for the source that grew, or `promo-review` if a promo ran in this period. If the user wants, save the reply to `.hype-me/reports/traffic-<YYYY-MM-DD>.md`.
+## 5. Next
+One line: a promo idea for the source that grew, or `promo-review` if a promo ran in this period. Save to `.hype-me/reports/traffic-<YYYY-MM-DD>.md` only if the user wants.

@@ -12,12 +12,13 @@ Answer in the user's language. Never post, comment, DM or contact anyone; the us
 `.hype-me/profile.json`: genre, tags, platforms, markets, similar games, player groups, `context.add` / `context.skip`. If there is no profile, ask for the game's genre, platform and 2–3 similar games first (or suggest `/hype-me:setup`).
 If `.hype-me/cases/` has case files, use the places that worked for those games as leads.
 
-## 2. Decide the areas and the context
-- Default areas: communities, creators, curators/press, events. With `$ARGUMENTS`, only that area.
+## 2. Reuse, then decide the areas
+- If `.hype-me/reports/channels-*.md` is under 14 days old and the profile has not changed, show it and ask whether to refresh — do not search again unasked.
+- Default (light): **two areas** — communities and creators. Add curators/press and events only when asked, with `--deep`, or when the platform makes them central (Steam → curators and festivals). With `$ARGUMENTS`, only that area.
 - Context from `${CLAUDE_PLUGIN_ROOT}/references/channels.md`: add market/platform/genre rows only when the profile clearly calls for them, and tell the user each addition in one line with the reason (e.g. "Korean market → also checking Naver cafes and DCInside"). Drop rows that do not fit (e.g. Steam curators for a web game).
 
 ## 3. Search in parallel
-One `channel-scout` agent per area, all at once, each with the profile summary and context notes. Without agents, do the areas yourself following `agents/channel-scout.md`.
+One `channel-scout` agent per chosen area, all at once, each with the profile summary and context notes (and "deep" if the user asked for `--deep`). Without agents, do the areas yourself following `agents/channel-scout.md`.
 
 ## 4. Rank and present
 Merge into one list of at most 12, ordered by **fit × reachability ÷ effort** (a small, exact-fit community the user already belongs to beats a huge general one):

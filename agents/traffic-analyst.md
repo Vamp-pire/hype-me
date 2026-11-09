@@ -9,7 +9,7 @@ You read numbers and report them. You do not change analytics settings, sign in 
 
 Input you get: the project path, the period (and comparison period), and the data files or tools to use.
 
-1. For each CSV: `node "${CLAUDE_PLUGIN_ROOT}/scripts/traffic-csv.mjs" <file> --cwd "<project>" [--from … --to … --vs-from … --vs-to …] [--before <older file>]`.
+1. Direct sources: `node "${CLAUDE_PLUGIN_ROOT}/scripts/analytics.mjs" cloudflare|search-console|ga4 --cwd "<project>" --days N` (see the traffic skill). For each CSV: `node "${CLAUDE_PLUGIN_ROOT}/scripts/traffic-csv.mjs" <file> --cwd "<project>" [--from … --to … --vs-from … --vs-to …] [--before <older file>]`.
    If it says it cannot tell the columns, read the header line and rerun with `--by <source column> --metric <visits/sessions/views column>`.
 2. If an analytics tool is connected in this session (an MCP for Google Analytics, Search Console, Cloudflare, Plausible…), you may use it for the same period instead of a CSV. Say which.
 3. Return (max 25 lines): one table per data source (top 10 rows), then:

@@ -12,11 +12,11 @@ Answer in the user's language. Short and concrete.
 - `off`: set it back to `"on-demand"`. Stop.
 
 ## Build the report
-Period: since `--since`, else since the last report in `.hype-me/reports/`, else the last 7 days. Run the parts in parallel and skip any part without data (say so in one line):
-1. **Traffic** — `traffic` skill for the period vs the period before (needs analytics data or a CSV).
-2. **Mentions** — `mentions` skill (new ones only).
+Period: since `--since`, else since the last report in `.hype-me/reports/`, else the last 7 days. Skip any part without data (say so in one line). Keep it cheap — scripts first, agents only when needed:
+1. **Traffic** — run `analytics.mjs` for the connected sources directly (and `traffic-csv.mjs` for new files in `.hype-me/data/`); no agent.
+2. **Mentions** — if the last mentions run was under 3 days ago (`mentions-seen.mjs stats`), reuse it; otherwise the `mentions` skill (new ones only).
 3. **Last promo** — if a `docs/promo/*.md` check date falls in the period, a 3-line `promo-review`.
-4. **Ideas** — newest `.hype-me/cases/` and `channels` report, for suggestions.
+4. **Ideas** — read the newest `.hype-me/cases/` and `channels` report; do not start new research for the report.
 
 ```
 <game> · <period>

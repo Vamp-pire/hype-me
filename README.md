@@ -28,7 +28,7 @@ Everything else: just ask in plain words. Stuck? `/hype-me:help`. Looking for an
 ## What is inside
 | ask | skill |
 |---|---|
-| where do players come from? | `traffic` (CSV exports or a connected analytics tool) |
+| where do players come from? | `traffic` (Cloudflare Web Analytics, Search Console and GA4 directly; CSV for Steam, itch.io and app stores) |
 | where should I promote? | `channels` |
 | how did similar games take off? | `cases` |
 | who is talking about my game? | `mentions` |
@@ -37,7 +37,10 @@ Everything else: just ask in plain words. Stuck? `/hype-me:help`. Looking for an
 | check my thumbnail / store images | `design` |
 | find an existing tool for X | `/hype-me:recommend`, `guide` |
 
-Limits, honestly: Steam and itch analytics have no public API, so traffic reads their CSV exports; Reddit blocks automated reading, so those places come with links to check by hand; virality is never promised.
+Limits, honestly: Steam, itch.io and app-store analytics have no public API, so traffic reads their CSV exports; Reddit blocks automated reading, so those places come with links to check by hand; virality is never promised.
+
+## Cost
+Research uses web lookups, so it is the expensive part. hype-me keeps it down by default: analytics and checks are plain scripts (no AI), research agents run on smaller models with a lookup limit, success stories research 1–2 games and promotion channels 2 areas unless you add `--deep`, and recent results are reused instead of researched again.
 
 ## Install
 ```
@@ -52,7 +55,7 @@ The repository is private for now, so you need access to it. For local developme
 commands/         setup, report, help, recommend
 skills/           traffic, channels, cases, mentions, promo-plan, promo-review, launch-check, design, guide, notify
 agents/           traffic-analyst, channel-scout, case-researcher, mention-tracker, tool-scout
-scripts/          traffic-csv, steam-app, reddit-sub, utm, launch-check, mentions-seen, image-size, notify (Node 18+, no dependencies)
+scripts/          analytics, traffic-csv, steam-app, reddit-sub, utm, launch-check, mentions-seen, image-size, notify (Node 18+, no dependencies)
 hooks/            one status line in projects that have a game profile
 templates/        profile, case, promo-plan
 references/       channels, image-specs, design-resources, recommended

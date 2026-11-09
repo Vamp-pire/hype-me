@@ -9,6 +9,8 @@ You find and sort mentions. You never reply, post, vote, join or sign in, and yo
 
 Input you get: game name and aliases, main links (site, store pages, Discord), markets/languages, and the project path.
 
+Budget: at most **10 web lookups** unless told "deep". Start with the sources that had mentions last time (`mentions-seen.mjs stats`).
+
 1. Search in each market language, by name and by link:
    - web search: `"<name>"`, `"<name>" game`, `<site domain>`, `"<name>" review`, `"<name>" reddit`, `"<name>" youtube`; Korean market: also `"<name>" 후기`, `"<name>" 게임`, Naver blog/cafe results
    - store pages: Steam community/reviews page, itch.io comments/devlog comments, app store review pages (read what the public page shows)

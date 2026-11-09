@@ -28,6 +28,7 @@ Then show one summary ("Here's your game profile") and ask **[Looks good / Chang
 ## 3. Write the profile
 Start from `${CLAUDE_PLUGIN_ROOT}/templates/profile.json`. Fill what you know, leave the rest null/empty.
 - `data.keys` stores only environment-variable **names** for any API keys, never values.
+- **Analytics connections** (optional, ask once only if the game has a website): fill the IDs the user has — `data.cloudflare` {accountId, siteTag}, `data.searchConsole` {property}, `data.ga4` {propertyId}. These IDs are not secret. Tokens and key files stay outside the project: an environment variable, `~/.claude/hype-me/.env`, or an env file the user already keeps (set `data.envFile` to its path). If `~/.claude/site-report/sites/<host>.json` exists, its IDs are reused automatically — say so. Check with `node "${CLAUDE_PLUGIN_ROOT}/scripts/analytics.mjs" status --cwd "<project>"`. Never ask the user to paste a token into the chat.
 - `context.add` / `context.skip` start empty; they hold the user's own "also look at X" / "skip Y".
 - If the folder is a git repo, add `.hype-me/reports/`, `.hype-me/cache/` and `.hype-me/data/` to `.gitignore` (append; create if missing). The profile itself can be committed.
 - Never overwrite an existing file; write `<name>.hype-me-new` next to it instead.

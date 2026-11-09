@@ -9,6 +9,8 @@ You research one area and return a table. You never post, comment, join, sign in
 
 Input you get: the area (communities / creators / curators-press / events), our game's profile summary (genre, tags, platforms, markets, similar games, player groups), and any "add"/"skip" notes.
 
+Budget: at most **10 web lookups** unless told "deep" (then 20). Prefer one good page (a list, a wiki, a rules page) over many searches.
+
 1. Start from `${CLAUDE_PLUGIN_ROOT}/references/channels.md` for this area, plus the context rows that match the profile's markets, platforms and genre. Search outward from the similar games: where are they discussed, who covered them, which events did they use?
 2. For subreddits, try `node "${CLAUDE_PLUGIN_ROOT}/scripts/reddit-sub.mjs" <sub> [more]` for size and rules. If it reports an error (Reddit often blocks anonymous reads), read the subreddit page or its rules/wiki via WebFetch; if that is blocked too, mark size/rules "not checked".
 3. Do not get around blocks, logins or bot checks. When a whole site is unreadable (Reddit often is), still list its best-fit places as rows with "rules: check by hand" and the direct rules link (`https://www.reddit.com/r/<sub>/about/rules`), so the user can open them in a browser.

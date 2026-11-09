@@ -137,9 +137,15 @@
 2. ✅ (2026-11-09, v0.3.0: Steam 공개 데이터·레딧 규칙 스크립트, 레딧은 익명 읽기를 막아 페이지 읽기로 대체) **cases + channels** (조사 두 가지, 데이터 연결 없이 바로 쓸 수 있음) → Stylish·변형 체스 게임 하나로 시험
 3. ✅ (v0.9) promo-plan + launch-check(공유 미리보기·분석 코드·추적 링크 확인) + UTM 링크(utm.mjs)
 4. ✅ (v0.9) mentions(새 언급만, mentions-seen.mjs) + report(--send, --schedule weekly) + promo-review + notify 연결
-5. ✅ (v0.9) traffic: CSV 읽기(traffic-csv.mjs, 열 자동 추정·기간 비교·추적 링크 매칭). API는 연결된 MCP가 있으면 사용, 직접 API 연결은 아직 없음
+5. ✅ (v0.9) traffic: CSV 읽기(traffic-csv.mjs, 열 자동 추정·기간 비교·추적 링크 매칭). v0.9.1: analytics.mjs로 Cloudflare Web Analytics·Search Console·GA4 직접 연결(Cloudflare는 Stylish 실데이터로 확인, Search Console은 키 파일이 없어 미확인, GA4는 미확인)
 6. ✅ (v0.9) design: 플랫폼별 이미지 규격(image-specs.md)·크기 검사(image-size.mjs)·작게 봐도 읽히나 피드백·리소스 추천
 7. (v0.9) 공개 준비: ✅ 이름·아이콘·평가 케이스 8개(evals/, 2026-11-09 결과: 플러그인 있을 때 8/8 통과 — promo-plan은 질문만 하고 멈춰서 실패 → "먼저 초안, 질문은 3개까지"로 고친 뒤 통과. 없을 때와 차이가 난 건 cases·traffic) · 채널 조사(변형 체스)·성공 사례(Shotgun King) 시험. 남음: 실제 게임으로 한 주 써 보기, 공개 전환(사용자 확인)
+
+## 9-1. 비용 줄이기 (v0.9.1)
+- 분석·점검은 스크립트로(AI 안 씀), traffic은 에이전트 없이 스크립트 직접
+- 조사 에이전트: case-researcher는 sonnet, 나머지 haiku, 조회 횟수 상한(8~12, --deep이면 늘림)
+- 기본은 가볍게: 성공 사례 1~2개, 채널 2개 영역(커뮤니티·크리에이터)
+- 재사용: 채널 보고서 14일, 언급 3일 안이면 다시 조사 안 함, 보고서는 새 조사를 시작하지 않음
 
 ## 10. 이름 후보 (재치 있게)
 grill-me처럼 '부탁하는 말'이 이름이 되면 기억하기 쉽고, 명령도 `/이름:report`처럼 읽힌다. 정하기 전에 skills.sh·플러그인 디렉터리·GitHub에서 같은 이름이 있는지 확인.

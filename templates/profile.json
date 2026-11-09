@@ -22,8 +22,17 @@
     "shareMoments": []
   },
   "data": {
-    "web": [],
-    "store": [],
+    "cloudflare": {
+      "accountId": null,
+      "siteTag": null
+    },
+    "searchConsole": {
+      "property": null
+    },
+    "ga4": {
+      "propertyId": null
+    },
+    "envFile": null,
     "keys": {}
   },
   "launch": {
