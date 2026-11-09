@@ -1,19 +1,22 @@
 {
-  "name": "fullship",
-  "version": "0.1.0",
-  "description": "Early version. Ship small web products without the forgotten steps: plan big changes before building, run your project's own checks with proof instead of \"should work\", confirm the deploy is actually live, get a finish report in Discord or Slack, and get pointed to existing plugins instead of reinventing them. Coming next: release guard, per-release numbers, promo plans.",
+  "name": "hype-me",
+  "version": "0.2.0",
+  "description": "Early version. Help people find your game: where your players come from, where to promote, how similar games took off, who is talking about you, promo plans with a viral-loop check, and design feedback for store images and thumbnails. For indie games and small projects on web, Steam/itch.io and mobile. Never posts or spends without your yes.",
   "keywords": [
-    "workflow",
-    "shipping",
-    "checklist",
-    "release",
-    "indie",
-    "small-team"
+    "game-marketing",
+    "indie-games",
+    "promotion",
+    "player-acquisition",
+    "viral",
+    "community",
+    "steam",
+    "itch",
+    "mobile"
   ],
   "license": "MIT",
   "author": {
     "name": "Vamp-pire",
     "url": "https://github.com/Vamp-pire"
   },
-  "repository": "https://github.com/Vamp-pire/fullship"
+  "repository": "https://github.com/Vamp-pire/hype-me"
 }

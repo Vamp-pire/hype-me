@@ -1,16 +1,16 @@
 {
-  "name": "fullship",
+  "name": "hype-me",
   "owner": {
     "name": "Vamp-pire"
   },
   "plugins": [
     {
-      "name": "fullship",
+      "name": "hype-me",
       "source": "./",
-      "description": "Ship small web products without the forgotten steps: plans first, proof-based checks, live-deploy checks, per-release numbers."
+      "description": "Help people find your game: player sources, where to promote, similar games' success stories, mentions, promo plans, design feedback."
     }
   ],
   "metadata": {
-    "description": "fullship and the plugins it recommends"
+    "description": "hype-me and the tools it recommends"
   }
 }

@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "game": {
+    "name": null,
+    "pitch": null,
+    "genre": [],
+    "tags": [],
+    "platforms": [],
+    "languages": [],
+    "markets": [],
+    "stage": null
+  },
+  "links": {
+    "site": null,
+    "store": {},
+    "community": {},
+    "press": null
+  },
+  "audience": {
+    "similarGames": [],
+    "playerGroups": [],
+    "shareMoments": []
+  },
+  "data": {
+    "web": [],
+    "store": [],
+    "keys": {}
+  },
+  "launch": {
+    "checkPaths": ["/"],
+    "buildDir": null
+  },
+  "report": {
+    "schedule": "on-demand",
+    "notify": false
+  },
+  "notify": {
+    "type": null,
+    "urlEnv": "HYPE_ME_WEBHOOK_URL"
+  },
+  "context": {
+    "add": [],
+    "skip": []
+  },
+  "recommendations": {
+    "dismissed": []
+  }
+}

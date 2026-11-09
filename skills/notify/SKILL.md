@@ -1,6 +1,6 @@
 ---
 name: notify
-description: Send a short "work finished" report to the user's own Discord/Slack/webhook channel set up for this project. Use when the user asks to be notified or reported to ("끝나면 알려 줘", "디스코드로 보고해", "notify me when done"), or when notifications are set up with onFinish and a fullship ship/deploy run just finished. Only sends to the webhook configured in .fullship/config.json.
+description: Send a short "work finished" report to the user's own Discord/Slack/webhook channel set up for this project. Use when the user asks to be notified or reported to ("끝나면 알려 줘", "디스코드로 보고해", "notify me when done"), or when a hype-me report is set to be sent (report.notify). Only sends to the webhook configured in .hype-me/profile.json.
 ---
 
 # Notify
@@ -8,17 +8,17 @@ description: Send a short "work finished" report to the user's own Discord/Slack
 The webhook URL lives in an environment variable; the config only stores its **name** (`notify.urlEnv`). Never print, log or ask for the URL value in chat.
 
 ## Set up (first time)
-If `notify` is missing in `.fullship/config.json`:
+If `notify` is missing in `.hype-me/profile.json`:
 1. Ask which channel: Discord, Slack, or another webhook.
-2. Tell the user to create an incoming webhook there and put its URL in an environment variable themselves (suggest the name `FULLSHIP_WEBHOOK_URL`, set in their shell profile or a local, git-ignored env file). Do not type the URL for them.
-3. Save `"notify": { "type": "<discord|slack|webhook>", "urlEnv": "FULLSHIP_WEBHOOK_URL", "onFinish": false }`. Ask whether to send automatically after each ship/deploy run (`onFinish: true`) or only when asked.
+2. Tell the user to create an incoming webhook there and put its URL in an environment variable themselves (suggest the name `HYPE_ME_WEBHOOK_URL`, set in their shell profile or a local, git-ignored env file). Do not type the URL for them.
+3. Save `"notify": { "type": "<discord|slack|webhook>", "urlEnv": "HYPE_ME_WEBHOOK_URL"}`. Ask whether reports should be sent automatically (`report.notify: true`) or only when asked.
 
 ## Send
 Write one short message in the project's language, at most 5 lines:
 ```
 ✅ <project>: <what was done in one line>
-checks: passed 6 · failed 0 · not run 1
-deploy: live (https://…)
+visits: 1,240 (+18%) · new mentions: 7
+top source: r/chessvariants
 next: <one line, if any>
 ```
 Then run:

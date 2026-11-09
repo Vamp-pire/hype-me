@@ -1,53 +1,42 @@
 ---
-description: One-time project setup (about a minute) — detects your stack, deploy and tests, asks at most 2 questions, and turns your release checklist into checks that actually run
+description: One-time setup (about a minute) — builds a profile of your game or project (genre, platforms, links, similar games, who it is for, what players love to share) so every hype-me answer is about your game
 argument-hint: "[--refresh]"
 ---
 
-# fullship setup
+# hype-me setup — the game profile
 
-Set up (or refresh) fullship for the current project. Think of this as a better `/init`:
-it detects, asks only what it cannot detect, turns the checklist into runnable commands,
-and never overwrites the user's files.
+Everything in hype-me (where players come from, where to promote, similar games' success stories, mentions, promo plans, design feedback) starts from one profile: `.hype-me/profile.json`. Build it with as few questions as possible.
 
-Reply to the user in the project's language (detect it from README / CLAUDE.md / UI strings; ask if unclear).
+Reply in the user's language, in plain words. Do not mention file names, keys or agents unless asked.
 
 ## 1. Detect (read only)
-Look for, and note what you find with the file it came from:
-- **Package / build**: `package.json` scripts, lockfile (npm/pnpm/yarn/bun), `tsconfig.json`, `pyproject.toml`, etc.
-- **Hosting / deploy**: `wrangler.toml` or `functions/` (Cloudflare Pages/Workers), `vercel.json`, `netlify.toml`, `firebase.json`, `fly.toml`, `Dockerfile`, `.github/workflows/*`.
-- **Backend**: `supabase/` (migrations, functions), Firebase, Prisma, etc.
-- **Tests**: vitest / jest / playwright / pytest config, and the test script.
-- **i18n**: locale folders, `/en/` routes, translation helpers.
-- **Release channels**: browser extension `manifest.json`, GitHub release workflows, `npm publish`, auto-update endpoints.
-- **Existing rules**: `CLAUDE.md`, `HANDOFF.md`, `PLAN.md`, patch notes / changelog files.
+From the current folder and anything the user already said:
+- **Name, one-line pitch, genre/tags**: README, package/store metadata, page `<title>`/`<meta name="description">`, `manifest.json`, Steam/itch/app-store links.
+- **Platforms and links**: web URL (deploy config, README), Steam/itch/App Store/Play links, Discord invite, social accounts.
+- **Languages and markets**: UI languages (i18n folders, `/en/` routes), README language.
+- **Share moments**: result screens, replays, rankings, share buttons, OG/share-image code.
+- **Data already wired**: analytics snippets (Cloudflare Web Analytics, GA4, Plausible), Search Console verification, UTM usage.
+If `.hype-me/profile.json` exists, load it; with `--refresh` only propose what changed.
 
-If `.fullship/config.json` already exists, load it first. With `--refresh`, only propose changes for what is new or different.
+## 2. Ask at most 3 questions (one AskUserQuestion round, recommended answer first)
+Only what you could not detect, typically:
+1. **Similar games** (3–5) — offer your own guesses as options; this drives channels and case studies.
+2. **Who it is for** — 2–3 player groups (e.g. "chess variant fans", "idle/tycoon players", "Korean chess community").
+3. **Main link** to send people to, if none was found.
+Then show one summary ("Here's your game profile") and ask **[Looks good / Change something]**. Write nothing before "Looks good".
 
-## 2. Ask as little as possible (max 2 questions)
-Keep this easy: the user should not need to know about modules, agents or the config file.
-- **Modules are chosen automatically** from what you detected: `core` always; `release` if there is a deploy target, extension, package or release workflow; `marketing` and `media` stay off until the user asks for that kind of work.
-- Ask **only** what you could not detect, in one AskUserQuestion round, at most 2 questions, recommended answer first:
-  - the production URL (only if not found), and
-  - the planning mode: `big-only` (recommended: plan first only for big changes) / `always` / `manual` (only when asked), in plain words.
-- Then show one summary screen ("I'll set it up like this": stack, deploy URL, checks, planning mode) and ask **[Looks good / Change something]**. Write files only after "Looks good".
+## 3. Write the profile
+Start from `${CLAUDE_PLUGIN_ROOT}/templates/profile.json`. Fill what you know, leave the rest null/empty.
+- `data.keys` stores only environment-variable **names** for any API keys, never values.
+- `context.add` / `context.skip` start empty; they hold the user's own "also look at X" / "skip Y".
+- If the folder is a git repo, add `.hype-me/reports/` and `.hype-me/cache/` to `.gitignore` (append; create if missing). The profile itself can be committed.
+- Never overwrite an existing file; write `<name>.hype-me-new` next to it instead.
 
-## 3. Write `.fullship/config.json`
-Start from `${CLAUDE_PLUGIN_ROOT}/templates/config.json`. Fill `stack`, `deploy`, `commands`, `languages`, `modules`, `mode`.
-Build `checks` as **runnable** items: each has `id`, `name`, `run` (a shell command, or a fullship skill name like `skill:screen-matrix`), `pass` (`exit0` unless stated), and `heavy` (true if it takes over ~1 minute or needs a browser).
-Only include checks whose command you actually found or the user confirmed.
-Fill `deploy.checkPaths` with the home page plus one or two important pages (for example a second-language home), and `deploy.buildDir` with the build output folder if the site is built locally (for example `dist`). Leave `notify.type` empty; the notify skill sets it up when asked.
-Add `.fullship/evidence/` and `.fullship/screens/` to `.gitignore` (append; create the file if missing) so logs are not committed. `.fullship/config.json` itself is meant to be committed.
+## 4. Context check (only when needed)
+Look at markets, platforms and genre. If they call for sources beyond the defaults, say so in one line each with the reason — for example: Korean market → Naver blogs/cafes, DCInside galleries, Arca.live; mobile → store search terms and reviews; chess → lichess/chess.com communities. Do not add anything that does not clearly apply.
 
-## 4. Project rules section
-Propose a short fullship section for `CLAUDE.md` from `${CLAUDE_PLUGIN_ROOT}/templates/claude-md-section.md`.
-- No `CLAUDE.md`: create it with that section.
-- Existing `CLAUDE.md`: show the section and append it inside `<!-- fullship:start -->` / `<!-- fullship:end -->` markers only after the user agrees. If it would conflict with existing rules, write `CLAUDE.md.fullship-new` instead and tell the user.
-
-**Never overwrite an existing file.** When a file you would create already exists and differs, write `<name>.fullship-new` next to it.
-
-## 5. Recommend
-Finish by running the steps of `/fullship:recommend` for the detected stack (show the table; install nothing).
-
-## 6. Report
-Lead with one line: "fullship is ready." Then, briefly: what was detected (with source files), the mode, and how many checks were set up. Mark anything you guessed as a guess.
-End with the one thing to do next: "When you finish a change, say 'check it' or run `/fullship:ship`." Use plain words in the project's language; avoid terms like config, module, agent.
+## 5. Finish
+One line: "Your game profile is ready." Then suggest the most useful first step, as plain requests the user can say:
+- no players yet → "find similar games' success stories" or "where should I promote?"
+- already live with analytics → "where do my players come from?"
+Mention `/hype-me:report` for a summary any time.

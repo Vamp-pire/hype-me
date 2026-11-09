@@ -4,14 +4,14 @@
 // the value is never printed.
 //
 // Usage: node notify.mjs [--cwd <dir>] --message "text"
-// Config (.fullship/config.json):
-//   "notify": { "type": "discord" | "slack" | "webhook", "urlEnv": "FULLSHIP_WEBHOOK_URL" }
+// Config (.hype-me/profile.json):
+//   "notify": { "type": "discord" | "slack" | "webhook", "urlEnv": "HYPE_ME_WEBHOOK_URL" }
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
 const args = parseArgs(process.argv.slice(2));
 const cwd = args.cwd || process.cwd();
-const configPath = join(cwd, '.fullship', 'config.json');
+const configPath = join(cwd, '.hype-me', 'profile.json');
 const config = existsSync(configPath) ? JSON.parse(readFileSync(configPath, 'utf8')) : {};
 const notify = config.notify || {};
 
@@ -21,7 +21,7 @@ if (!message) {
   process.exit(2);
 }
 if (!notify.type || !notify.urlEnv) {
-  console.log('Notifications are not set up (notify.type and notify.urlEnv in .fullship/config.json).');
+  console.log('Notifications are not set up (notify.type and notify.urlEnv in .hype-me/profile.json).');
   process.exit(2);
 }
 const hook = process.env[notify.urlEnv];
@@ -32,7 +32,7 @@ if (!hook) {
 
 const text = message.slice(0, 1900);
 const body =
-  notify.type === 'discord' ? { content: text } : notify.type === 'slack' ? { text } : { text, source: 'fullship' };
+  notify.type === 'discord' ? { content: text } : notify.type === 'slack' ? { text } : { text, source: 'hype-me' };
 
 try {
   const res = await fetch(hook, {

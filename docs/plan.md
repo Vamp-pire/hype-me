@@ -1,291 +1,170 @@
-# fullship — Claude Code 플러그인 계획 (v2, 2026-11-08)
+# hype-me v3 — 게임·프로젝트 홍보와 유입 조사 플러그인 (계획, 2026-11-09)
 
-> 다른 세션에서 이 파일을 읽고 만들기 시작하면 됩니다. v1 초안을 평가·질문으로 구체화한 판입니다.
-> 목표: 작은 팀·1인 웹 서비스를 **개발 → 검증 → 출시 → 출시 분석 → 홍보 → 영상**까지 한 흐름으로 돕는 플러그인.
-> 대상: **공개 배포 전제**(나 혼자만 쓰는 게 아님), **스택 범용**.
+> v2(개발·검증 중심)는 원래 의도에서 벗어나 `docs/archive/plan-v2-dev-focus.md`로 옮겼다. v0.1.0 코드(점검·배포 확인·계획 모드)는 git 기록(`dce6360`)에 남는다.
+> **원래 의도**: 특정 프로젝트, 특히 **게임**을 알리고 **사람이 어디서 오는지·어디로 가야 하는지**를 조사하는 특화 도구.
 
-## 0. 확정된 결정 (2026-11-08)
+## 0. 확정된 결정 (2026-11-09)
 | 주제 | 결정 |
 |---|---|
-| 사용자 | 공개 배포 전제. 스킬 설명(description)은 영어, 결과물은 프로젝트 언어를 따름. 개인 습관·값은 플러그인에 넣지 않고 프로젝트 설정으로 |
-| 스택 | 범용. 스택별 지식은 `references/adapters/<스택>.md`로 분리(Supabase, Cloudflare, Vercel, Netlify, Firebase…), `/fullship:setup`이 감지해 고름 |
-| 프로젝트 설정 | `/fullship:setup`이 `.fullship/config.json` + CLAUDE.md 구간을 만들어 줌 (기본 `/init`보다 나은 판) |
-| 쉽게 쓰기 | **외울 명령은 두 개**(`/fullship:setup` 처음 한 번, `/fullship:ship` 끝낼 때) + 막히면 `/fullship:help`. 나머지는 말로("다 됐어, 점검해 줘"). 에이전트·묶음·설정 파일은 사용자에게 안 보이게(14절) |
-| 라이선스 | **MIT** (2026-11-08 확정, `LICENSE` 추가) |
-| 계획 모드 | **"계획을 언제 먼저 세우나"만 정함**: 큰 작업만(기본) / 항상 / 수동. 프로젝트당 한 번 묻고 저장, 세션 시작 때 한 줄 표시, `/fullship:mode`로 변경(4절) |
-| 검증 | **점수 대신 통과/실패 + 실행한 명령 근거**. 완료 기준은 먼저 실패하는 테스트로(TDD 빨강→초록). 화면은 스크린샷 비교가 근거 |
-| 영상·이미지 | `trailer`, `share-card`는 **같은 플러그인 안 별도 묶음(media)**, 기본 꺼짐 |
-| 출시 분석 | `release-insights` — 채널: GitHub Releases, 브라우저 확장 스토어, 자체 자동 업데이트 서버, npm 등 패키지 + 사이트 통계. 어떤 API를 연결할지 **에이전트가 제안** |
-| 기존 스킬 | `site-report`, `discord-bot`(→`notify`)을 옮긴 뒤 `~/.claude/skills/`의 원본은 지운다(같은 스킬이 두 개 뜨면 옛 것이 불릴 수 있음) |
-| 이미 있는 것 | 디자인·영상·SEO·테스트 등 **이미 잘 만든 플러그인·스킬은 다시 만들지 않고 추천**. 출처는 Claude 플러그인 디렉터리 + **skills.sh**. 설치돼 있으면 우리 스킬은 그쪽에 넘기고 빠진 부분만(11절) |
+| 중심 | **홍보·유입 조사**. 출시 확인은 홍보에 필요한 만큼만(가게 페이지·링크·미리보기 이미지가 제대로 뜨는지) |
+| 대상 | 브라우저 웹 게임, Steam·itch.io 등 PC 게임, 모바일 게임, 그 밖의 웹 서비스(예: Stylish) |
+| 더하는 것 | **디자인 도움**(가게·썸네일·공유 이미지 규격, 리소스 사이트 — 목록은 사용자가 나중에 줌), **다른 서비스·게임의 성공 사례 수집** |
+| 빼는 것 | 개발 기능(점검표 `ship`, 계획 `spec`, 계획 모드 `mode`, 배포 확인 `deploy`, verifier·plan-checker 에이전트, run-checks). 기록만 남김 |
+| 그대로 | 공개 배포 전제·MIT·쉽게 쓰기(외울 명령 최소)·이미 있는 도구는 추천·되돌리기 어려운 일은 사람 확인 |
+| 이름 | **hype-me** (2026-11-09 확정, GitHub·skills.sh·플러그인 디렉터리에 같은 이름 없음). 옛 이름 fullship |
+| 디자인 리소스 | 기본 세트: Stitch, Tailwind CSS, Bootstrap, shadcn/ui, Framer Motion, Mobbin, design.md(사이트 확인 필요), Google 아이콘(Google Fonts 안) → `references/design-resources.md` |
+| 첫 시험 | 후보(미확정): **Rlo 체스 타이쿤**, 또는 **여러 변형 체스를 돌아다니는(투어) 게임** — 사용자가 속한 소규모 디스코드와 다른 커뮤니티까지 다양하게 |
+| 보고 | 기본은 **부를 때만**. 사용자가 정하면 매주 자동(예약)도 가능 |
+| 상황 맞춤 | 기본 목록(채널·데이터 출처·리소스)에 **에이전트가 사용자 상황을 보고 더하거나 뺄 수 있음, 꼭 필요할 때만**(11절) |
 
-## 1. 왜 만드나
-- 공식·커뮤니티 플러그인은 분야별로 흩어져 있다(feature-dev, Marketing, Remotion…). 개발 + 출시 분석 + 홍보 + 영상을 한 흐름으로 하는 건 없다.
-- 차별점은 **"1인·작은 팀이 자주 놓치는 것"을 명령으로 검사**하는 것: 인수인계, 전후 비교, 화면 조합, 라이선스·개인정보·번역 누락, 무료 한도, 출시별 성과.
+## 1. 이 플러그인이 답하는 질문 6개
+1. **우리 유저는 어디서 오나?** — 유입 출처·검색어·홍보별 성과
+2. **어디서 홍보하면 좋을까?** — 우리 게임을 좋아할 사람이 모인 커뮤니티·유튜버·스트리머·큐레이터·행사
+3. **비슷한 게임은 어떻게 떴나?** — 성공 사례의 타임라인과 계기, 우리에게 적용할 것
+4. **누가 우리 얘기를 하나?** — 언급·리뷰·반응 추적과 요약
+5. **이번 홍보는 어떻게 할까?** — 홍보 계획(대상·공유 순간·바이럴 장치·훅·채널·타이밍·측정)
+6. **보여 줄 그림은 괜찮나?** — 가게 이미지·썸네일·공유 카드 규격과 디자인 피드백, 리소스
 
-## 2. 구조
-```
-fullship/
-  .claude-plugin/plugin.json
-  commands/        setup, ship, help  (자주)  ·  mode, recommend  (가끔)
-                   spec·handoff·idea는 명령 없이 말로 부르는 스킬
-  skills/
-    core/          spec-first, ship-checklist, golden-compare, screen-matrix,
-                   release-guard, deploy-verify, handoff, quota-watch,
-                   session-guard, feedback-inbox
-    release/       release-insights, site-report, notify
-    marketing/     promo-plan, promo-review, launch-post, outreach-log, seo-content
-    media/         trailer, share-card          ← 별도 묶음, 기본 꺼짐
-  agents/          plan-checker, reviewer, insights-scout, marketer
-  hooks/hooks.json SessionStart 하나만 (계획 모드 한 줄 표시)
-  references/adapters/<스택>.md
-  references/recommended.md     추천 플러그인·스킬 목록(11절)
-  templates/       config.json, CLAUDE.md 구간, spec.md, handoff.md
-```
-- 스킬 폴더는 Claude Code 규칙상 평평해야 하면 이름 앞에 묶음을 붙인다(`media-trailer` 등). 만들 때 확인.
-- 묶음 켜고 끄기: `.fullship/config.json`의 `"modules": ["core","release","marketing"]`. 꺼진 묶음 스킬은 설명 첫 줄에 "only when media module is enabled"를 넣고, 스킬 안에서 설정을 확인해 꺼져 있으면 켜는 법만 안내.
-- 만들 때 `skill-creator`로 SKILL.md·설명문 다듬기. **스킬마다 평가 케이스(불려야 할 말 3개 / 불리면 안 되는 말 3개)를 같이 작성**해 `claude plugin eval`에 바로 넣는다.
+## 2. 외울 명령
+- `/hype-me:setup` — 처음 한 번. **게임 프로필** 만들기
+- `/hype-me:report` — 주간 보고서(유입·언급·지난 홍보 결과·이번 주 할 일 3개). 원하면 디스코드 DM
+- 나머지는 말로: "유저 어디서 와?", "어디 홍보할까?", "비슷한 게임 사례 찾아 줘", "우리 언급 찾아 줘", "홍보 계획 짜 줘", "썸네일 봐 줘"
+- 막히면 `/hype-me:help`
 
-## 3. 프로젝트 설정: `/fullship:setup` (기본 /init보다 나은 점)
-1. **감지**: package.json·lockfile·배포 설정(wrangler.toml, vercel.json, netlify.toml, supabase/)·테스트 러너·i18n 구조·manifest.json(확장)·릴리스 워크플로를 읽어 스택과 명령을 추정.
-2. **모르는 것만 질문**: 배포 주소, 계획 모드, 켤 묶음, 브랜드 말투, 지원 언어.
-3. **실행 가능한 점검표 생성**: `.fullship/config.json`의 `checks`에 `{ id, 이름, 명령, 통과 조건 }` 목록. 예: `build: npm run build (exit 0)`, `test: npx vitest run`, `mobile: screen-matrix 375px 가로 스크롤 0`.
-4. **덮어쓰지 않음**: 이미 CLAUDE.md가 있으면 `<!-- fullship -->` 구간만 추가 제안, 충돌하면 `CLAUDE.md.fullship-new`로 둠.
-5. 다시 돌리면 바뀐 것만 갱신(새 스택·새 언어 감지).
-6. **추천**: 감지한 스택·작업에 맞는 기존 플러그인·스킬을 골라 제안(11절). 설치는 사용자가 고른 것만.
+## 3. 게임 프로필 (`/hype-me:setup` → `.hype-me/profile.json`)
+감지 + 최대 3개 질문으로 채운다.
+- 이름·한 줄 소개·장르·태그, 플랫폼(웹/Steam/itch/iOS/Android), 가게·랜딩 주소, 언어
+- **누구를 위한 게임인가**: 비슷한 게임 3~5개(사용자에게 받거나 제안), 핵심 플레이어 무리 2~3개
+- 공유하고 싶은 순간(결과 화면·리플레이·클립·순위 등)
+- 연결 가능한 데이터(아래 4절)와 키 **이름**만 — 값은 환경 변수
+- 출력은 프로젝트 언어로, 설정 파일 이름은 사용자에게 안 보여도 됨
 
-## 4. 계획 모드 (`/fullship:mode`)
-**모드는 "계획을 언제 먼저 세우나"만 정한다** (원래 결정: v1 평가 3번 답변, 2026-11-08 바로잡음 — v2 초안에서 모든 기능의 자동 여부로 잘못 넓혔음).
-- `big-only` (**기본**): 큰 작업일 때만 만들기 전에 계획(목표·선택지·추천·바뀌는 파일·완료 기준)을 보여 주고 승인받는다. 큰 작업 = 새 화면·새 기능, 파일 여러 개, 서버·DB·저장 정보 변경, 되돌리기 어려운 일. 작은 수정·명확한 지시는 바로.
-- `always`: 코드를 바꾸는 요청이면 작은 것도 짧은 계획부터.
-- `manual`: 자동으로 계획하지 않음. "계획 먼저 짜 줘"라고 하거나 `/fullship:spec`일 때만.
-- 점검·배포 확인·추천 같은 **다른 기능은 모드와 상관없이** 시킬 때 하거나, 기능을 끝냈을 때 한 줄로 "점검할까요?" 제안만.
-- SessionStart 훅: 설정이 없으면 "`/fullship:setup`로 시작", 있으면 `fullship · planning: big changes only · /fullship:help` 한 줄.
+## 4. 기능 (스킬)
 
-## 5. 스킬
+### A. 유입 조사 — `traffic` ("유저 어디서 와?")
+- 연결할 수 있는 것부터 쓰고, 없으면 **CSV 내보내기를 받아서** 읽는다:
+  - 웹: Cloudflare Web Analytics, Google Analytics 4, Plausible, Search Console(검색어)
+  - Steam: Steamworks 트래픽 분석·UTM 분석(공개 API 없음 → CSV), 위시리스트 보고서(CSV)
+  - itch.io: 분석 페이지(CSV/수동)
+  - 모바일: App Store Connect·Google Play Console(API 키 또는 CSV)
+- 결과: 채널별 표(방문·전환·추세), 홍보별 성과(UTM), 새로 생긴 유입처, 줄어든 유입처
+- **UTM 링크 만들기**: 채널마다 추적 링크를 만들어 `.hype-me/links.json`에 기록 → 나중에 성과와 연결
+- 에이전트 `traffic-analyst`(가벼운 모델)가 숫자 모으기
 
-### core — 개발·검증
-1. **spec-first** (`/spec`) — 목표·선택지·추천·바뀌는 파일·완료 기준. 큰 기능은 `docs/specs/<날짜>-<이름>.md` 한 파일. 요구사항은 "~하면 ~한다 / ~하지 않는다", 완료 기준은 Given/When/Then 3~5개. 반복 작업엔 "멈출 조건 + 최대 횟수".
-2. **ship-checklist** (`/ship`) — `config.checks`를 차례로 실행해 **통과/실패**. 로그는 `.fullship/evidence/<날짜>-<기능>/`에 파일로, 대화엔 종료 코드 + 끝 30줄. 완료 기준마다 "먼저 실패하던 테스트가 이제 통과"를 근거로 붙임. 돌리지 않은 검사는 "안 돌림"으로 표시(거짓 확인 금지).
-3. **golden-compare** — 동작을 안 바꾸는 정리 전에 출력 저장 → 고친 뒤 비교 → 다른 줄만 보고. 출력 덤프 스크립트 틀 제공(예: 이 저장소 `scripts/calib/story-dump.mts`).
-4. **screen-matrix** — Playwright로 기기(375·768·1280) × 언어 × 라이트/다크를 한 번에 촬영, 지난 촬영과 다른 화면·가로 스크롤·콘솔 오류를 표로. 기준 이미지는 `.fullship/screens/`.
-5. **release-guard** — 출시 전 정적 검사 묶음(각각 통과/실패):
-   - 라이선스: 번들 의존성에 GPL·AGPL 등 금지 목록이 섞였나
-   - 개인정보: 새 저장 필드(DB 마이그레이션·localStorage 키·폼)가 생겼는데 개인정보처리방침이 안 바뀌었나
-   - 번역: 한 언어에만 있는 문구·페이지
-   - 번들 크기: 예산 초과
-   - 비밀 키: 커밋 안에 키 모양 문자열
-6. **deploy-verify** — push 후 실제 주소에서 새 번들 이름·새 페이지 200·OG 태그 확인.
-7. **handoff** (`/handoff`) — 세션 끝에 `HANDOFF.md` 갱신: 한 일 / 남은 일 / 이번에 정한 것과 이유 / 다음에 먼저 볼 파일. 다음 세션이나 다른 사람이 바로 이어받게.
-8. **quota-watch** — GitHub Actions 분, Supabase·Cloudflare·Vercel 무료 한도 대비 사용량 경고(어댑터별 API).
-9. **session-guard** — 같은 폴더를 다른 세션이 쓸 때: 커밋 전 브랜치·남이 바꾼 파일 확인, 내가 안 고친 파일은 건드리지 않게.
-10. **feedback-inbox** (`/idea`) — 디스코드·리뷰·이슈의 의견과 떠오른 아이디어를 `docs/backlog.md`에 모으고, 고를 때 중복·이미 한 것 표시.
+### B. 어디서 홍보할까 — `channels` ("어디 홍보할까?")
+- 비슷한 게임·장르에서 출발해 찾는다:
+  - 커뮤니티: 레딧 서브레딧(크기, **자기 홍보 규칙**), 디스코드 서버, 국내 커뮤니티·카페, 포럼
+  - 영상: 비슷한 게임을 다룬 유튜버·스트리머(구독자·최근 활동·연락 경로 공개된 것만)
+  - Steam 큐레이터, 언론·뉴스레터, 행사(Steam Next Fest, itch 잼, 지역 게임 행사)
+- 결과: 우선순위 표(맞는 이유·규칙·추천 접근법·예상 노력). **대량 DM·스팸 금지**, 연락은 사람이 직접
+- 에이전트 `channel-scout`
 
-### release — 출시·분석
-11. **release-insights** — 출시(버전) 단위로 성과를 모아 "출시 전후" 비교 보고서:
-    - GitHub Releases: 파일별 `download_count`(gh api)
-    - 브라우저 확장 스토어: 사용자 수·평점·리뷰(Chrome Web Store, Edge, Firefox AMO — 가능한 공개/개발자 API)
-    - 자체 자동 업데이트 서버: 업데이트 확인 요청 로그(버전별 활성 사용자 추정)
-    - npm·PyPI 등: 다운로드 수
-    - 사이트: site-report 결과(방문·검색 노출), 오류 수
-    - 결과는 웹페이지 보고서 + 지난번 대비 변화
-12. **site-report** (기존 스킬 이전) — SEO·Lighthouse·Search Console·Cloudflare·Clarity.
-13. **notify** (기존 discord-bot 이전) — 작업 보고 DM. 키는 이름으로만, 키 파일 경로는 설정에.
+### C. 성공 사례 — `cases` ("비슷한 게임은 어떻게 떴어?")
+- 비슷한 게임·서비스 하나씩: 출시·업데이트·첫 바이럴 글·스트리머 방송·할인·행사 같은 **사건 타임라인** + 무엇이 계기였나 + 우리에게 적용할 것 3가지
+- 출처: 공개 리뷰 수 추이(Steam 공개 리뷰 API), 레딧·유튜브의 퍼진 글/영상, 개발자 회고(블로그·GDC·포스트모템), 검색 관심도
+- 다른 분야 서비스의 성공 사례도 같은 틀로(예: 성격 유형 테스트가 퍼진 방식)
+- `.hype-me/cases/<이름>.md`로 쌓아 다시 씀. 출처 링크 필수, 추측은 추측이라고 표시
+- 에이전트 `case-researcher`
 
-### marketing — 홍보 (중심은 **홍보 계획 짜기**, 글쓰기는 그 다음)
-13-1. **promo-plan** (`/fullship:promo`) — **이번 출시를 어떻게 퍼뜨릴지 계획**을 짠다. 결과는 `docs/promo/<날짜>-<이름>.md` 한 파일.
-   1. **재료 찾기**: 패치노트·화면·출시 분석을 읽고 "사람들이 남에게 보여 주고 싶어 할 순간"을 찾는다(예: Stylish의 4글자 유형 결과·결과 이미지 = 공유하고 싶은 것).
-   2. **누구에게**: 대상 2~3무리(예: 체스 커뮤니티, MBTI·성격 유형 좋아하는 사람, 개발자)와 그들이 모이는 곳.
-   3. **바이럴 장치 점검** — 글보다 **제품 안에서 퍼지는 구조**가 먼저:
-      - 공유할 이유: 결과가 나를 드러내나, 친구와 비교하고 싶나(유형·순위·도전)
-      - 공유가 쉬운가: 한 번 눌러 공유, 미리보기(OG) 이미지가 예쁘게 뜨나, 링크 받은 사람이 바로 해 볼 수 있나
-      - 되돌아오는 고리: 공유받은 사람이 자기 결과를 다시 공유하게 되나(친구 초대·비교·"너는 뭐 나왔어?")
-      - 빠진 장치는 **제품 개선 제안**으로 돌린다(spec-first로 이어짐)
-   4. **훅 만들기**: 채널별 첫 줄·썸네일 문구 후보 5개씩(호기심·비교·의외의 결과·숫자). 짧은 영상이 맞으면 media 묶음 trailer로.
-   5. **채널·타이밍 표**: 채널마다 규칙(자기 홍보 허용 여부, 요일·시간, 길이, 금지 사항), 올리는 순서(작은 커뮤니티로 반응 보고 → 큰 곳), 날짜.
-   6. **측정**: 채널별 UTM 링크, 볼 숫자(방문·공유 버튼 클릭·전환), 며칠 뒤 release-insights로 결과 확인 → 다음 계획에 반영.
-   7. **하지 않을 것**: 가짜 계정·조작 후기·도배·커뮤니티 규칙 위반·과장. 게시·DM은 **사람이 직접**.
-   - 바이럴은 보장할 수 없다고 분명히 말하고, "가설 → 작게 시험 → 숫자로 확인" 방식으로 쓴다.
-13-2. **promo-review** — 지난 홍보 결과(outreach-log + 출시 분석)를 보고 무엇이 먹혔는지·다음엔 뭘 바꿀지 한 쪽 요약.
-14. **launch-post** — promo-plan의 채널 표대로 글 초안(말투·길이·금지 사항 다르게). **게시는 사람이 직접**.
-15. **outreach-log** — 보낸 기록을 먼저 읽고 이미 한 홍보를 다시 제안 안 함.
-16. **seo-content** — 검색어 조사 → 가이드 글 개요 → 내부 링크·구조화 데이터 점검.
+### D. 언급·반응 추적 — `mentions` ("우리 얘기 찾아 줘")
+- 게임 이름·주소로 찾기: 레딧, 유튜브(댓글 포함, 키 있으면 YouTube Data API), Steam 리뷰(공개 API), itch 댓글, 디스코드(우리 봇 채널), 검색
+- 지난번 이후 **새 언급만**, 좋다/아쉽다/버그/요청으로 묶어 요약, 답할 만한 글 표시(답은 사람이 직접)
+- 반복되는 요청·불만은 `docs/backlog.md`로
+- 에이전트 `mention-tracker`
 
-### media — 영상·이미지 (별도 묶음, 기본 꺼짐)
-17. **trailer** — 15~30초 소개 영상. 장면 목록 승인 → Playwright 화면 녹화 또는 Remotion → 자막·음악(라이선스 확인된 것만) → 9:16·16:9 두 벌. 공식 Remotion 플러그인이 있으면 그것을 쓰고 우리는 장면 목록·소재 준비만.
-18. **share-card** — OG 이미지·결과 카드·썸네일을 규격별로.
-- media는 의존성(Remotion, ffmpeg)이 무거우므로 켤 때만 설치 안내. 나머지 묶음은 이것 없이 완전히 동작.
+### E. 홍보 계획 — `promo-plan`, 돌아보기 `promo-review`
+(v2 설계 유지, 게임에 맞게 보강)
+1. 재료: 공유하고 싶은 순간 찾기
+2. 대상 무리와 그들이 모이는 곳(B 결과 사용)
+3. **바이럴 장치 점검**: 공유할 이유·공유 쉬움·되돌아오는 고리 → 빠진 건 게임 개선 제안
+4. 훅: 채널별 첫 줄·썸네일 문구 5개
+5. 채널·타이밍 표 (+ 게임 전용: 위시리스트 쌓기, 데모, Next Fest, 데브로그 주기, 키 배포, 패치 맞춰 다시 알리기, 모바일은 스토어 문구·스크린샷)
+6. 측정: UTM 링크(A), 볼 숫자, 며칠 뒤 `promo-review`
+7. 하지 않을 것: 가짜 계정·조작 후기·도배·규칙 위반·과장, 자동 게시
+- 결과 `docs/promo/<날짜>-<이름>.md`, 글 초안은 `launch-post`(채널 표대로)
 
-## 6. 커스텀 서브에이전트 (`agents/<이름>.md`)
-서브에이전트 = 메인 대화와 **따로 떨어진 작업 공간**에서 일하고 결과 요약만 돌려주는 도우미.
+### F. 디자인 도움 — `design`
+- **규격 확인**: Steam 캡슐·스크린샷·트레일러, itch 커버, 앱스토어·플레이 아이콘·스크린샷, 공유(OG) 이미지, 유튜브 썸네일 — 크기·비율·글자 안전 영역
+- **피드백**: 썸네일·캡슐·랜딩 첫 화면을 보고 "작게 봐도 읽히나, 장르가 보이나, 비슷한 게임들 사이에서 눈에 띄나"
+- **리소스 사이트**: `references/design-resources.md`의 기본 세트(Stitch, Tailwind CSS, Bootstrap, shadcn/ui, Framer Motion, Mobbin, design.md, Google 아이콘·폰트)를 "언제 쓰나"에 맞춰 추천, **라이선스(상업 사용·표기 필요)** 함께 표시. 프로젝트가 이미 쓰는 것(package.json·CSS)을 우선
+- 기본 세트로 안 되는 경우만 에이전트가 더함(게임 아트·효과음, 스토어 이미지 틀, 목업 등) — 이유 한 줄과 함께
+- 기존 도구 추천: frontend-design, Design(Anthropic), UI Color Palette, Remotion·hyperframes(트레일러) 등
 
-### 언제 서브에이전트로 만드나 (원칙)
-- **긴 출력·로그가 생기는 일**(테스트·빌드·스크린샷) → 메인 대화를 더럽히지 않게 따로 돌리고 표만 받는다.
-- **넓게 읽는 일**(저장소 훑기, 웹·디렉터리 조사) → 병렬로, 읽기 전용.
-- **독립된 눈이 필요한 일**(계획 점검, 리뷰) → 만든 사람과 다른 맥락에서 보게.
-- 반대로 **대화 맥락이 필요한 일**(인수인계 작성, 계획 세우기, 사용자와 질문 주고받기)은 스킬로 둔다. 서브에이전트는 대화를 못 보고 사용자에게 질문도 못 한다.
+### G. 출시 확인(홍보에 필요한 만큼) — `launch-check`
+- 가게·랜딩 페이지가 열리나, UTM 링크가 제대로 가나, **공유 미리보기(OG) 이미지·제목**이 뜨나, 분석 코드가 심어져 있나
+- (v0.1 deploy-check 스크립트를 이 용도로 고쳐 씀)
 
-### 공통 규칙
-- 기본은 **읽기 전용**. 파일을 쓰는 건 `.fullship/` 아래(evidence, screens, reports)만.
-- 결과는 정해진 형식으로: `통과/실패 표 + 근거(명령·파일) + 못 한 것`. 길어도 30줄.
-- 되돌리기 어려운 일(배포·게시·설치·결제)은 하지 않는다 — 제안만 하고 메인이 사용자에게 묻는다.
-- 모델: 판단이 필요한 건 상위 모델(inherit), 단순 실행·수집은 가벼운 모델(haiku)로 비용 절약. frontmatter `model`로 지정.
-- 외부에 같은 역할 에이전트가 설치돼 있으면(11절) 그쪽에 넘긴다.
+### H. 보고 — `report`, `notify`
+- 주간 보고: 유입 변화 · 새 언급 · 지난 홍보 결과 · 이번 주 할 일 3개
+- 디스코드·슬랙 웹훅으로 보내기(기존 notify 유지, 주소는 환경 변수 이름으로만)
 
-### 목록
-| 이름 | 하는 일 | 도구 | 모델 | 부르는 곳 | 묶음 |
-|---|---|---|---|---|---|
-| **plan-checker** | 계획 PASS/DEBT: 빠진 화면(언어·휴대폰)·새 저장 정보(약관)·되돌리기 어려운 일·완료 기준·멈출 조건 없음 → DEBT와 고칠 항목 | Read, Grep, Glob | inherit | `spec-first` 끝 | core |
-| **verifier** | `config.checks`를 차례로 실행, 로그는 `.fullship/evidence/`에, 돌려주는 건 통과/실패 표 + 실패 끝 30줄. "안 돌린 것"을 따로 표시 | Bash, Read, Write(evidence만) | haiku | `ship-checklist`, `deploy-verify` | core |
-| **screen-tester** | Playwright로 기기×언어×테마 촬영, 기준 이미지와 비교, 가로 스크롤·콘솔 오류 표 | Bash, Read, Write(screens만), playwright MCP | haiku | `screen-matrix` | core |
-| **guard** | 출시 전 정적 검사(라이선스·개인정보 필드·번역 누락·번들 크기·키 모양 문자열) | Bash, Read, Grep | haiku | `release-guard` | core |
-| **reviewer** | 프로젝트 규칙 위반만(디자인 토큰, 금지 라이선스, 언어 누락, CLAUDE.md 규칙). 일반 버그·보안은 `/code-review`·`/security-review`에 맡김 | Read, Grep, Glob, Bash(git diff) | inherit | `/fullship:ship` 중, 사용자 요청 | core |
-| **scout** | 추천 조사: 설치된 것 확인 → 11절 목록 대조 → skills.sh·디렉터리에서 새 후보 찾기 → 후보 표(신뢰도·감사 결과 포함). 설치는 안 함 | Read, Glob, WebFetch | haiku | `/fullship:recommend`, `fullship-guide` | core |
-| **insights-scout** | 프로젝트를 읽고 "연결하면 볼 수 있는 출시 데이터와 필요한 API·키 이름" 제안 | Read, Glob, Grep, WebFetch | inherit | `release-insights` 처음 설정 | release |
-| **release-analyst** | 설정된 채널(GitHub 다운로드, 스토어, 업데이트 서버, npm, 사이트 통계)에서 숫자를 모아 출시 전후 비교표 | Bash(gh·curl), Read, Write(reports만) | haiku | `release-insights` | release |
-| **marketer** | promo-plan 재료 조사: 대상 커뮤니티의 규칙·잘 된 글 유형·비슷한 제품의 퍼진 사례를 읽어 요약(게시 안 함) | Read, WebFetch | inherit | `promo-plan` 1·2·5단계 | marketing |
-| **shot-lister** | 화면·패치노트로 15~30초 장면 목록과 필요한 캡처 목록 | Read, Glob | inherit | `trailer` | media |
-
-- `handoff`, `spec-first`, `promo-plan`, `launch-post`는 대화 맥락이 필요해서 **스킬로** 둔다.
-- 여러 개를 동시에 돌릴 수 있는 조합: verifier + screen-tester + guard (`/fullship:ship`에서 병렬, 결과를 한 표로 합침).
-
-## 7. 넣지 말 것 / 주의
-- 기본과 겹치지 않게: `/code-review`, `/security-review`, `/simplify`, `/init`, `loop`, `schedule`은 그대로 쓴다(`/fullship:setup`은 `/init` 결과를 보완하는 쪽).
-- 비밀 키를 플러그인·설정에 넣지 않는다. 키 **이름과 키 파일 경로**만.
-- 자동 게시·메일·결제·스토어 제출 등 되돌리기 어려운 일은 항상 미리보기 → 사람 확인.
-- 훅은 SessionStart 하나만. 늘리려면 이유를 적고.
-- 프로젝트 파일을 만들 땐 덮어쓰지 않고 `.fullship-new`로.
-- 특정 프로젝트 규칙(워크트리 금지, main 직접 커밋 등)은 플러그인에 하드코딩하지 않고 설정·CLAUDE.md에서.
-
-## 8. 만드는 순서 (v0.1 = 개발·출시 핵심)
-1. ✅ 뼈대 + `/fullship:setup` + `/fullship:mode` + `/fullship:recommend`(11절 목록) + SessionStart 훅 + `.fullship/config.json` 형식
-2. ✅ (2026-11-08, v0.1.0: 스킬 이름은 짧게 spec·ship·deploy·notify·guide) `spec-first`, `ship-checklist`, `deploy-verify`, `notify` + 에이전트 `plan-checker`, `verifier`, `scout` + `fullship-guide` → **이 프로젝트에서 한 주 써 보기** (v0.1)
-3. `handoff`, `golden-compare`, `release-guard`, `session-guard`
-4. `screen-matrix`, `quota-watch`, `feedback-inbox`
-5. `release-insights` + `insights-scout`, `site-report` 이전(원본 삭제)
-6. marketing 묶음 — `promo-plan` 먼저, 그다음 launch-post·outreach-log·promo-review
-7. media 묶음 (Remotion 플러그인으로 먼저 시험)
-8. 공개 준비: 영어 README, 다른 스택 예제 프로젝트 1~2개에서 `/fullship:setup` 시험, 평가 케이스 정리, 마켓플레이스 등록
-- 각 단계마다 스킬별 평가 케이스를 같이 만든다(마지막에 몰아서 하지 않음).
-
-## 9. MoAI-ADK에서 참고할 것 (2026-11-08 조사)
-출처: https://github.com/modu-ai/moai-adk, https://adk.mo.ai.kr/en/ (TRUST 5·SPEC 문서는 원문 확인, 나머지는 만들 때 원문 재확인)
-
-| MoAI | 우리 플러그인에서 | 넣을 곳 |
-|---|---|---|
-| SPEC 문서(spec·plan·acceptance·progress) | 한 파일짜리 기능 메모, 큰 기능에만 | `spec-first` |
-| GEARS 요구사항 문장 | "~하면 ~한다 / ~하지 않는다" 꼴만 빌림 | `spec-first` |
-| 완료 기준 Given/When/Then | 3~5개 → 먼저 실패하는 테스트로 | `spec-first`, `ship-checklist` |
-| plan-auditor (PASS/DEBT) | 만들기 전 계획 점검 | `plan-checker` |
-| sync-auditor (100점 채점) | **채점 대신 통과/실패 + 근거**(자기 채점은 들쭉날쭉) | `ship-checklist` |
-| TRUST 5 | 테스트 / 린트·타입 / 포맷·토큰 / 보안 / 패치노트·커밋 | `config.checks` 기본 항목 |
-| No false verification | 실행한 명령 + 결과 끝부분 필수, 안 돌린 건 "안 돌림" | `ship-checklist`, `deploy-verify` |
-| 긴 출력은 파일로 | 로그는 evidence 폴더, 대화엔 요약 | `ship-checklist/scripts/run-quiet` |
-| /moai goal | 멈출 조건 + 최대 횟수 | `spec-first` |
-| /moai gtd | 아이디어 쌓기 → 고르기 | `feedback-inbox` (`/idea`) |
-| 업데이트 때 사용자 수정 보존 | 덮어쓰지 않고 `.fullship-new` | 공통 규칙 |
-
-가져오지 않을 것: Factory Mode·병렬 워크트리 강제, TDD 전면 강제·커버리지 85%(판정 로직만 테스트 먼저), 16개 언어·LSP 게이트·다른 LLM 백엔드·전역 설치, 에이전트 10여 개.
-
-## 10. 남은 질문 (만들면서 정하기)
-- 플러그인 이름: 임시로 `fullship`(2026-11-08). 나중에 바꿀 수 있음 — 바꾸면 plugin.json·marketplace.json·명령 이름(`/fullship:*`)·설정 폴더(`.fullship/`)를 함께
-- 스킬 폴더를 묶음 하위로 둘 수 있는지, 아니면 이름 접두어로 갈지(플러그인 규격 확인)
-- 확장 스토어별로 쓸 수 있는 공개 API 범위(insights-scout가 조사)
-- 자체 자동 업데이트 서버 로그를 어디서 읽을지(Cloudflare 로그, Supabase 표 등 — 어댑터)
-
-## 11. 이미 있는 플러그인·스킬 추천 (2026-11-08 조사)
-원칙: **이미 잘 만든 것은 다시 만들지 않는다.** 우리 플러그인은 "언제 무엇을 쓸지"를 알려 주고, 겹치는 스킬은 설치돼 있으면 그쪽에 넘긴다.
-
-### 추천 방식
-- **`/fullship:recommend`** (그리고 `/fullship:setup` 6단계): 프로젝트를 읽고 상황별 추천을 표로 보여 준다 — 이름 · 출처 · 하는 일 · 우리 스킬과의 관계(대신 씀 / 함께 씀) · 설치 명령 · 신뢰도(공식/파트너/커뮤니티, skills.sh 감사 결과).
-- 출처 두 곳:
-  1. **Claude 플러그인 디렉터리** (공식 Anthropic Directory·Knowledge Work 마켓플레이스) — `/plugin` 설치
-  2. **skills.sh** (Vercel이 운영하는 오픈 스킬 디렉터리, 설치 수 순위·주제별·감사 결과 있음) — `npx skills add <owner/repo> [--skill <이름>]`
-- 목록은 `references/recommended.md`에 고정본을 두고, 새로 찾을 땐 skills.sh 검색(웹 페이지·`find-skills` 스킬)을 쓴다. skills.sh API(`/api/v1/skills/search`)는 Vercel OIDC 토큰이 필요해 기본으로는 안 씀.
-- **자동 설치 안 함**. 사용자가 고른 것만 설치 명령을 안내/실행. 커뮤니티 것은 감사 결과·저장소를 보여 주고 확인받기. skills.sh CLI는 설치 통계를 보내므로 `DISABLE_TELEMETRY=1` 선택지를 같이 안내.
-- 설치 후 우리 스킬은 겹치는 일을 하지 않도록: 각 SKILL.md에 "X가 설치돼 있으면 X를 쓰고 여기선 Y만" 한 줄.
-
-### 플러그인 안에 "경로"를 넣는 방식 (2026-11-08 결정)
-- **복사해 넣지 않는다**(라이선스·원본 갱신 문제). 경로만 든다.
-- **모음 마켓플레이스**: `marketplace.json`에 fullship 자신 + 외부 플러그인 항목(원본 GitHub 저장소를 가리킴)을 넣는다. 사용자는 fullship 마켓플레이스 하나만 추가하면 추천 플러그인도 같은 곳에서 고를 수 있다. 원본 저장소·경로는 넣기 전에 확인.
-- **skills.sh 스킬**은 마켓플레이스에 못 넣으므로 `references/recommended.md`에 `owner/repo --skill 이름` + 감사 결과로 둔다.
-- **`fullship-guide` 스킬**(대화 중 추천): 설명문을 "이런 요청이면 불린다"로 써서 — 예: "계획 빡세게 따져 봐" → grill-me, "트레일러에 효과" → hyperframes/Remotion — 짧은 색인만 읽고 "이건 X가 잘해요, 설치할까요?" 한 줄. 이미 설치돼 있으면 그걸 쓰라고만, 거절한 건 다시 안 꺼냄. 물어볼 때만 길게, 평소엔 한 줄 제안(계획 모드와 무관).
-- **설치는 확인 한 번까지**: 설정 `install: "ask"`(기본, 하나씩) / `"trusted-batch"`(공식·파트너·감사 Pass인 것만 묶어서 한 번 확인). 확인 없는 완전 자동 설치는 넣지 않는다(남의 코드 실행, 디렉터리 심사 문제).
-- skills.sh 상세 페이지엔 **라이선스가 안 나온다**(감사 3종 Gen·Socket·Snyk만). 라이선스는 저장소에서 확인해 목록에 적는다.
-
-### 상황별 추천 후보 (설치 수는 skills.sh 누적, 반올림 — 만들 때 다시 확인)
-| 상황 | 추천 | 출처 | 우리 스킬과 관계 |
+## 5. 서브에이전트
+| 이름 | 하는 일 | 도구 | 모델 |
 |---|---|---|---|
-| 화면 디자인 품질 | `frontend-design` (anthropics/skills, 약 110만) | 디렉터리(공식)·skills.sh | 함께 씀. screen-matrix가 결과 확인 |
-| UI 규칙·접근성 점검 | `web-design-guidelines` (vercel-labs/agent-skills, 약 84만) | skills.sh | release-guard 접근성 항목 대신 |
-| 디자인 감각·다듬기 | `impeccable`(pbakaus), `taste-skill`(leonxlnx), `emil-design-eng`(emilkowalski) | skills.sh | 선택 |
-| 디자인 시스템·접근성 감사 | **Design**(Anthropic: 비평·디자인 시스템·UX 문구·접근성), **Fairmind Design**(토큰·WCAG), **audit-suite**(디자인·UX·성능·접근성 10관점) | 디렉터리 | design-tokens 검사·reviewer와 겹치면 그쪽 |
-| Figma 연동 | **Figma**(공식) | 디렉터리 | 쓰는 사람만 |
-| 색 팔레트·대비 | **UI Color Palette** | 디렉터리 | 선택 |
-| React/Next | `vercel-react-best-practices`(약 88만), `next-best-practices` | skills.sh | 스택 감지 시 |
-| 기능 개발 흐름 | **feature-dev**(공식: 탐색·설계·리뷰 에이전트) | 디렉터리 | spec-first와 겹침 → 설치돼 있으면 spec 문서·완료 기준만 우리가 |
-| 테스트·검증 | `test-driven-development`, `verification-before-completion`(obra/superpowers), `webapp-testing`(anthropics), `playwright-best-practices` | skills.sh | ship-checklist 원칙과 같음 → 참고·함께 |
-| 브라우저 자동화 | **playwright**(Microsoft MCP) | 디렉터리 | screen-matrix·deploy-verify가 사용 |
-| 코드 리뷰 | **code-review**(공식) | 디렉터리 | reviewer는 프로젝트 규칙만 |
-| 브라우저 확장 | **Chrome Extension Builder**(MV3 설계·감사·출시) | 디렉터리 | 확장이 있으면 추천, release-insights가 스토어 지표 |
-| Supabase | `supabase`, `supabase-postgres-best-practices` (supabase/agent-skills) | skills.sh·디렉터리 | adapters/supabase가 참조 |
-| Vercel 배포 | `deploy-to-vercel` | skills.sh | adapters/vercel |
-| Cloudflare | (2026-11 조사 땐 skills.sh에서 못 찾음) | — | 우리 adapters/cloudflare가 직접 |
-| SEO | `seo-audit`, `ai-seo`, `schema-markup`, `programmatic-seo` (coreyhaines31/marketingskills), **SEO-AEO-GEO Ultimate** | skills.sh·디렉터리 | seo-content는 이것들이 있으면 연결만 |
-| 홍보 계획·바이럴 | `launch-strategy`·`marketing-psychology`·`social-content`·`content-strategy`(coreyhaines31/marketingskills), **Social Media Skills**의 `viral-reverse-engineering`·`hook-writer`·`campaign-and-launch-planning`·`reddit-marketing`·`content-calendar`, **Marketing**(Anthropic) `campaign-plan` | skills.sh·디렉터리 | promo-plan이 있으면 함께: 일반 전략·훅 기법은 이것들, fullship은 **우리 제품의 공유 순간·바이럴 장치 점검·출시 숫자로 결과 확인**만 |
-| 홍보 글·카피 | **Marketing**(Anthropic), `copywriting`(coreyhaines31) | 디렉터리·skills.sh | launch-post는 패치노트→초안·outreach-log만 |
-| 영상 | **Remotion**(`remotion-dev/skills`, 약 77만), **video-shotcraft**, HeyGen `hyperframes` | 디렉터리·skills.sh | trailer는 장면 목록·화면 소재 준비, 렌더는 이것들 |
-| 계획 따져 묻기 | `grill-me`(약 150만, 감사 3종 Pass), `grill-with-docs`, `to-spec`, `to-prd` (mattpocock/skills) | skills.sh | spec-first 전에 "계획 검증" 단계로 추천. 있으면 plan-checker는 빠진 항목만 |
-| 인수인계 | `handoff`(약 110만), `claude-handoff` (mattpocock/skills) | skills.sh | 우리 `handoff`와 겹침 → 만들기 전에 써 보고 모자란 것만(HANDOFF.md 형식·결정 이유) |
-| 개발 습관 묶음 | `writing-plans`, `systematic-debugging`, `subagent-driven-development`, `dispatching-parallel-agents`, `requesting-code-review` (obra/superpowers) | skills.sh | 함께 씀 |
-| 계획→구현→리뷰 에이전트 | **spec-driven-dev**(계획 리뷰·TDD 구현·표준 검사 에이전트 9개) | 디렉터리 | spec-first·plan-checker와 겹침 → 하나만 쓰게 안내 |
-| 출시 절차 | **claude-release**(버전·테스트·릴리스 노트·승인·GitHub 릴리스), **Cyberine ReleaseGuard**(배포물에 소스·키 유출 검사) | 디렉터리 | release-guard·deploy-verify와 함께 |
-| 효과·모션(VFX) | HeyGen `hyperframes-animation`(약 100만)·`motion-graphics`(약 51만), `review-animations`·`animation-vocabulary`(emilkowalski), **Tweenkit**(키네틱 영상·애니메이션 페이지), **animation-studio**(코드로 그린 애니메이션+음악) | skills.sh·디렉터리 | media 묶음: trailer가 이것들로 렌더 |
-| 3D·셰이더 | **parallax-threejs**(Three.js/GLSL 디버깅·시각 회귀 테스트, shader-reviewer 에이전트), **PlayCanvas**(효과·셰이더) | 디렉터리 | 3D 쓰는 프로젝트만. screen-matrix 대신 시각 회귀 |
-| 게임 | **Unity**(공식 파트너) | 디렉터리 | 게임 프로젝트 감지 시 |
-| 스킬 찾기 | `find-skills` (vercel-labs/skills, 1위 약 430만) | skills.sh | `/fullship:recommend`가 활용 |
-| 스킬 만들기 | `skill-creator` (anthropics/skills) | skills.sh·기본 | 우리 플러그인 개발용 |
+| traffic-analyst | 분석 API·CSV에서 숫자 모아 표 | Bash, Read, Write(.hype-me/reports) | haiku |
+| channel-scout | 홍보할 곳 찾기(규칙·크기·연락 경로) | WebFetch, Read | haiku |
+| case-researcher | 성공 사례 타임라인·계기 정리(출처 필수) | WebFetch, Read, Write(.hype-me/cases) | inherit |
+| mention-tracker | 새 언급 모으고 분류 | WebFetch, Bash, Read | haiku |
+| scout | 이미 있는 도구 추천 조사 (유지) | WebFetch, Read | haiku |
+- 공통: 읽기 위주, 게시·DM·설치 안 함, 출처 링크 필수, 모르면 "모름"
 
-- 광고 집행·자동 게시형(Hyper Marketing, AdWhispr, Social media studio 등)은 **추천 목록에서 "되돌리기 어려운 일" 표시**를 붙이고 기본 추천하지 않음.
-- skills.sh에서 셰이더·WebGL·GSAP 전용 스킬은 2026-11 조사 땐 못 찾음(사이트 검색이 화면에서만 동작) — scout가 다시 찾을 것.
+## 6. 데이터 출처와 한계 (정직하게)
+- Steamworks·itch 분석은 공개 API가 없거나 제한 → **CSV를 받아 읽는 방식**이 기본
+- 레딧·X·유튜브는 API 정책·요금이 바뀐다: 키가 있으면 쓰고, 없으면 공개 페이지·검색 범위에서만. **사이트 이용 약관을 어기는 긁어오기는 하지 않는다**(예: SteamDB는 자동 수집을 막음 → 링크만 안내)
+- 검색 관심도(Google Trends)는 공식 API가 없어 링크·수동 확인
+- 개인 정보: 언급 작성자의 공개 이름 정도만, 연락처 수집 안 함
 
-## 13. 라이선스
-- **추천: MIT.** 가장 짧고 널리 쓰여서 다른 사람이 가져다 쓰기 쉽다. Claude 플러그인·스킬 생태계에서도 흔하다. 저작권 표시만 남기면 누구나 쓰고 고칠 수 있다.
-- 대안: **Apache-2.0** — MIT처럼 자유롭지만 특허 사용 허락 조항이 있고, 바꾼 파일 표시·NOTICE 파일이 필요. 회사 사용자를 신경 쓰면 이쪽.
-- 피할 것: GPL 계열(가져다 쓰는 사람이 자기 코드도 공개해야 할 수 있어 플러그인엔 부담), 라이선스 없음(지금 `UNLICENSED` = 남이 쓸 권리 없음).
-- 지킬 것:
-  - 외부 스킬·플러그인은 **경로만** 가리키므로 그쪽 라이선스와 섞이지 않는다. 코드를 복사해 올 땐 그 라이선스를 확인하고 `THIRD_PARTY.md`에 표기.
-  - Stylish 저장소 코드는 "All rights reserved"라 **복사하지 않는다**. 패턴만 참고해 새로 쓴다.
-- 할 일: `LICENSE` 파일 추가, `plugin.json`의 `license`를 `MIT`로, `author` 채우기(이름은 사용자에게 받기).
+## 7. 이미 있는 도구 추천 (유지·보강)
+- 홍보 일반: coreyhaines31/marketingskills(launch-strategy, marketing-psychology), Social Media Skills(viral-reverse-engineering, hook-writer, reddit-marketing), Anthropic Marketing
+- 모바일 스토어 문구: ASO Specialist
+- 트레일러·모션: Remotion, hyperframes, video-shotcraft, Tweenkit
+- 디자인: frontend-design, Design(Anthropic), UI Color Palette
+- 분석 연결: Windsor.ai(GA4·Search Console 등 여러 출처, 유료 서비스 주의)
+- 광고 집행·자동 게시형은 기본 추천 안 함
 
-## 12. 참고 (이 저장소)
-- 작업 규칙 예: `CLAUDE.md` (계획 먼저, 디자인 토큰, 검증 원칙, 마무리 점검표) → `/fullship:setup` 출력의 본보기
-- 기존 스킬: `discord-bot`, `site-report` (개인 스킬 폴더)
-- 패턴 예: `src/share/typeMeta.ts`+`functions/types/` (og 미리보기), `supabase/functions/verify-listing/` (본인 확인), `scripts/calib/story-dump.mts` (전후 비교), `scripts/updates.mjs` (패치노트), `HANDOFF.md`·`PLAN.md` (인수인계·결정 이력)
-- 플러그인 후보 조사: feature-dev(공식), Marketing(공식), Remotion, Motion Reel, Social Media Skills
-
-## 14. 쉽게 쓰기 (2026-11-08 원칙)
-목표: **설치부터 첫 점검 결과까지 5분, 외운 명령 2개.** 기능이 늘어도 사용자가 알아야 할 것은 늘지 않게.
-
-### 지금 계획에서 어려워질 수 있던 것 → 바꾼 것
-| 어려운 점 | 바꾼 것 |
+## 8. 지금 코드에서 바뀌는 것
+| 지금 (v0.1.0) | v3 |
 |---|---|
-| 명령 7개(setup·mode·recommend·spec·ship·handoff·idea) | 자주 쓰는 건 **setup·ship 두 개** + `help`. 나머지는 말로 부르면 스킬이 알아서 불림, 명령은 지름길로만 |
-| 모드 3개 + 묶음 4개 + 설정 JSON | 묶음은 **감지해서 자동으로 켬**(확장 있으면 release, 영상 요청하면 media 켤지 물어봄). 계획 모드는 기본 `big-only`(큰 작업만 계획), 바꾸고 싶으면 말로("항상 계획부터 해 줘") |
-| 에이전트 10개 | **사용자 눈에 안 보임**. 이름도 몰라도 됨. 결과 표에 "누가 했는지"는 안 씀 |
-| setup 질문 | **최대 2개**(감지 못 한 배포 주소, 계획 모드). 나머지는 감지한 값으로 채워 "이렇게 할게요" 한 화면 → [좋아요 / 고칠래요] |
-| 긴 결과 | **첫 줄에 결론**: `통과 6 · 실패 1 · 안 돌림 1`. 실패한 것만 아래에 한 줄씩 + "다음에 할 일". 로그 전체는 파일로 |
-| 영어 용어 | 사용자 말은 프로젝트 언어·쉬운 말로. "evidence"→"근거", "DEBT"→"보완 필요" |
-| 추천이 귀찮을 수 있음 | 한 번에 최대 3개, 거절하면 다시 안 꺼냄 |
+| commands: setup, help, mode, recommend | setup(게임 프로필로 다시 씀), help, recommend, **report**(새로). mode 삭제 |
+| skills: spec, ship, deploy, notify, guide | **traffic, channels, cases, mentions, promo-plan, design, launch-check**(새로), notify·guide 유지. spec·ship·deploy 삭제 |
+| agents: verifier, plan-checker, scout | traffic-analyst, channel-scout, case-researcher, mention-tracker 새로, scout 유지. verifier·plan-checker 삭제 |
+| scripts: run-checks, deploy-check, notify | run-checks 삭제, deploy-check → launch-check로 고쳐 씀, utm 링크 만들기·CSV 읽기 추가 |
+| hooks: 계획 모드 한 줄 | "hype-me · <게임 이름> · /hype-me:help" 한 줄 |
+| templates/config.json | profile.json(게임 프로필) |
 
-### 규칙 (모든 스킬·명령에 적용)
-1. **말로 해도 된다**: 모든 기능은 자연어로 부를 수 있어야 한다. 명령은 지름길.
-2. **기본값이 안전하고 쓸 만하다**: 아무것도 안 정해도 동작. 기본은 "큰 작업만 계획 먼저"(`big-only`), 점검·배포 확인·설치·게시는 시킬 때만.
-3. **물을 땐 버튼으로, 한 번에**: 질문은 묶어서 한 번, 추천 답을 첫 번째에.
-4. **결론 먼저, 다음 할 일 하나**: 결과마다 "그래서 다음은?" 한 줄.
-5. **숨길 건 숨긴다**: 설정 파일·에이전트·묶음 이름을 몰라도 쓸 수 있다. 바꾸고 싶으면 말로.
-6. **막히면 `/fullship:help`**: 지금 프로젝트 상태(설정됨? 마지막 점검 결과?)와 **지금 할 만한 것 하나**를 보여 줌.
+## 9. 만드는 순서
+1. ✅ (2026-11-09, v0.2.0) 정리: 개발 기능 삭제, setup → 게임 프로필, help·hook·README 고치기
+2. **cases + channels** (조사 두 가지, 데이터 연결 없이 바로 쓸 수 있음) → Stylish·변형 체스 게임 하나로 시험
+3. promo-plan + launch-check + UTM 링크
+4. mentions + report + notify 연결
+5. traffic (CSV 읽기부터, 그다음 API)
+6. design (리소스 목록 받은 뒤)
+7. 공개 준비: 이름 정하기, 다른 장르 게임 1~2개로 시험, 평가 케이스
 
-### 확인 방법
-- 공개 전에 처음 쓰는 사람 1~2명에게 README 없이 설치·setup·ship까지 해 보게 하고, 막힌 곳을 고친다.
-- 평가 케이스에 "자연어로 불렀을 때 맞는 스킬이 불리는지"를 넣는다(예: "다 됐어 확인해 줘" → ship-checklist).
+## 10. 이름 후보 (재치 있게)
+grill-me처럼 '부탁하는 말'이 이름이 되면 기억하기 쉽고, 명령도 `/이름:report`처럼 읽힌다. 정하기 전에 skills.sh·플러그인 디렉터리·GitHub에서 같은 이름이 있는지 확인.
+| 이름 | 느낌 |
+|---|---|
+| **hype-me** | grill-me의 짝. "나 좀 띄워 줘". 짧고 뜻이 바로 옴 |
+| **find-my-players** | 이 플러그인이 답하는 질문 그대로. 길지만 오해가 없음 |
+| **where-they-at** | "우리 유저들 어디 있어?" 장난스러운 말투 |
+| **lure-me** | 플레이어를 끌어오는 미끼. 낚시 느낌이 살짝 |
+| **go-viral-maybe** | 바이럴은 보장 못 한다는 정직한 농담 |
+| **crowd-magnet** | 사람을 끌어당기는 자석 |
+| **side-quest** | 개발이 본편, 홍보는 사이드 퀘스트. 게임 개발자에게 통하는 말 |
+
+## 11. 상황 맞춤 원칙 (에이전트가 더하고 빼기)
+- 기본 목록이 출발점: 채널(4B), 데이터 출처(4A·4D), 디자인 리소스(4F), 추천 도구(7).
+- 에이전트는 게임 프로필(언어·나라·장르·플랫폼·규모)을 보고 **꼭 필요할 때만** 더하거나 뺀다. 그때마다 **이유 한 줄**을 보여 준다.
+- 예:
+  - 한국 대상 → 네이버 블로그·카페 노출, 디시인사이드 갤러리, 아카라이브 같은 국내 채널
+  - 일본 대상 → X(트위터) 비중을 높임
+  - 모바일 게임 → 스토어 검색어(ASO)·스토어 리뷰 추가, Steam 큐레이터는 뺌
+  - 웹 게임·소규모 커뮤니티 → 큰 언론·유료 광고는 빼고 디스코드·커뮤니티 이벤트 위주
+  - 체스·변형 체스 → lichess 포럼·팀, chess.com 클럽, 변형 체스 디스코드
+- 하지 않을 것: 필요 없는데 목록 늘리기, 묻지 않고 유료 서비스·키가 필요한 출처를 기본으로 넣기.
+- 사용자가 "이건 빼" / "이것도 봐 줘" 하면 프로필에 저장해 다음에도 반영.
+
+## 12. 남은 질문
+- 첫 시험: Rlo 체스 타이쿤 vs 변형 체스 투어 게임 — 어느 쪽, 저장소·주소
+- 로컬 폴더 `D:/fullship` → `D:/hype-me` 이름 바꾸기(세션을 옮긴 뒤)

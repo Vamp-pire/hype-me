@@ -1,9 +1,7 @@
-<!-- fullship:start -->
-## fullship
-- Settings live in `.fullship/config.json` (mode, modules, checks). Change the mode with `/fullship:mode`.
-- "Done" means evidence: name the command you ran and its result. Say plainly what you did not run.
-- Behavior-preserving refactors: save the output before, compare after.
-- New rules in core logic: write the failing test first.
-- Irreversible actions (publishing, posting, emailing, paying, store submissions) always get a preview and a yes first.
-- fullship never overwrites your files; it writes `<name>.fullship-new` instead.
-<!-- fullship:end -->
+<!-- hype-me:start -->
+## hype-me
+- The game profile lives in `.hype-me/profile.json` (name, platforms, links, similar games, player groups). Update it by asking, or with `/hype-me:setup --refresh`.
+- Promotion research cites its sources (links); guesses are marked as guesses.
+- Never post, DM, comment, submit to stores, install tools or spend money without a yes first. Follow each community's self-promotion rules.
+- hype-me never overwrites your files; it writes `<name>.hype-me-new` instead.
+<!-- hype-me:end -->

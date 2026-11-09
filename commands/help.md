@@ -1,18 +1,19 @@
 ---
-description: Where does this project stand? Shows setup status, the last check result and the one thing worth doing next
+description: What can hype-me do for this game right now? Shows the profile status, what was last looked at, and the one thing worth doing next
 ---
 
-# fullship help
+# hype-me help
 
-Answer in the project's language, in plain words, in at most 8 lines. No jargon (do not say config, module, agent).
+Answer in the user's language, plain words, at most 10 lines. No jargon.
 
-1. **Status** — read `.fullship/config.json` and the newest folder in `.fullship/evidence/` if they exist.
-   - Not set up: say so and suggest `/fullship:setup` (about a minute, at most 2 questions). Stop.
-   - Set up: one line with the planning mode in plain words (for example "I plan first only for big changes") and the last check result (`passed 6 · failed 1 · not run 1`, with its date), or "no checks run yet".
-2. **One next step** — pick the single most useful action:
-   - last check failed → fix what failed, then "check it" again
-   - changes since the last check (git status / git log) → "say 'check it' or run `/fullship:ship`"
-   - everything passed and nothing changed → suggest `/fullship:recommend` once, or nothing.
-3. **What you can say** — three short examples of plain requests, for example:
-   "check it" · "is the deploy live?" · "recommend tools for this project".
-   Mention in one short line that `/fullship:mode` changes when I plan before building.
+1. **Status** — read `.hype-me/profile.json` and the newest files in `.hype-me/reports/`, `.hype-me/cases/`, `docs/promo/`.
+   - No profile: say so and suggest `/hype-me:setup` (about a minute). Stop.
+   - Profile: one line with the game name and platforms, and one line with the last thing done (e.g. "last report: Nov 9", "2 case studies saved").
+2. **One next step** — the single most useful action for where the game is:
+   - nothing done yet → "find how similar games took off" or "where should I promote?"
+   - a promo plan exists and its date has passed → "how did the last promo go?"
+   - analytics connected and no recent report → `/hype-me:report`
+3. **What you can say** — the six questions hype-me answers, one short line each:
+   "where do my players come from?" · "where should I promote?" · "how did similar games take off?" · "who's talking about my game?" · "make a promo plan" · "check my thumbnail/store image".
+
+Some of these are still being built; if a request has no skill yet, do it directly with the profile as context and say it is an early version.

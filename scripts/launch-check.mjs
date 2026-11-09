@@ -1,22 +1,22 @@
 #!/usr/bin/env node
-// Checks that the live site is up and serves the build you just made.
+// Checks that the game's page is up (and, with --build, serves the build you just made).
 //
-// Usage: node deploy-check.mjs [--cwd <dir>] [--url <site>] [--paths /,/en/]
+// Usage: node launch-check.mjs [--cwd <dir>] [--url <site>] [--paths /,/en/]
 //                              [--build <dir with index.html>] [--wait <seconds>]
-// Defaults come from .fullship/config.json (deploy.url, deploy.checkPaths, deploy.buildDir).
+// Defaults come from .hype-me/profile.json (links.site, launch.checkPaths, launch.buildDir).
 // --wait keeps retrying every 15s until everything passes or time runs out.
 import { readFileSync, existsSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
 const args = parseArgs(process.argv.slice(2));
 const cwd = args.cwd || process.cwd();
-const configPath = join(cwd, '.fullship', 'config.json');
+const configPath = join(cwd, '.hype-me', 'profile.json');
 const config = existsSync(configPath) ? JSON.parse(readFileSync(configPath, 'utf8')) : {};
-const deploy = config.deploy || {};
+const deploy = { url: config.links?.site, ...(config.launch || {}) };
 
 const url = (args.url || deploy.url || '').replace(/\/+$/, '');
 if (!url) {
-  console.log('No site URL. Pass --url or set deploy.url with /fullship:setup.');
+  console.log('No site URL. Pass --url or add the main link with /hype-me:setup.');
   process.exit(2);
 }
 const paths = args.paths ? String(args.paths).split(',') : deploy.checkPaths || ['/'];
@@ -42,10 +42,10 @@ console.log('|---|---|---|');
 for (const r of report.rows) console.log(`| ${r.name} | ${r.ok ? 'passed' : 'failed'} | ${r.detail} |`);
 if (!buildDir) console.log('\n(no build folder given: checked pages only, not whether the new build is live)');
 
-const dir = join(cwd, '.fullship', 'evidence');
-if (existsSync(join(cwd, '.fullship'))) {
+const dir = join(cwd, '.hype-me', 'reports');
+if (existsSync(join(cwd, '.hype-me'))) {
   mkdirSync(dir, { recursive: true });
-  writeFileSync(join(dir, 'last-deploy-check.json'), JSON.stringify({ at: new Date().toISOString(), url, ...report }, null, 2));
+  writeFileSync(join(dir, 'last-launch-check.json'), JSON.stringify({ at: new Date().toISOString(), url, ...report }, null, 2));
 }
 process.exitCode = report.ok ? 0 : 1;
 
@@ -55,8 +55,8 @@ async function checkOnce() {
   for (const p of paths) {
     const target = url + (p.startsWith('/') ? p : `/${p}`);
     try {
-      const res = await fetch(`${target}${target.includes('?') ? '&' : '?'}fullship=${Date.now()}`, {
-        headers: { 'cache-control': 'no-cache', 'user-agent': 'fullship-deploy-check' },
+      const res = await fetch(`${target}${target.includes('?') ? '&' : '?'}hype-me=${Date.now()}`, {
+        headers: { 'cache-control': 'no-cache', 'user-agent': 'hype-me-launch-check' },
         redirect: 'follow',
       });
       const body = await res.text();
@@ -69,7 +69,7 @@ async function checkOnce() {
   if (expected.length) {
     if (!homeHtml) {
       try {
-        homeHtml = await (await fetch(`${url}/?fullship=${Date.now()}`, { headers: { 'cache-control': 'no-cache' } })).text();
+        homeHtml = await (await fetch(`${url}/?hype-me=${Date.now()}`, { headers: { 'cache-control': 'no-cache' } })).text();
       } catch {
         homeHtml = '';
       }

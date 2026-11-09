@@ -1,59 +1,55 @@
-# fullship
+# hype-me
 
-**Ship small web products without the forgotten steps.**
-A Claude Code plugin for solo developers and small teams: it plans big changes before building, proves that your checks really ran, confirms the deploy is live, and shows how each release did.
+**"Hype me" — help people find your game.**
+A Claude Code plugin for indie games and small projects (web, Steam/itch.io, mobile): it finds where your players come from, where to promote, how similar games took off, who is talking about you, and turns that into a promo plan you can actually run.
 
-> Status: **0.1 early version** — setup, planning, proof-based checks, deploy check, notifications and recommendations work; the rest is on the roadmap below. Name is provisional. Plan: [docs/plan.md](docs/plan.md) (Korean).
+> Status: **0.2 early version** — the game profile and recommendations work today; the research skills are being built (see Roadmap). Private for now.
 
-## Why install it
-Claude Code can already write the code. What usually goes wrong on a small product is everything around it:
-
-| without fullship | with fullship |
+## The six questions it answers
+| ask it | what you get |
 |---|---|
-| A big feature gets built before anyone agreed on what "done" means | Big changes start with a short plan and acceptance criteria you approve (`/fullship:mode`) |
-| "It should work now" — but the tests never ran | Your project's own checks run and the answer is a table: `passed 6 · failed 1 · not run 1`, with logs saved as proof |
-| Pushed, but is the new version actually live? | The live site is checked for the new build and new pages |
-| Mobile layout, English page, privacy policy, a GPL library… forgotten | Release guard flags them before you ship |
-| "How did that release do?" means opening five dashboards | Downloads, store users, update pings and site visits per release, side by side |
-| "Let's post it somewhere" with no plan, then guessing why it didn't spread | A promo plan: who it's for, the moment people want to share, whether sharing actually loops back, hooks per channel, timing — then the numbers tell you what worked |
-| Rebuilding something a great plugin already does | `/fullship:recommend` points you to it, and fullship steps aside when it is installed |
+| "Where do my players come from?" | traffic by source and by promo link (web analytics, Search Console, Steam/itch/store CSV exports), what grew and what dropped |
+| "Where should I promote?" | communities, YouTubers/streamers, curators and events that fit your game — with each place's self-promotion rules |
+| "How did similar games take off?" | a timeline of what made comparable games (or other services) spread, and three things to try |
+| "Who's talking about my game?" | new mentions and reviews since last time, grouped into love / gripes / bugs / requests |
+| "Make a promo plan" | audience, the moment players want to share, viral-loop check, hooks per channel, timing, how to measure |
+| "Check my thumbnail / store image" | size and format checks per platform, honest design feedback, resources with licence notes |
 
-It stays out of the way: nothing is installed, posted, deployed or paid for without your yes, and fullship never overwrites your files.
+It adapts to your game: a Korean-market game also gets Naver blogs and Korean communities; a mobile game gets store search terms; a chess variant gets chess communities — only when it actually applies.
 
-**Probably not for you if** you already have a full CI/CD pipeline, release dashboards and a team process you like — fullship is aimed at people who do all of this by hand.
+It never posts, DMs, installs or spends money without your yes, and it follows each community's rules. No fake accounts, no spam.
 
-## Two commands to remember
-1. `/fullship:setup` — once per project. Detects your stack, asks at most 2 questions, sets up your checks.
-2. `/fullship:ship` — when you finish a change. Or just say "check it".
+## Commands
+1. `/hype-me:setup` — once per game. A short game profile (at most 3 questions).
+2. `/hype-me:report` — a summary any time: traffic changes, new mentions, last promo results, three things to do this week *(coming)*.
 
-Stuck? `/fullship:help` shows where you are and the one thing to do next.
-
-Occasionally: `/fullship:mode` (when to plan first: **big changes only** by default, always, or only when asked) and `/fullship:recommend`.
+Everything else: just ask in plain words. Stuck? `/hype-me:help`. Looking for an existing tool for something? `/hype-me:recommend`.
 
 ## Roadmap
 | | feature |
 |---|---|
-| ✅ now | setup · help · planning mode · plans for big changes (`/fullship:spec`) · ship checklist with proof (`/fullship:ship`) · live-deploy check (`/fullship:deploy`) · notifications (`/fullship:notify`) · recommendations and one-line pointers to existing tools · session status line |
-| later | session handoff · before/after output compare · screen matrix (phone/desktop × language × theme) · release guard · free-tier quota warnings · release insights · promo plan (audience, share moments, viral loop, hooks, timing, measurement) · launch post drafts · trailer prep |
+| ✅ now | game profile · help · recommendations of existing tools (incl. design resources) · one-line pointers · notifications to Discord/Slack |
+| next | similar-game case studies · where to promote |
+| then | promo plan + launch check (page, links, share preview) + UTM links · mentions + report · traffic (CSV first, then APIs) · design feedback |
 
 ## Install
 ```
-/plugin marketplace add Vamp-pire/fullship
-/plugin install fullship@fullship
+/plugin marketplace add Vamp-pire/hype-me
+/plugin install hype-me@hype-me
 ```
 The repository is private for now, so you need access to it. For local development: `claude --plugin-dir <path to this folder>`.
 
 ## Layout
 ```
 .claude-plugin/   plugin.json, marketplace.json
-commands/         setup, help, mode, recommend
-skills/           spec, ship, deploy, notify, guide
-agents/           verifier, plan-checker, scout
-scripts/          run-checks, deploy-check, notify (Node 18+, no dependencies)
+commands/         setup, help, recommend
+skills/           guide, notify
+agents/           scout
+scripts/          launch-check, notify (Node 18+, no dependencies)
 hooks/            hooks.json, session-start.mjs
-templates/        config.json, claude-md-section.md
-references/       recommended.md
-docs/             plan.md
+templates/        profile.json, claude-md-section.md
+references/       recommended.md, design-resources.md
+docs/             plan.md (Korean), archive/
 ```
 
 License: MIT
