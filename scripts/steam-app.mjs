@@ -7,7 +7,7 @@
 //
 // Uses the store's public endpoints only. Be gentle: one game at a time.
 const [cmd, arg] = process.argv.slice(2);
-const UA = { 'user-agent': 'hype-me/0.2 (case study helper)' };
+const UA = { 'user-agent': 'hype-me (case study helper)' };
 
 try {
   if (cmd === 'search' && arg) await search(arg);

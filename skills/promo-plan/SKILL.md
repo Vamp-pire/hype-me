@@ -1,6 +1,6 @@
 ---
 name: promo-plan
-description: Make a promotion plan for a game or project launch/update — goal, audience, the moment players want to share, a viral-loop check (reason to share, ease, does it come back), hooks per channel, channel order and timing with the rules of each place, tracking links, and how to measure — plus post drafts on request. Use when the user asks how to promote, market, launch or make something go viral ("홍보 계획 짜 줘", "어떻게 바이럴 시켜?", "launch plan", "how do I market my game", "post 써 줘").
+description: Make a promotion plan for a game launch, update, event or demo — measurable goal, audience, the moment players want to share, a viral-loop check, hooks per channel, channel order and timing with each place's rules, tracking links and how to measure; post drafts on request. Use for "홍보 계획 짜 줘", "어떻게 바이럴 시켜?", "launch plan", "how do I market my game".
 argument-hint: "[what to promote: launch | update | event | demo]"
 ---
 

@@ -51,13 +51,13 @@ The repository is private for now, so you need access to it. For local developme
 .claude-plugin/   plugin.json, marketplace.json, icon.png
 commands/         setup, report, help, recommend
 skills/           traffic, channels, cases, mentions, promo-plan, promo-review, launch-check, design, guide, notify
-agents/           traffic-analyst, channel-scout, case-researcher, mention-tracker, scout
+agents/           traffic-analyst, channel-scout, case-researcher, mention-tracker, tool-scout
 scripts/          traffic-csv, steam-app, reddit-sub, utm, launch-check, mentions-seen, image-size, notify (Node 18+, no dependencies)
-hooks/            session start line
-templates/        profile, case, promo-plan, CLAUDE.md section
+hooks/            one status line in projects that have a game profile
+templates/        profile, case, promo-plan
 references/       channels, image-specs, design-resources, recommended
 evals/            trigger and safety cases (claude plugin eval)
-docs/             plan.md (Korean), archive/
+docs/             plan.md (Korean)
 ```
 
 License: MIT

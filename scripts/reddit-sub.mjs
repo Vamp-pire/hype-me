@@ -11,7 +11,7 @@ if (!subs.length) {
   console.log('usage: reddit-sub.mjs <subreddit> [more…]');
   process.exitCode = 2;
 }
-const UA = { 'user-agent': 'hype-me/0.2 (community research; read-only)' };
+const UA = { 'user-agent': 'hype-me (community research; read-only)' };
 
 for (const sub of subs) {
   try {

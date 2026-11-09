@@ -1,6 +1,6 @@
 ---
 name: design
-description: Help with how the game looks to people who have not played it yet — check store and share images against each platform's sizes (Steam capsules and screenshots, itch.io cover, App Store/Google Play icons and screenshots, share preview, YouTube thumbnail), give honest feedback on thumbnails, capsules and landing pages (readable small? genre clear? stands out next to similar games?), and recommend design resources with licence notes. Use for "썸네일 봐 줘", "캡슐 이미지 괜찮아?", "스토어 이미지 크기", "랜딩 페이지 디자인", "디자인 리소스 추천", "check my thumbnail / capsule / store page".
+description: Check how the game looks before players try it — store and share image sizes per platform (Steam capsules, itch cover, app store icons and screenshots, share preview, YouTube thumbnail), honest feedback on thumbnails, capsules and landing pages, and design resources with licence notes. Use for "썸네일 봐 줘", "캡슐 이미지 크기", "랜딩 페이지 디자인", "check my thumbnail / store image".
 argument-hint: "[image files or page URL]"
 ---
 

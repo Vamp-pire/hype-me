@@ -1,5 +1,5 @@
-// hype-me SessionStart hook: one status line with the game name.
-// Stays silent in folders that are not projects, and never fails the session.
+// hype-me SessionStart hook: one status line with the game name, only in projects
+// that have a hype-me game profile. Silent everywhere else; never fails the session.
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -11,22 +11,13 @@ function readStdin() {
   }
 }
 
-function looksLikeProject(dir) {
-  return ['package.json', 'pyproject.toml', 'go.mod', 'Cargo.toml', 'project.godot', 'ProjectSettings', '.git'].some(
-    (f) => existsSync(join(dir, f)),
-  );
-}
-
 function main() {
   const input = readStdin();
   const cwd = input.cwd || process.cwd();
   const profilePath = join(cwd, '.hype-me', 'profile.json');
 
-  if (!existsSync(profilePath)) {
-    if (!looksLikeProject(cwd)) return;
-    out({ systemMessage: 'hype-me: run /hype-me:setup to make a game profile (about a minute)' });
-    return;
-  }
+  // No profile: this is not a project the user set up for hype-me. Say nothing.
+  if (!existsSync(profilePath)) return;
 
   let profile;
   try {

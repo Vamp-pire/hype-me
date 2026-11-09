@@ -1,17 +1,14 @@
 ---
 name: guide
-description: Point the user to an existing plugin or skill that already does what they are asking for, in one line, instead of rebuilding it. Use when a request clearly matches a specialised tool listed in hype-me's recommendations and it is not installed — e.g. stress-testing a plan ("grill me", "계획 빡세게 따져 봐"), video or motion effects for a trailer ("VFX", "모션 그래픽"), Three.js/shader debugging, deep SEO audits, design polish, social media hooks. Do not use for ordinary coding requests.
+description: Point the user, in one line, to an existing plugin or skill built for what they are asking when hype-me itself does not do it — e.g. stress-testing a plan ("grill me", "계획 빡세게 따져 봐"), trailer video or motion effects ("VFX", "모션 그래픽"), deep SEO audits, app-store listing text (ASO). Not for ordinary coding, and not for things hype-me's own skills already cover.
 ---
 
 # One-line pointer to an existing tool
 
-1. Look up the request in `${CLAUDE_PLUGIN_ROOT}/references/recommended.md` (the "when" column). If nothing matches well, do nothing and carry on with the request.
-2. Skip it if it is already installed (check `~/.claude/plugins/installed_plugins.json`, `~/.claude/skills/`, `.claude/skills/`, or the skills available in this session) — then just use it.
-3. Skip it if `.hype-me/profile.json` → `recommendations.dismissed` contains it.
-4. Otherwise say, in the project's language, one line:
-   "This is what **<name>** is built for (<source>, <trust>). Install it, or should I go ahead without it?"
-   with buttons **[Install / Go ahead without]**. Never install without that yes.
-5. On "Install": give the plugin step (`/plugin install …`, which the user runs) or run the skills.sh command (`npx skills add <owner/repo> --skill <name>`; mention `DISABLE_TELEMETRY=1`). For community items, show the repository link first.
-6. On "Go ahead without": add the name to `recommendations.dismissed` and do the request yourself. Do not suggest it again.
+1. Match the request against the "when" column of `${CLAUDE_PLUGIN_ROOT}/references/recommended.md`. No clear match → say nothing and carry on.
+2. Already installed (plugins list, `~/.claude/skills/`, `.claude/skills/`, or available in this session) → just use it.
+3. In `.hype-me/profile.json` → `recommendations.dismissed` → carry on without it.
+4. Otherwise one line in the user's language: "**<name>** is built for this (<source>, <trust>). Install it, or go ahead without?" with buttons **[Install / Go ahead without]**.
+5. Install → follow "How to install" in `references/recommended.md`. Go ahead without → add the name to `recommendations.dismissed` and do the task yourself.
 
-At most one pointer per request, and never interrupt a task that is already in progress.
+At most one pointer per request; never interrupt a task in progress.

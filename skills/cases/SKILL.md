@@ -1,6 +1,6 @@
 ---
 name: cases
-description: Find out how similar games — or other services — took off and what our game can copy. Builds dated timelines (launch, demo, festival, viral post, creator video, update, sale), names the trigger, and lists ideas sized for a small team, with sources. Use when the user asks how a game/app got popular or went viral, wants success stories or comparables ("비슷한 게임은 어떻게 떴어?", "성공 사례 찾아 줘", "how did X blow up", "case study"), or before writing a promo plan with no references yet.
+description: Find out how similar games or services took off — a dated timeline of launches, demos, festivals, viral posts and creator videos, what triggered growth (fact/likely/guess, with sources), and ideas a small team can copy. Use for "비슷한 게임은 어떻게 떴어?", "성공 사례", "how did X blow up", "case study".
 argument-hint: "[game or service names]"
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: channels
-description: Find where to promote a game — subreddits, Discord servers, forums, YouTubers/streamers, Steam curators, press, festivals and events that fit it — ranked, with each place's self-promotion rules and a concrete way in. Adapts to market and platform (e.g. Naver/DCInside for Korea, chess communities for chess games). Use when the user asks where to promote, post, advertise or find players ("어디서 홍보해?", "홍보할 곳 찾아 줘", "where should I post my game", "which streamers", "communities for my game").
+description: Find where to promote a game — subreddits, Discord servers, forums, YouTubers/streamers, curators, press and events that fit it, ranked, with each place's self-promotion rules and a first step; adapts to market and genre. Use for "어디서 홍보해?", "홍보할 곳 찾아 줘", "where should I post my game", "which streamers".
 argument-hint: "[area: communities | creators | press | events]"
 ---
 

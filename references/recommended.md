@@ -28,11 +28,12 @@ Sources:
 | media | hyperframes-animation, motion-graphics | skills.sh | `heygen-com/hyperframes` (~1.0M / ~510K) | motion graphics / effects in trailers | alternative to Remotion | vendor |
 | media | video-shotcraft, Tweenkit, animation-studio | plugin directory | "video-shotcraft", "Tweenkit", "animation-studio" | product videos, kinetic text, coded animation | optional | community |
 | media | review-animations, animation-vocabulary | skills.sh | `emilkowalski/skills` | UI motion polish for a landing page | optional | community |
-| engines | Unity | plugin directory | "Unity" | Unity project found | game development (outside hype-me) | partner |
-| engines | PlayCanvas, parallax-threejs | plugin directory | "PlayCanvas", "parallax-threejs" | 3D web games, shaders | game development (outside hype-me) | community |
-| platform | Chrome Extension Builder | plugin directory | "Chrome Extension Builder" | the project ships a browser extension | store listing and release work for extensions | community |
-| meta | find-skills | skills.sh | `vercel-labs/skills` → `find-skills` (~4.3M) | searching for more skills | used by `scout` | partner |
-| meta | skill-creator | skills.sh, built-in | `anthropics/skills` → `skill-creator` | writing new skills | for hype-me development | official |
+| meta | find-skills | skills.sh | `vercel-labs/skills` → `find-skills` (~4.3M) | searching for more skills | used by `tool-scout` | partner |
+
+## How to install (shared by /hype-me:recommend and the guide skill)
+- **Plugin**: give the `/plugin install <name>@<marketplace>` step; the user runs plugin installs in their client.
+- **skills.sh skill**: show `npx skills add <owner/repo> --skill <name>` and mention `DISABLE_TELEMETRY=1` to skip install statistics. Run it only after the user says yes. For community items, show the repository link (and skills.sh audit result if known) first.
+- Never install anything the user did not pick.
 
 ## Not recommended by default (irreversible actions)
 Ad-buying and auto-posting plugins (for example Hyper Marketing, AdWhispr, Social media studio). List them only when the user asks for that area, marked "irreversible: spends money / posts publicly". Never set up automatic posting.

@@ -1,6 +1,6 @@
 ---
-name: scout
-description: Researches existing plugins and skills that fit a project or a need (plugin directory, skills.sh) and returns a short candidate table with trust and install commands. Use from hype-me recommend/guide when the built-in list does not cover an area. Never installs anything.
+name: tool-scout
+description: Researches existing plugins and skills that fit a project or a need (plugin directory, skills.sh) and returns a short candidate table with trust and install commands. Use from /hype-me:recommend when the built-in list does not cover an area. Never installs anything.
 tools: Read, Glob, Grep, WebFetch
 model: haiku
 ---

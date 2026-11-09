@@ -6,8 +6,8 @@ description: Check a game's page is ready before promoting it — page loads, th
 # Ready to promote?
 
 1. Run: `node "${CLAUDE_PLUGIN_ROOT}/scripts/launch-check.mjs" --cwd "<project>"`
-   - Uses the profile's main link and saved tracking links. Pass `--url` for another page (e.g. a Steam or itch page — tracking-code and build checks then do not apply).
-   - Just deployed? add `--wait 180` (and `--build <dir>` if the site is built locally) to wait until the new version is live.
+   - Uses the profile's main link and saved tracking links. Pass `--url` for another page (e.g. a Steam or itch page — the visitor-tracking check then does not apply).
+   - Just updated the page? add `--wait 180` to keep checking until it is live.
 2. Report the first line as is (`ready · …` or `not ready · …`), then only what needs action:
    - **share image missing or not an image** → it hurts every shared link; suggest a 1200×630 image (`design` can check it).
    - **share title/description missing** → propose text from the profile pitch, in the main market's language.

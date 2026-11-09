@@ -2,12 +2,11 @@
 // Before promoting: is the page up, does a shared link look good, is visitor tracking in place,
 // and do the tracking links work?
 //
-// Usage: node launch-check.mjs [--cwd <dir>] [--url <page>] [--paths /,/en/]
-//                              [--build <dir with index.html>] [--wait <seconds>] [--no-links]
-// Defaults come from .hype-me/profile.json (links.site, launch.checkPaths, launch.buildDir)
+// Usage: node launch-check.mjs [--cwd <dir>] [--url <page>] [--paths /,/en/] [--wait <seconds>] [--no-links]
+// Defaults come from .hype-me/profile.json (links.site, launch.checkPaths)
 // and .hype-me/links.json (tracking links made with utm.mjs).
 import { readFileSync, existsSync, writeFileSync, mkdirSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { join } from 'node:path';
 
 const args = parseArgs(process.argv.slice(2));
 const cwd = args.cwd || process.cwd();
@@ -22,9 +21,7 @@ if (!url) {
   process.exit(2);
 }
 const paths = args.paths ? String(args.paths).split(',') : launch.checkPaths || ['/'];
-const buildDir = args.build || launch.buildDir || null;
 const waitSec = Number(args.wait || 0);
-const expected = buildDir ? localAssets(resolve(cwd, buildDir)) : [];
 const HEADERS = { 'cache-control': 'no-cache', 'user-agent': 'hype-me-launch-check' };
 
 const deadline = Date.now() + waitSec * 1000;
@@ -109,15 +106,6 @@ async function checkOnce() {
     detail: trackers.length ? trackers.join(', ') : 'none found in the page (it may be added by the host, e.g. Cloudflare)',
   });
 
-  if (expected.length) {
-    const missing = expected.filter((a) => !homeHtml.includes(a));
-    rows.push({
-      name: 'new build is live',
-      ok: missing.length === 0,
-      detail: missing.length ? `missing on live site: ${missing.slice(0, 3).join(', ')}` : `${expected.length} build files match`,
-    });
-  }
-
   for (const l of trackingLinks.slice(0, 20)) {
     try {
       const res = await fetch(l.url, { headers: HEADERS, redirect: 'follow' });
@@ -172,18 +160,6 @@ function readJson(path) {
   } catch {
     return null;
   }
-}
-
-// Hashed asset names referenced by the local build's index.html.
-function localAssets(dir) {
-  const file = join(dir, 'index.html');
-  if (!existsSync(file)) {
-    console.log(`(no ${file}; skipping build match)`);
-    return [];
-  }
-  const html = readFileSync(file, 'utf8');
-  const refs = [...html.matchAll(/(?:src|href)="([^"]+\.(?:js|css))"/g)].map((m) => m[1].split('/').pop());
-  return [...new Set(refs)].filter((name) => /[.-][A-Za-z0-9_-]{6,}\.(js|css)$/.test(name));
 }
 
 function parseArgs(argv) {

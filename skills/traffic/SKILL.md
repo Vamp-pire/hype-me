@@ -1,6 +1,6 @@
 ---
 name: traffic
-description: Answer "where do my players come from?" — traffic and acquisition by source, referrer, search term and tracking link, compared with the previous period, from analytics CSV exports (Google Analytics 4, Cloudflare Web Analytics, Plausible, Search Console, Steamworks UTM/traffic reports, itch.io, App Store Connect, Play Console) or a connected analytics tool. Use when the user asks about visitors, players, downloads or wishlists by source, referrals, or which post/channel brought people ("유저 어디서 와?", "유입 경로", "어디서 들어왔어?", "where is my traffic from").
+description: Answer "where do my players come from?" — visits, players, downloads or wishlists by source, search term and tracking link vs the previous period, from analytics CSV exports (GA4, Cloudflare, Search Console, Steamworks, itch.io, app stores) or a connected analytics tool. Use for "유저 어디서 와?", "유입 경로", "which post brought people".
 argument-hint: "[CSV files] [--since YYYY-MM-DD]"
 ---
 

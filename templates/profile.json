@@ -27,8 +27,9 @@
     "keys": {}
   },
   "launch": {
-    "checkPaths": ["/"],
-    "buildDir": null
+    "checkPaths": [
+      "/"
+    ]
   },
   "report": {
     "schedule": "on-demand",

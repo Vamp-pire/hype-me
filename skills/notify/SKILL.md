@@ -1,28 +1,25 @@
 ---
 name: notify
-description: Send a short "work finished" report to the user's own Discord/Slack/webhook channel set up for this project. Use when the user asks to be notified or reported to ("끝나면 알려 줘", "디스코드로 보고해", "notify me when done"), or when a hype-me report is set to be sent (report.notify). Only sends to the webhook configured in .hype-me/profile.json.
+description: Send a short hype-me update (a report summary or a finished research result) to the user's own Discord or Slack via a webhook set up for this project. Use when the user asks to be sent or notified ("디스코드로 보내 줘", "끝나면 알려 줘", "send it to Slack"), or when the profile says reports are sent (report.notify).
 ---
 
 # Notify
 
-The webhook URL lives in an environment variable; the config only stores its **name** (`notify.urlEnv`). Never print, log or ask for the URL value in chat.
+The webhook URL lives in an environment variable; the profile stores only its **name** (`notify.urlEnv`). Never print, log or ask for the URL value in chat.
 
-## Set up (first time)
-If `notify` is missing in `.hype-me/profile.json`:
-1. Ask which channel: Discord, Slack, or another webhook.
-2. Tell the user to create an incoming webhook there and put its URL in an environment variable themselves (suggest the name `HYPE_ME_WEBHOOK_URL`, set in their shell profile or a local, git-ignored env file). Do not type the URL for them.
-3. Save `"notify": { "type": "<discord|slack|webhook>", "urlEnv": "HYPE_ME_WEBHOOK_URL"}`. Ask whether reports should be sent automatically (`report.notify: true`) or only when asked.
+## First time
+If `notify.type` is empty in `.hype-me/profile.json`:
+1. Ask which: Discord, Slack, or another webhook.
+2. The user creates an incoming webhook there and puts its URL in an environment variable themselves (suggest `HYPE_ME_WEBHOOK_URL`, in their shell profile or a git-ignored env file). Do not type the URL for them.
+3. Save `notify.type`, and ask whether reports should be sent automatically (`report.notify: true`) or only when asked.
 
 ## Send
-Write one short message in the project's language, at most 5 lines:
+At most 8 lines in the user's language, for example:
 ```
-✅ <project>: <what was done in one line>
-visits: 1,240 (+18%) · new mentions: 7
-top source: r/chessvariants
-next: <one line, if any>
+📣 <game> · <period>
+visits 1,240 (+18%) · top source r/chessvariants
+new mentions 7 (2 worth answering)
+this week: <1–3 short actions>
 ```
-Then run:
-`node "${CLAUDE_PLUGIN_ROOT}/scripts/notify.mjs" --cwd "<project>" --message "<text>"`
-Report the script's one-line result. If it says the variable is not set, explain how to set it; do not retry with another channel.
-
-Send only what the user asked to be told. Do not include secrets, personal data or file contents.
+`node "${CLAUDE_PLUGIN_ROOT}/scripts/notify.mjs" --cwd "<project>" --message "<text>"` → report its one-line result. If the variable is not set, explain how to set it; do not try another channel.
+Send only what the user asked for; no secrets, personal data or file contents.

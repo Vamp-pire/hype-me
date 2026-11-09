@@ -1,6 +1,6 @@
 # hype-me v3 — 게임·프로젝트 홍보와 유입 조사 플러그인 (계획, 2026-11-09)
 
-> v2(개발·검증 중심)는 원래 의도에서 벗어나 `docs/archive/plan-v2-dev-focus.md`로 옮겼다. v0.1.0 코드(점검·배포 확인·계획 모드)는 git 기록(`dce6360`)에 남는다.
+> v2(개발·검증 중심) 계획서와 v0.1.0 코드(점검·배포 확인·계획 모드)는 원래 의도에서 벗어나 지웠고, git 기록(`dce6360`, `f28c505` 이전)에 남아 있다.
 > **원래 의도**: 특정 프로젝트, 특히 **게임**을 알리고 **사람이 어디서 오는지·어디로 가야 하는지**를 조사하는 특화 도구.
 
 ## 0. 확정된 결정 (2026-11-09)
@@ -105,7 +105,7 @@
 | channel-scout | 홍보할 곳 찾기(규칙·크기·연락 경로) | WebFetch, Read | haiku |
 | case-researcher | 성공 사례 타임라인·계기 정리(출처 필수) | WebFetch, Read, Write(.hype-me/cases) | inherit |
 | mention-tracker | 새 언급 모으고 분류 | WebFetch, Bash, Read | haiku |
-| scout | 이미 있는 도구 추천 조사 (유지) | WebFetch, Read | haiku |
+| tool-scout | 이미 있는 도구 추천 조사 | WebFetch, Read | haiku |
 - 공통: 읽기 위주, 게시·DM·설치 안 함, 출처 링크 필수, 모르면 "모름"
 
 ## 6. 데이터 출처와 한계 (정직하게)
