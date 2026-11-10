@@ -59,7 +59,7 @@ The repository is private for now, so you need access to it. For local developme
 commands/         setup, report, help, recommend
 skills/           bugs, ux, retention, experiment, prototype, traffic, channels, cases, mentions, promo-plan, promo-review, launch-check, design, guide, notify
 agents/           bug-monkey, code-hunter, error-collector, rule-checker, ux-playtester, prototyper, traffic-analyst, channel-scout, case-researcher, mention-tracker, tool-scout
-scripts/          monkey, snap (drive the installed Chrome/Edge — no downloads), retention, analytics, traffic-csv, steam-app, reddit-sub, utm, launch-check, mentions-seen, image-size, notify (Node 18+, no dependencies)
+scripts/          monkey, snap (drive the installed Chrome/Edge — no downloads), retention, analytics, traffic-csv, steam-app, reddit-sub, utm, launch-check, mentions-seen, image-size, notify (Node 18+, no dependencies; monkey and snap need Node 22+)
 hooks/            one status line in projects that have a game profile
 templates/        profile, case, promo-plan, experiment
 references/       budget, channels, image-specs, design-resources, recommended

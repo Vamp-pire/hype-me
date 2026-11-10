@@ -34,6 +34,8 @@ export function findBrowser() {
 
 /** Launch a headless browser. Returns { port, close() }. */
 export async function launch() {
+  if (typeof WebSocket === 'undefined')
+    throw new Error(`This needs Node.js 22 or newer (you have ${process.version}). Update Node from https://nodejs.org and try again.`);
   const exe = findBrowser();
   if (!exe) throw new Error('No Chrome or Edge found. Install one, or set HYPE_ME_BROWSER to its path.');
   const profile = mkdtempSync(join(tmpdir(), 'hype-me-browser-'));
