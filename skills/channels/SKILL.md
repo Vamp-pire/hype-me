@@ -16,14 +16,14 @@ If `.hype-me/cases/` has case files, use the places that worked for those games 
 ## 2. Reuse, then decide the areas
 - If the reference's "Last checked" date is more than 6 months before today, say in one line that the community rules and examples may be out of date; rules must be read live anyway.
 - If `.hype-me/reports/channels-*.md` is under 14 days old and the profile has not changed, show it and ask whether to refresh — do not search again unasked.
-- Default (light): **two areas** — communities and creators. Add curators/press and events only when asked, with `--deep`, or when the platform makes them central (Steam → curators and festivals). With `$ARGUMENTS`, only that area.
+- Level (light / normal / deep) and how many areas: `${CLAUDE_PLUGIN_ROOT}/references/budget.md`. Communities and creators come first; add curators/press and events at the deep level, when asked, or when the platform makes them central (Steam → curators and festivals). With `$ARGUMENTS`, only that area.
 - Context from `${CLAUDE_PLUGIN_ROOT}/references/channels.md`: add market/platform/genre rows only when the profile clearly calls for them, and tell the user each addition in one line with the reason (e.g. "Korean market → also checking Naver cafes and DCInside"). Drop rows that do not fit (e.g. Steam curators for a web game).
 
 ## 3. Search in parallel
-One `channel-scout` agent per chosen area, all at once, each with the profile summary and context notes (and "deep" if the user asked for `--deep`). Without agents, do the areas yourself following `agents/channel-scout.md`.
+One `channel-scout` agent per chosen area, all at once, each with the profile summary and context notes (and the level). Without agents, do the areas yourself following `agents/channel-scout.md`.
 
 ## 4. Rank and present
-Merge into one list of at most 12, ordered by **fit × reachability ÷ effort** (a small, exact-fit community the user already belongs to beats a huge general one):
+Merge into one list within the level's range of rows, ordered by **fit × reachability ÷ effort** (a small, exact-fit community the user already belongs to beats a huge general one):
 ```
 Top 3 to start with
 1. <place> — <why> · rule: "<short quote>" · start: <first action>

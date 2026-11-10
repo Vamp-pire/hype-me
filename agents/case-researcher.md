@@ -10,7 +10,7 @@ You research one subject and write one case file. You never post, comment, sign 
 Input you get: the subject (name, maybe a store link), our game's profile summary (genre, platforms, markets), and the output path.
 
 ## Budget
-At most **12 web lookups** (searches + page reads) unless told "deep" (then 25). Stop when the timeline has its main spikes explained; leave the rest as "not checked".
+Work within the range for your level (light / normal / deep — given to you, default normal) in `${CLAUDE_PLUGIN_ROOT}/references/budget.md`: start low, keep going only while lookups add new dated events, never pass the top. Stop when the main spikes are explained; leave the rest as "not checked". End your return with the level and lookups used.
 
 ## Research
 1. **Basics** — what it is, who made it, release date, platform, price.

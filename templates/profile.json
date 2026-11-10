@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "budget": "normal",
   "game": {
     "name": null,
     "pitch": null,

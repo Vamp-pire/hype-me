@@ -8,14 +8,14 @@ argument-hint: "[game or service names]"
 
 Answer in the user's language. Lead with the ideas, not the research process.
 
-## 1. Pick the subjects (default 1–2 per run, up to 3 with `--deep`)
+## 1. Pick the subjects (how many: by level in `${CLAUDE_PLUGIN_ROOT}/references/budget.md` — light 1, normal 1–2, deep 2–3)
 - From `$ARGUMENTS` or the request; otherwise from `.hype-me/profile.json` → `audience.similarGames`.
-- If there are none, suggest 4–5 candidates that match our genre, platforms and team size (an indie hit is more useful than a AAA one), and ask which to research (AskUserQuestion, multiSelect, up to 2 — or 3 with `--deep`).
+- If there are none, suggest 4–5 candidates that match our genre, platforms and team size (an indie hit is more useful than a AAA one), and ask which to research (AskUserQuestion, multiSelect, up to the top of the level's range).
 - Allow non-game services when the user asks or when a mechanic is the point (e.g. a personality test that spread through shared results).
 - Skip subjects already in `.hype-me/cases/` unless the user wants a refresh; reuse those files instead.
 
 ## 2. Research in parallel
-Start one `case-researcher` agent per subject, all at once. Give each: the subject, a 3-line summary of our profile (genre, platforms, markets, share moments), and the output path `.hype-me/cases/<slug>.md`.
+Start one `case-researcher` agent per subject, all at once. Give each the level, and: the subject, a 3-line summary of our profile (genre, platforms, markets, share moments), and the output path `.hype-me/cases/<slug>.md`.
 Without agents, research one subject yourself following `agents/case-researcher.md`.
 
 ## 3. Bring it together

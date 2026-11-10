@@ -40,7 +40,7 @@ Everything else: just ask in plain words. Stuck? `/hype-me:help`. Looking for an
 Limits, honestly: Steam, itch.io and app-store analytics have no public API, so traffic reads their CSV exports; Reddit blocks automated reading, so those places come with links to check by hand; virality is never promised.
 
 ## Cost
-Research uses web lookups, so it is the expensive part. hype-me keeps it down by default: analytics and checks are plain scripts (no AI), research agents run on smaller models with a lookup limit, success stories research 1–2 games and promotion channels 2 areas unless you add `--deep`, and recent results are reused instead of researched again.
+Research uses web lookups, so it is the expensive part. hype-me keeps it down by default: analytics and checks are plain scripts (no AI), research agents run on smaller models, and every limit is a range per effort level (light / normal / deep — say "quickly" or "in depth", or set it in the profile): agents start at the low end and go further only while results stay useful, never past the top. Recent results are reused instead of researched again.
 
 ## Install
 ```
