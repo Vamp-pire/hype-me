@@ -5,6 +5,7 @@
 //   node analytics.mjs search-console [--days 28] [--cwd dir] [--json]   Google search clicks by query (+ pages)
 //   node analytics.mjs ga4            [--days 28] [--cwd dir] [--json]   sessions by source / medium and campaign
 //   node analytics.mjs cloudflare --list-sites                           find your siteTag
+//   node analytics.mjs clarity        [--days 3]  [--cwd dir] [--json]   rage/dead clicks, quick backs, script errors by page
 //   node analytics.mjs status                                            what is connected (names only)
 //
 // Each compares the last N days with the N days before.
@@ -52,6 +53,7 @@ try {
   if (cmd === 'cloudflare') await cloudflare();
   else if (cmd === 'search-console') await searchConsole();
   else if (cmd === 'ga4') await ga4();
+  else if (cmd === 'clarity') await clarity();
   else if (cmd === 'status') status();
   else {
     console.log('usage: analytics.mjs cloudflare|search-console|ga4|status [--days N] [--cwd dir] [--json] [--list-sites]');
@@ -94,6 +96,7 @@ async function cloudflare() {
     viewer { accounts(filter: { accountTag: $acc }) {
       total: rumPageloadEventsAdaptiveGroups(filter: $filter, limit: 1) { count sum { visits } }
       referers: rumPageloadEventsAdaptiveGroups(filter: $filter, limit: 25, orderBy: [sum_visits_DESC]) { sum { visits } dimensions { refererHost } }
+      refpages: rumPageloadEventsAdaptiveGroups(filter: $filter, limit: 40, orderBy: [sum_visits_DESC]) { sum { visits } dimensions { refererHost refererPath } }
       paths: rumPageloadEventsAdaptiveGroups(filter: $filter, limit: 10, orderBy: [sum_visits_DESC]) { sum { visits } dimensions { requestPath } }
       countries: rumPageloadEventsAdaptiveGroups(filter: $filter, limit: 8, orderBy: [sum_visits_DESC]) { sum { visits } dimensions { countryName } }
     } } }`;
@@ -104,12 +107,18 @@ async function cloudflare() {
       pageviews: a.total[0]?.count ?? 0,
       by: Object.fromEntries(a.referers.map((r) => [r.dimensions.refererHost || '(direct)', r.sum.visits])),
       paths: a.paths.map((r) => [r.dimensions.requestPath, r.sum.visits]),
+      // Referring pages outside the site and search engines: blog posts, videos, threads that sent visitors.
+      refpages: a.refpages
+        .filter((r) => r.dimensions.refererHost && r.dimensions.refererPath && r.dimensions.refererPath !== '/' && r.dimensions.refererHost !== host && !/(^|\.)(google|bing|search\.naver|duckduckgo|yahoo|baidu|yandex)/.test(r.dimensions.refererHost) && !/googlequicksearchbox/.test(r.dimensions.refererHost))
+        .slice(0, 15)
+        .map((r) => [`${r.dimensions.refererHost}${r.dimensions.refererPath}`, r.sum.visits]),
       countries: a.countries.map((r) => [r.dimensions.countryName, r.sum.visits]),
     };
   };
   const [cur, prev] = await Promise.all(windows(days).map(period));
   output('cloudflare', `Cloudflare Web Analytics · visits by referrer · last ${days} days vs the ${days} before${usedSiteReport('cloudflare')}`, 'visits', cur.visits, prev.visits, cur.by, prev.by, {
     'top pages': cur.paths,
+    'referring pages': cur.refpages,
     countries: cur.countries,
     note: 'Cloudflare does not record utm_ tags; match tracking links with GA4 or the CSV reader.',
   });
@@ -178,6 +187,52 @@ async function ga4() {
   });
 }
 
+// ---------------- Microsoft Clarity (behaviour signals) ----------------
+// Data Export API: last 1–3 days only, 10 calls a day per project (this uses 2).
+async function clarity() {
+  const name = keyName('clarity', 'CLARITY_API_TOKEN');
+  const token = secret(name);
+  if (!token) return missing(`${name} is not set`, 'Clarity project → Settings → Data Export → generate an API token; store it as an environment variable or in ~/.claude/hype-me/.env');
+  const days = Math.min(3, Math.max(1, Number(opt('days', 3))));
+  const call = async (dimension) => {
+    const q = new URLSearchParams({ numOfDays: String(days), ...(dimension ? { dimension1: dimension } : {}) });
+    const res = await fetch(`https://www.clarity.ms/export-data/api/v1/project-live-insights?${q}`, {
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      signal: AbortSignal.timeout(30000),
+    });
+    if (res.status === 429) throw new Error('Clarity allows 10 calls a day — try again tomorrow');
+    if (!res.ok) throw new Error(`${res.status} ${(await res.text()).slice(0, 200)}`);
+    return Object.fromEntries((await res.json()).map((m) => [m.metricName, m.information]));
+  };
+  const [all, byUrl] = [await call(null), await call('URL')];
+  const n = (x) => (x == null || x === '' ? null : Number(x));
+  const first = (k) => all[k]?.[0] || {};
+  const summary = {
+    sessions: n(first('Traffic').totalSessionCount),
+    users: n(first('Traffic').distinctUserCount),
+    scrollDepthPct: n(first('ScrollDepth').averageScrollDepth),
+    activeSec: n(first('EngagementTime').activeTime),
+    rageClickPct: n(first('RageClickCount').sessionsWithMetricPercentage),
+    deadClickPct: n(first('DeadClickCount').sessionsWithMetricPercentage),
+    quickBackPct: n(first('QuickbackClick').sessionsWithMetricPercentage),
+    excessiveScrollPct: n(first('ExcessiveScroll').sessionsWithMetricPercentage),
+    scriptErrorPct: n(first('ScriptErrorCount').sessionsWithMetricPercentage),
+  };
+  const pages = (k) =>
+    (byUrl[k] || [])
+      .map((r) => ({ url: r.Url ?? r.URL ?? r.url, pct: n(r.sessionsWithMetricPercentage), count: n(r.subTotal) }))
+      .filter((r) => r.url && (r.count || r.pct))
+      .sort((a, b) => (b.count ?? 0) - (a.count ?? 0))
+      .slice(0, 8);
+  const signals = { 'rage clicks': pages('RageClickCount'), 'dead clicks': pages('DeadClickCount'), 'quick backs': pages('QuickbackClick'), 'script errors': pages('ScriptErrorCount') };
+  if (flag('json')) return console.log(JSON.stringify({ source: 'clarity', days, summary, pages: signals }, null, 2));
+  const pct = (v) => (v == null ? '–' : `${v}%`);
+  console.log(`Microsoft Clarity · last ${days} day(s) · ${summary.sessions ?? '?'} sessions, ${summary.users ?? '?'} users`);
+  console.log(`scroll depth ${pct(summary.scrollDepthPct)} · active time ${summary.activeSec ?? '?'}s`);
+  console.log(`sessions with: rage clicks ${pct(summary.rageClickPct)} · dead clicks ${pct(summary.deadClickPct)} · quick backs ${pct(summary.quickBackPct)} · excessive scroll ${pct(summary.excessiveScrollPct)} · script errors ${pct(summary.scriptErrorPct)}`);
+  for (const [k, list] of Object.entries(signals)) if (list.length) console.log(`\n${k} by page: ${list.map((r) => `${r.url.replace(/^https?:\/\/[^/]+/, '') || '/'} ${r.count ?? ''}${r.pct != null ? ` (${r.pct}%)` : ''}`).join(' · ')}`);
+}
+
 // ---------------- shared ----------------
 function status() {
   const has = (n) => (secret(n) ? 'set' : 'not set');
@@ -185,6 +240,7 @@ function status() {
   console.log(`cloudflare: ids ${ids.cloudflare?.accountId ? (ids.cloudflare.siteTag ? 'ok' : 'accountId only') : 'missing'} · ${keyName('cloudflare', 'CLOUDFLARE_API_TOKEN')} ${has(keyName('cloudflare', 'CLOUDFLARE_API_TOKEN'))}`);
   const g = googleKeyName();
   console.log(`search-console: property ${ids.searchConsole?.property ? 'ok' : 'missing'} · ${g || 'GOOGLE_SERVICE_ACCOUNT_JSON'} ${g ? 'set' : 'not set'}`);
+  console.log(`clarity: ${keyName('clarity', 'CLARITY_API_TOKEN')} ${has(keyName('clarity', 'CLARITY_API_TOKEN'))}`);
   console.log(`ga4: propertyId ${ids.ga4?.propertyId ? 'ok' : 'missing'} · ${g || 'GOOGLE_SERVICE_ACCOUNT_JSON'} ${g ? 'set' : 'not set'}`);
 }
 

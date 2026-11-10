@@ -19,6 +19,11 @@ hype-me's research skills and agents work within a **range** for each level. The
 | rows in a channel-scout table | 3–5 | 5–10 | 8–15 |
 | rows in the channels result | 5–6 | 6–12 | 10–20 |
 | rows in /recommend | 3–4 | 4–6 | 6–10 |
+| monkey test: browsers × actions each | 2 × 20–40 | 3–4 × 50–80 | 6–8 × 120–200 |
+| code-hunter: files read per module | 5–10 | 10–25 | 25–60 |
+| code-hunter: suspects reported | 3–5 | 5–10 | 8–15 |
+| rule-checker: random cases | 100–300 | 1,000–3,000 | 10,000–30,000 |
+| ux: personas · steps each | 1 · 6–10 | 2 · 10–20 | 3 · 20–35 |
 
 ## How to move inside a range
 - **Start low.** Do the lookups that matter most first (official pages, the best list or rules page).

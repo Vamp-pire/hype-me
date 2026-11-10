@@ -3,6 +3,7 @@
   "budget": "normal",
   "game": {
     "name": null,
+    "kind": "game",
     "pitch": null,
     "genre": [],
     "tags": [],

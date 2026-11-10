@@ -15,6 +15,7 @@ Before anything else, tell the user what a game profile is, for example:
 
 ## 1. Detect (read only)
 From the current folder and anything the user already said:
+- **Kind**: `game`, `web service` (a tool or site, e.g. an analysis site) or `app` — from the project itself. It changes which sources and words hype-me uses (no Steam/store pages or "players" wording for a web service).
 - **Name, one-line pitch, genre/tags**: README, package/store metadata, page `<title>`/`<meta name="description">`, `manifest.json`, Steam/itch/app-store links.
 - **Platforms and links**: web URL (deploy config, README), Steam/itch/App Store/Play links, Discord invite, social accounts.
 - **Languages and markets**: UI languages (i18n folders, `/en/` routes), README language.

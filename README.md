@@ -35,6 +35,10 @@ Everything else: just ask in plain words. Stuck? `/hype-me:help`. Looking for an
 | make a promo plan / how did it go? | `promo-plan`, `promo-review` |
 | is my page ready to share? | `launch-check` (page, share preview, tracking, links) |
 | check my thumbnail / store images | `design` |
+| find bugs players would hit | `bugs` (monkey test in several browsers at once, code reading, real player errors, rule checks) |
+| where do new players get stuck? | `ux` (first-time playtests by persona, Clarity, complaints, similar games) |
+| do players come back? what is the aha moment? | `retention` (event plan, cohorts, activation, funnels) |
+| run hypothesis → test → learn | `experiment`, and `prototype` for the cheapest test first |
 | find an existing tool for X | `/hype-me:recommend`, `guide` |
 
 Limits, honestly: Steam, itch.io and app-store analytics have no public API, so traffic reads their CSV exports; Reddit blocks automated reading, so those places come with links to check by hand; virality is never promised.
@@ -53,12 +57,12 @@ The repository is private for now, so you need access to it. For local developme
 ```
 .claude-plugin/   plugin.json, marketplace.json, icon.png
 commands/         setup, report, help, recommend
-skills/           traffic, channels, cases, mentions, promo-plan, promo-review, launch-check, design, guide, notify
-agents/           traffic-analyst, channel-scout, case-researcher, mention-tracker, tool-scout
-scripts/          analytics, traffic-csv, steam-app, reddit-sub, utm, launch-check, mentions-seen, image-size, notify (Node 18+, no dependencies)
+skills/           bugs, ux, retention, experiment, prototype, traffic, channels, cases, mentions, promo-plan, promo-review, launch-check, design, guide, notify
+agents/           bug-monkey, code-hunter, error-collector, rule-checker, ux-playtester, prototyper, traffic-analyst, channel-scout, case-researcher, mention-tracker, tool-scout
+scripts/          monkey, snap (drive the installed Chrome/Edge — no downloads), retention, analytics, traffic-csv, steam-app, reddit-sub, utm, launch-check, mentions-seen, image-size, notify (Node 18+, no dependencies)
 hooks/            one status line in projects that have a game profile
-templates/        profile, case, promo-plan
-references/       channels, image-specs, design-resources, recommended
+templates/        profile, case, promo-plan, experiment
+references/       budget, channels, image-specs, design-resources, recommended
 evals/            trigger and safety cases (claude plugin eval)
 docs/             plan.md (Korean)
 ```
