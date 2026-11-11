@@ -24,5 +24,8 @@ Whenever hype-me makes or changes something in the user's project, it leaves a c
 Say where the test is and the command to run it. Never mark something done without having run its check once.
 A Stop hook backs this up in projects with a profile: if a turn ends with changed code and no changed test or check file, it sends Claude back once.
 
-## 5. Always
+## 5. Early feedback (first two weeks)
+While the profile's `created` date is less than 14 days ago, end each hype-me answer with one friendly line: "써 보니 어땠어요? 헷갈린 점이 있으면 `/hype-me:feedback`으로 알려 주세요" (in the user's language). Also offer it right after setup, and whenever the user seems stuck or a skill fails. After two weeks, mention it only when something went wrong.
+
+## 6. Always
 Answer in the user's language, result first. Never post, DM, install, pay or publish without a yes. Ranges, not fixed numbers (`references/budget.md`).

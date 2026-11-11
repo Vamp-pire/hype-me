@@ -153,6 +153,52 @@ test('analytics itch: totals per game and change since the last check (fake itch
   }
 });
 
+test('feedback: builds an issue with version info, hides personal data, gives a prefilled link', () => {
+  const d = tmp();
+  writeFileSync(
+    join(d, 'fb.json'),
+    JSON.stringify({
+      kind: 'confusing',
+      tried: 'ran /hype-me:setup in C:\\Users\\Alice\\games\\chess',
+      stuck: 'it asked for my key sk-abcdefghijklmnopqrstuvwx and my mail alice@example.com',
+      helpful: 'channels list was good',
+      skill: 'setup',
+    }),
+  );
+  const r = run('feedback.mjs', ['--file', join(d, 'fb.json'), '--json']);
+  assert.equal(r.code, 0, r.out);
+  const j = JSON.parse(r.out);
+  assert.match(j.title, /^\[confusing\] setup: /);
+  assert.match(j.body, /hype-me 0\.\d+\.\d+/); // plugin version
+  assert.match(j.body, /Node v\d+/);
+  assert.doesNotMatch(j.body, /Alice|alice@example\.com|sk-abcdefghijklmnop/);
+  assert.match(j.body, /<path>|<email>|<secret>/);
+  const u = new URL(j.url);
+  assert.equal(u.origin + u.pathname, 'https://github.com/Vamp-pire/hype-me/issues/new');
+  assert.equal(u.searchParams.get('labels'), 'feedback');
+  assert.ok(j.url.length < 8000);
+  // never posts without --create
+  assert.equal(j.posted, false);
+  rmSync(d, { recursive: true, force: true });
+});
+
+test('session-start hook: feedback prompt only in the first 14 days of a profile', () => {
+  const hook = join(ROOT, 'hooks', 'session-start.mjs');
+  const fire = (cwd) => execFileSync(process.execPath, [hook], { input: JSON.stringify({ cwd }), encoding: 'utf8' });
+  const d = tmp();
+  mkdirSync(join(d, '.hype-me'));
+  const day = 864e5;
+  writeFileSync(join(d, '.hype-me', 'profile.json'), JSON.stringify({ created: new Date(Date.now() - 3 * day).toISOString().slice(0, 10), game: { name: 'G' } }));
+  let out = JSON.parse(fire(d));
+  assert.match(out.systemMessage, /\/hype-me:feedback/);
+  assert.match(out.hookSpecificOutput.additionalContext, /feedback/i);
+  writeFileSync(join(d, '.hype-me', 'profile.json'), JSON.stringify({ created: new Date(Date.now() - 30 * day).toISOString().slice(0, 10), game: { name: 'G' } }));
+  out = JSON.parse(fire(d));
+  assert.doesNotMatch(out.systemMessage, /feedback/);
+  assert.equal(fire(tmp()), ''); // no profile → silent
+  rmSync(d, { recursive: true, force: true });
+});
+
 test('check-tests hook: sends back once when code changed without a test, silent otherwise', () => {
   const hook = join(ROOT, 'hooks', 'check-tests.mjs');
   const fire = (cwd, extra = {}) =>

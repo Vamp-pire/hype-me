@@ -32,6 +32,7 @@ Then show one summary ("Here's your game profile") and ask **[Looks good / Chang
 
 ## 3. Write the profile
 Start from `${CLAUDE_PLUGIN_ROOT}/templates/profile.json`. Fill what you know, leave the rest null/empty.
+- Set `created` to today (YYYY-MM-DD) on the first setup.
 - `data.keys` stores only environment-variable **names** for any API keys, never values.
 - **Analytics connections** (optional, ask once only if the game has a website): fill the IDs the user has — `data.cloudflare` {accountId, siteTag}, `data.searchConsole` {property}, `data.ga4` {propertyId}; for itch.io games only the key name (`ITCH_API_KEY`, itch.io → Settings → API keys). These IDs are not secret. Tokens and key files stay outside the project: an environment variable, `~/.claude/hype-me/.env`, or an env file the user already keeps (set `data.envFile` to its path). If `~/.claude/site-report/sites/<host>.json` exists, its IDs are reused automatically — say so. Check with `node "${CLAUDE_PLUGIN_ROOT}/scripts/analytics.mjs" status --cwd "<project>"`. Never ask the user to paste a token into the chat.
 - `context.add` / `context.skip` start empty; they hold the user's own "also look at X" / "skip Y".
@@ -45,4 +46,4 @@ Look at markets, platforms and genre. If they call for sources beyond the defaul
 One line: "Your game profile is ready." Then suggest the most useful first step, as plain requests the user can say:
 - no players yet → "find similar games' success stories" or "where should I promote?"
 - already live with analytics → "where do my players come from?"
-Mention `/hype-me:report` for a summary any time.
+Mention `/hype-me:report` for a summary any time, and that feedback is very welcome — `/hype-me:feedback` (a minute; it becomes a GitHub issue after a preview).

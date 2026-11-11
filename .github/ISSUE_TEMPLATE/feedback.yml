@@ -1,0 +1,33 @@
+name: Feedback
+description: What worked, what was confusing, what broke (you can also use /hype-me:feedback inside Claude Code)
+labels: [feedback]
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options: [confusing, bug, idea, praise, other]
+    validations:
+      required: true
+  - type: input
+    id: skill
+    attributes:
+      label: Which feature
+      placeholder: setup, channels, bugs, ux, report…
+  - type: textarea
+    id: tried
+    attributes:
+      label: What I tried
+  - type: textarea
+    id: stuck
+    attributes:
+      label: Where I got stuck / what was confusing
+  - type: textarea
+    id: helpful
+    attributes:
+      label: What helped
+  - type: input
+    id: env
+    attributes:
+      label: hype-me version · OS · Node
+      placeholder: e.g. 0.13.0 · Windows 11 · Node 24

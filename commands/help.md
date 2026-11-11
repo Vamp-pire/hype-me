@@ -16,4 +16,4 @@ Answer in the user's language, plain words, at most 10 lines. No jargon.
 3. **What you can say** — short examples:
    "where do my players come from?" · "where should I promote?" · "how did similar games take off?" · "who's talking about my game?" · "make a promo plan" · "check my thumbnail/store image" · "find bugs" · "where do new players get stuck?" · "do players come back?" · "let's test this idea first".
 
-All of these are available as early versions.
+All of these are available as early versions. Something confusing or broken? `/hype-me:feedback` (it becomes a GitHub issue after a preview).

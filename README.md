@@ -23,7 +23,7 @@ It never posts, DMs, installs or spends money without your yes, and it follows e
 1. `/hype-me:setup` — once per game. A short game profile (at most 3 questions).
 2. `/hype-me:report` — a summary any time: traffic changes, new mentions, last promo results, three things to do this week. Add `--send` for Discord/Slack, `--schedule weekly` to run it every week.
 
-Everything else: just ask in plain words. Stuck? `/hype-me:help`. Looking for an existing tool for something? `/hype-me:recommend`.
+Everything else: just ask in plain words. Stuck? `/hype-me:help`. Tell us what worked and what did not: `/hype-me:feedback` (turns into a GitHub issue after a preview; personal data is hidden). Looking for an existing tool for something? `/hype-me:recommend`.
 
 ## What is inside
 | ask | skill |
@@ -61,10 +61,10 @@ Needs Node.js 22+ for the browser tools (bug monkey, UX bots) and Chrome or Edge
 ## Layout
 ```
 .claude-plugin/   plugin.json, marketplace.json, icon.png
-commands/         setup, report, help
+commands/         setup, report, help, feedback
 skills/           bugs, ux, retention, experiment, prototype, traffic, channels, cases, mentions, promo-plan, launch-check, design, recommend, notify
 agents/           bug-monkey, code-hunter, error-collector, rule-checker, ux-playtester, prototyper, channel-scout, case-researcher, mention-tracker, tool-scout
-scripts/          monkey, snap (drive the installed Chrome/Edge — no downloads), retention, analytics, traffic-csv, steam-app, reddit-sub, utm, launch-check, mentions-seen, image-size, notify (Node 18+, no dependencies; monkey and snap need Node 22+)
+scripts/          monkey, snap (drive the installed Chrome/Edge — no downloads), retention, analytics, traffic-csv, steam-app, reddit-sub, utm, launch-check, mentions-seen, image-size, notify, feedback (Node 18+, no dependencies; monkey and snap need Node 22+)
 hooks/            in projects with a game profile: one status line at start; at the end of a turn, a reminder (once) when code changed without a test
 templates/        profile, case, promo-plan, experiment
 references/       budget, channels, image-specs, design-resources, recommended
