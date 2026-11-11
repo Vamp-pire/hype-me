@@ -3,7 +3,7 @@
 **"Hype me" — help people find your game.**
 A Claude Code plugin for indie games and small projects (web, Steam/itch.io, mobile): it finds where your players come from, where to promote, how similar games took off, who is talking about you, and turns that into a promo plan you can actually run.
 
-> Status: **0.9 — feature complete, testing.** Everything below works as an early version; public release after real-game testing. Private for now.
+> Status: **0.12 — early version.** Everything below works and is tested on sample pages; real-game use is just starting. Feedback welcome in [Issues](https://github.com/Vamp-pire/hype-me/issues).
 
 ## The six questions it answers
 | ask it | what you get |
@@ -56,7 +56,7 @@ Research uses web lookups, so it is the expensive part. hype-me keeps it down by
 /plugin marketplace add Vamp-pire/hype-me
 /plugin install hype-me@hype-me
 ```
-The repository is private for now, so you need access to it. For local development: `claude --plugin-dir <path to this folder>`.
+Needs Node.js 22+ for the browser tools (bug monkey, UX bots) and Chrome or Edge. For local development: `claude --plugin-dir <path to this folder>`.
 
 ## Layout
 ```
