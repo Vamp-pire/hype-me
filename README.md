@@ -28,7 +28,7 @@ Everything else: just ask in plain words. Stuck? `/hype-me:help`. Looking for an
 ## What is inside
 | ask | skill |
 |---|---|
-| where do players come from? | `traffic` (Cloudflare Web Analytics, Search Console and GA4 directly; CSV for Steam, itch.io and app stores) |
+| where do players come from? | `traffic` (Cloudflare Web Analytics, Search Console, GA4 and itch.io directly; CSV for Steam and app stores) |
 | where should I promote? | `channels` |
 | how did similar games take off? | `cases` |
 | who is talking about my game? | `mentions` |
@@ -36,7 +36,7 @@ Everything else: just ask in plain words. Stuck? `/hype-me:help`. Looking for an
 | is my page ready to share? | `launch-check` (page, share preview, tracking, links) |
 | check my thumbnail / store images | `design` |
 | find bugs players would hit | `bugs` (monkey test in several browsers at once, code reading, real player errors, rule checks) |
-| where do new players get stuck? | `ux` (first-time playtests by persona, Clarity, complaints, similar games) |
+| where do new players get stuck? | `ux` (play bots per persona built once and rerun for free, Clarity, complaints, similar games, a people playtest kit) |
 | do players come back? what is the aha moment? | `retention` (event plan, cohorts, activation, funnels) |
 | run hypothesis → test → learn | `experiment`, and `prototype` for the cheapest test first |
 | find an existing tool for X | `recommend` (also suggests one on its own when you need it) |

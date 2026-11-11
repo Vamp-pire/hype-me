@@ -23,7 +23,8 @@ hype-me's research skills and agents work within a **range** for each level. The
 | code-hunter: files read per module | 5–10 | 10–25 | 25–60 |
 | code-hunter: suspects reported | 3–5 | 5–10 | 8–15 |
 | rule-checker: random cases | 100–300 | 1,000–3,000 | 10,000–30,000 |
-| ux: personas · steps each | 1 · 6–10 | 2 · 10–20 | 3 · 20–35 |
+| ux: personas · bot steps each | 1 · 6–10 | 2 · 10–20 | 3 · 20–35 |
+| ux: images an agent looks at per persona | 1 | 1–2 | 2–4 |
 
 ## How to move inside a range
 - **Start low.** Do the lookups that matter most first (official pages, the best list or rules page).

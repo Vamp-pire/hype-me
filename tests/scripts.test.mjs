@@ -124,6 +124,35 @@ test('notify: Discord card preview from a template', () => {
   rmSync(d, { recursive: true, force: true });
 });
 
+test('analytics itch: totals per game and change since the last check (fake itch.io API)', async () => {
+  let views = 100;
+  const server = createServer((q, s) => {
+    if (!q.url.includes('/TESTKEY/my-games')) return s.writeHead(403), s.end('{"errors":["invalid key"]}');
+    s.writeHead(200, { 'content-type': 'application/json' });
+    s.end(JSON.stringify({ games: [{ id: 1, title: 'Variant Tour', url: 'https://x.itch.io/vt', views_count: views, downloads_count: 20, purchases_count: 0 }] }));
+  });
+  await new Promise((ok) => server.listen(0, ok));
+  const d = tmp();
+  mkdirSync(join(d, '.hype-me'));
+  writeFileSync(join(d, '.hype-me', 'profile.json'), '{}');
+  const env = { ...process.env, ITCH_API_KEY: 'TESTKEY', HYPE_ME_ITCH_API_BASE: `http://127.0.0.1:${server.address().port}` };
+  try {
+    const first = await runAsync('analytics.mjs', ['itch', '--cwd', d], env);
+    assert.match(first, /first check/);
+    assert.match(first, /Variant Tour \| 100 \| 20 \| 0/);
+    views = 160;
+    const second = await runAsync('analytics.mjs', ['itch', '--cwd', d], env);
+    assert.match(second, /Variant Tour \| 160 \(\+60\)/);
+    const bad = await runAsync('analytics.mjs', ['itch', '--cwd', d], { ...env, ITCH_API_KEY: 'WRONG' });
+    assert.match(bad, /invalid key/);
+    const none = await runAsync('analytics.mjs', ['itch', '--cwd', d], { ...env, ITCH_API_KEY: '' });
+    assert.match(none, /not connected: ITCH_API_KEY is not set/);
+  } finally {
+    server.close();
+    rmSync(d, { recursive: true, force: true });
+  }
+});
+
 test('check-tests hook: sends back once when code changed without a test, silent otherwise', () => {
   const hook = join(ROOT, 'hooks', 'check-tests.mjs');
   const fire = (cwd, extra = {}) =>
@@ -208,11 +237,34 @@ test('snap: first screen with checks and a screenshot', { skip: !canBrowse && 'n
   }
 });
 
+test('snap bot: reaches the goal, counts dead taps, canvas taps count as responses', { skip: !canBrowse && 'no Chrome/Edge or Node < 22', timeout: 120000 }, async () => {
+  const html = `<!doctype html><meta name=viewport content="width=device-width"><title>Bot</title>
+    <button id=s onclick="document.getElementById('o').textContent='Game over'">Start</button>
+    <button>Dead</button><p id=o>ready</p>
+    <canvas id=c width=200 height=100 style="border:1px solid"></canvas>
+    <script>let n=0;c.onclick=()=>{const x=c.getContext('2d');x.fillRect(n++*10,10,8,8)}</script>`;
+  const server = createServer((q, s) => (s.writeHead(200, { 'content-type': 'text/html' }), s.end(html)));
+  await new Promise((ok) => server.listen(0, ok));
+  const d = tmp();
+  writeFileSync(join(d, 'bot.json'), JSON.stringify({ persona: 'tester', viewport: 'mobile', goal: 'Game over', steps: [{ click: 'Start' }, { expect: 'Game over' }, { click: 'Dead' }, { clickSelector: '#c' }, { click: 'Nope' }] }));
+  try {
+    const out = await runAsync('snap.mjs', ['--url', `http://127.0.0.1:${server.address().port}/`, '--cwd', d, '--bot', join(d, 'bot.json')]);
+    assert.match(out, /goal "Game over" reached at step 2/);
+    assert.match(out, /dead taps 1 · not found 1/);
+    assert.match(out, /clicked "Dead" — no visible response/);
+    assert.doesNotMatch(out, /clicked "#c" — no visible response/);
+    assert.match(out, /\.jpg/);
+  } finally {
+    server.close();
+    rmSync(d, { recursive: true, force: true });
+  }
+});
+
 // ---------- helpers ----------
-function runAsync(script, args) {
+function runAsync(script, args, env) {
   return new Promise((ok) => {
     let out = '';
-    const p = spawn(process.execPath, [S(script), ...args]);
+    const p = spawn(process.execPath, [S(script), ...args], env ? { env } : undefined);
     p.stdout.on('data', (b) => (out += b));
     p.stderr.on('data', (b) => (out += b));
     p.on('close', () => ok(out));

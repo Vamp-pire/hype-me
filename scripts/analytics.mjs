@@ -6,6 +6,7 @@
 //   node analytics.mjs ga4            [--days 28] [--cwd dir] [--json]   sessions by source / medium and campaign
 //   node analytics.mjs cloudflare --list-sites                           find your siteTag
 //   node analytics.mjs clarity        [--days 3]  [--cwd dir] [--json]   rage/dead clicks, quick backs, script errors by page
+//   node analytics.mjs itch                       [--cwd dir] [--json]   views, downloads, purchases per game vs the last check
 //   node analytics.mjs status                                            what is connected (names only)
 //
 // Each compares the last N days with the N days before.
@@ -54,6 +55,7 @@ try {
   else if (cmd === 'search-console') await searchConsole();
   else if (cmd === 'ga4') await ga4();
   else if (cmd === 'clarity') await clarity();
+  else if (cmd === 'itch') await itch();
   else if (cmd === 'status') status();
   else {
     console.log('usage: analytics.mjs cloudflare|search-console|ga4|status [--days N] [--cwd dir] [--json] [--list-sites]');
@@ -187,6 +189,47 @@ async function ga4() {
   });
 }
 
+// ---------------- itch.io (your own games) ----------------
+// itch.io's API gives totals only (views, downloads, purchases) — no referrers. Each run is saved
+// so the next run shows the change since then.
+async function itch() {
+  const name = keyName('itch', 'ITCH_API_KEY');
+  const key = secret(name);
+  if (!key) return missing(`${name} is not set`, 'itch.io → Settings → API keys → Generate new API key; store it as an environment variable or in ~/.claude/hype-me/.env');
+  const base = process.env.HYPE_ME_ITCH_API_BASE || 'https://itch.io/api/1';
+  const res = await fetch(`${base}/${encodeURIComponent(key)}/my-games`, { signal: AbortSignal.timeout(30000) });
+  const j = await res.json().catch(() => ({}));
+  if (!res.ok || j.errors) throw new Error(`itch.io: ${(j.errors || [res.status]).join(', ')}`);
+  const games = (j.games || []).map((g) => ({
+    id: g.id,
+    title: g.title,
+    url: g.url,
+    views: Number(g.views_count || 0),
+    downloads: Number(g.downloads_count || 0),
+    purchases: Number(g.purchases_count || 0),
+    published: g.published_at || null,
+  }));
+  const histPath = join(cwd, '.hype-me', 'data', 'itch-history.json');
+  const hist = readJson(histPath) || [];
+  const last = hist[hist.length - 1];
+  const prevOf = (id) => last?.games?.find((g) => g.id === id);
+  const now = new Date().toISOString();
+  if (existsSync(join(cwd, '.hype-me'))) {
+    const { mkdirSync, writeFileSync } = await import('node:fs');
+    mkdirSync(join(cwd, '.hype-me', 'data'), { recursive: true });
+    writeFileSync(histPath, JSON.stringify([...hist.slice(-60), { at: now, games }], null, 2));
+  }
+  if (flag('json')) return console.log(JSON.stringify({ source: 'itch', at: now, since: last?.at || null, games: games.map((g) => ({ ...g, before: prevOf(g.id) || null })) }, null, 2));
+  console.log(`itch.io · ${games.length} game(s)${last ? ` · change since ${last.at.slice(0, 10)}` : ' · first check (saved as the baseline)'}`);
+  console.log('\n| game | views | downloads | purchases |\n|---|---|---|---|');
+  const d = (now_, before) => (before == null ? '' : ` (${now_ - before >= 0 ? '+' : ''}${now_ - before})`);
+  for (const g of games) {
+    const p = prevOf(g.id);
+    console.log(`| ${g.title} | ${fmt(g.views)}${d(g.views, p?.views)} | ${fmt(g.downloads)}${d(g.downloads, p?.downloads)} | ${fmt(g.purchases)}${d(g.purchases, p?.purchases)} |`);
+  }
+  console.log('\nitch.io gives totals only; for where visitors came from use its Analytics page (referrers) as CSV with traffic-csv.');
+}
+
 // ---------------- Microsoft Clarity (behaviour signals) ----------------
 // Data Export API: last 1–3 days only, 10 calls a day per project (this uses 2).
 async function clarity() {
@@ -241,6 +284,7 @@ function status() {
   const g = googleKeyName();
   console.log(`search-console: property ${ids.searchConsole?.property ? 'ok' : 'missing'} · ${g || 'GOOGLE_SERVICE_ACCOUNT_JSON'} ${g ? 'set' : 'not set'}`);
   console.log(`clarity: ${keyName('clarity', 'CLARITY_API_TOKEN')} ${has(keyName('clarity', 'CLARITY_API_TOKEN'))}`);
+  console.log(`itch: ${keyName('itch', 'ITCH_API_KEY')} ${has(keyName('itch', 'ITCH_API_KEY'))}`);
   console.log(`ga4: propertyId ${ids.ga4?.propertyId ? 'ok' : 'missing'} · ${g || 'GOOGLE_SERVICE_ACCOUNT_JSON'} ${g ? 'set' : 'not set'}`);
 }
 

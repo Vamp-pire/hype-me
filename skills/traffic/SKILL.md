@@ -15,10 +15,11 @@ Then run each connected source (in parallel):
 - `analytics.mjs cloudflare --cwd "<project>" --days 7` — visits by referrer, top pages, countries
 - `analytics.mjs search-console --cwd "<project>" --days 28` — Google search clicks by search term
 - `analytics.mjs ga4 --cwd "<project>" --days 28` — sessions by source / medium, tracking-link campaigns
+- `analytics.mjs itch --cwd "<project>"` — views, downloads and purchases per itch.io game, change since the last check (totals only; referrers via the itch.io Analytics page as CSV)
 A `not connected` line comes with a one-line "how"; pass it on only if the user wants that source.
 
 ## 2. CSV for everything else
-Steam, itch.io and app stores have no public analytics API. Use exports in `$ARGUMENTS` or `.hype-me/data/`:
+Steam and app stores have no public analytics API (itch.io gives totals via `analytics.mjs itch`, but not referrers). Use exports in `$ARGUMENTS` or `.hype-me/data/`:
 `node "${CLAUDE_PLUGIN_ROOT}/scripts/traffic-csv.mjs" <file> --cwd "<project>" [--before <older file> | --from … --to … --vs-from … --vs-to …]` (`--by` / `--metric` if it cannot tell the columns).
 Where to get them: Steamworks → UTM Analytics / Traffic Breakdown; itch.io → Analytics → referrers; App Store Connect → Sources; Play Console → Store performance. Save them in `.hype-me/data/` (git-ignored).
 
