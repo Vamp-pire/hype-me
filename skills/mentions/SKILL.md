@@ -6,9 +6,9 @@ description: Find who is talking about the game or service — new posts, videos
 # Who's talking about it?
 
 Answer in the user's language. Never reply, post, vote or DM; the user answers people.
+Follow the shared rules in `${CLAUDE_PLUGIN_ROOT}/references/rules.md` — profile first (run setup, then continue), end with one experiment suggestion, use design checks whenever something visual is involved, and leave a runnable test with anything you make.
 
 1. **Profile.** Read `.hype-me/profile.json` (name, aliases, kind, links, markets).
-   - No profile: draft one from the project (README, CLAUDE.md, site title/description, package name), show it in two lines and ask "right?" — then continue; offer `/hype-me:setup` to save it. If `.hype-me/` does not exist yet and the folder is a git repo, ask once whether to add `.hype-me/cache/` and `.hype-me/reports/` to `.gitignore`.
    - A common-word name (e.g. "Stylish"): search with the domain and a distinctive phrase, not the name alone.
    - Ask whether the user already knows any posts or videos about it (one line, optional) — known URLs are opened directly.
 2. **Run** the `mention-tracker` agent with that input, the project path and the level (first run: deep). Without agents, follow `agents/mention-tracker.md` yourself.

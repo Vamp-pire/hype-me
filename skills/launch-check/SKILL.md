@@ -4,6 +4,7 @@ description: Check a game's page is ready before promoting it — page loads, th
 ---
 
 # Ready to promote?
+Follow the shared rules in `${CLAUDE_PLUGIN_ROOT}/references/rules.md` — profile first (run setup, then continue), end with one experiment suggestion, use design checks whenever something visual is involved, and leave a runnable test with anything you make.
 
 1. Run: `node "${CLAUDE_PLUGIN_ROOT}/scripts/launch-check.mjs" --cwd "<project>"`
    - Uses the profile's main link and saved tracking links. Pass `--url` for another page (e.g. a Steam or itch page — the visitor-tracking check then does not apply).

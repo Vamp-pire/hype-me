@@ -7,6 +7,7 @@ argument-hint: "[url] [quick | deep]"
 # Where do new players get stuck?
 
 Answer in the user's language. Every problem needs at least two kinds of evidence, or is marked "single signal".
+Follow the shared rules in `${CLAUDE_PLUGIN_ROOT}/references/rules.md` — profile first (run setup, then continue), end with one experiment suggestion, use design checks whenever something visual is involved, and leave a runnable test with anything you make.
 
 ## 0. Missing the game or a URL?
 Do not stop with only a question. Show the plan in at most 4 lines — level, personas (built from what the user said), which evidence (playtest with screenshots on phone/PC, Clarity, complaints, similar games), and the output (ranked problems, each with evidence and a fix) — then ask for exactly the missing thing (URL or project folder).
@@ -17,8 +18,14 @@ Do not stop with only a question. Show the plan in at most 4 lines — level, pe
 - **What players say** — gripes and questions from `.hype-me/mentions.json` / the `mentions` skill ("어렵다", "모르겠다", "느리다", "how do I…").
 - **Similar games** (normal and deep) — first screens and onboarding of 1–2 similar games (store screenshots, their sites; Mobbin or getdesign.md for references). Compare: what do they show first, how fast is the first win.
 
+## 1b. In-game friction (what automatic play cannot feel)
+Automatic playtests see the first minutes; they do not feel tedium mid-game. Cover it two ways:
+- **Friction events** — check whether the game records them (see the `retention` skill's event plan): time per move/turn, undo/back use, the same invalid action repeated, settings changed, menu opened mid-game, game left before the end, rematch/next-game taps. If recorded, show where they spike; if not, propose the 3–5 that fit this game.
+- **People test kit** (normal and deep) — prepare `.hype-me/ux/playtest-kit-<date>.md` from `${CLAUDE_PLUGIN_ROOT}/templates/playtest-kit.md`: 3 tasks that go past onboarding into real play, 3 questions, what to watch in Clarity recordings (rage/dead clicks on the board, quick backs), and how to send answers back. The user gives it to 3–5 people; when answers come back, add them as evidence and rerun the ranking.
+
 ## 2. Judge with game-onboarding principles
 Teach by doing, not reading · first success within ~60 seconds · one obvious thing to do per screen · failing is cheap and you can retry at once · a moment worth showing a friend · works one-handed on a phone (tap targets ≥ 40px, no sideways scroll, readable text).
+Mid-game: every tap gets visible feedback (also when it is not allowed — say why) · the next action is obvious after each turn · locked states (waiting, animation, AI thinking) are shown where the player is looking · repeated choices are remembered · undo and restart are one tap away.
 
 ## 3. Report
 ```

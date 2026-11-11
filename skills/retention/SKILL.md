@@ -7,6 +7,7 @@ argument-hint: "[events file] [--aha event]"
 # Do players come back?
 
 Answer in the user's language. Numbers come from data only; small groups are marked.
+Follow the shared rules in `${CLAUDE_PLUGIN_ROOT}/references/rules.md` — profile first (run setup, then continue), end with one experiment suggestion, use design checks whenever something visual is involved, and leave a runnable test with anything you make.
 
 ## 1. Is anything recorded?
 Look for event tracking in the project (`gtag('event'`, `posthog.capture`, `plausible(`, inserts into an events table, `window.dataLayer`) and in `.hype-me/profile.json` → `data`.
@@ -15,6 +16,7 @@ Look for event tracking in the project (`gtag('event'`, `posthog.capture`, `plau
 
 ## 2. Event plan (5–8 events, no more)
 Pick for this game, e.g. `first_visit`, `game_start`, `game_complete`, `first_win`, `result_view`, `share_click`, `return_visit` (or the tool's own session start). Each with: when it fires, which properties (mode, variant, length — no personal data).
+Add 2–3 **friction events** for mid-game comfort (used by the `ux` skill): e.g. `invalid_action` (reason), `undo`, `quit_mid_game` (move number), `settings_change`, `idle_long` (seconds without input).
 How to record — match what the project already uses; if nothing, suggest the lightest:
 - GA4 already on the site → `gtag('event', 'game_complete', { mode })`
 - PostHog / Plausible custom events → their one-line call

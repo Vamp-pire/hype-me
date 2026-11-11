@@ -7,10 +7,10 @@ argument-hint: "[area: communities | creators | press | events]"
 # Where to promote
 
 Answer in the user's language. Never post, comment, DM or contact anyone; the user does outreach.
+Follow the shared rules in `${CLAUDE_PLUGIN_ROOT}/references/rules.md` — profile first (run setup, then continue), end with one experiment suggestion, use design checks whenever something visual is involved, and leave a runnable test with anything you make.
 
 ## 1. Read the profile
 `.hype-me/profile.json`: genre, tags, platforms, markets, similar games, player groups, `context.add` / `context.skip`.
-**No profile: do not stop to ask.** Use what the user said (genre, platform, market), guess 2–3 similar games and mark them as guesses, run a light search, and show results. Afterwards ask at most 2 questions that would change the list most (e.g. "which communities are you already in?") and offer `/hype-me:setup` for next time.
 If `.hype-me/cases/` has case files, use the places that worked for those games as leads.
 
 ## 2. Reuse, then decide the areas

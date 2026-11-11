@@ -31,7 +31,7 @@ Game-specific items to consider: wishlist push, demo, Steam Next Fest/themed fes
 
 ## Measure
 - Look at: <visits per tracking link, plays/finishes, shares, wishlists, joins>
-- Check on: <date, ~3–7 days after the last post> → "how did the promo go?" (promo-review)
+- Check on: <date, ~3–7 days after the last post> → "how did the promo go?" (experiment review)
 
 ## Not doing
 No fake accounts, fake reviews, vote manipulation, spam/cross-posting against rules, exaggerated claims, auto-posting. The user posts everything themselves.

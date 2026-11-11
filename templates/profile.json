@@ -43,6 +43,7 @@
     ]
   },
   "report": {
+    "sections": [],
     "schedule": "on-demand",
     "notify": false
   },

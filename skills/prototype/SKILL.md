@@ -7,6 +7,7 @@ argument-hint: "[idea]"
 # Prototype — cheapest test first
 
 Answer in the user's language. Prototypes are throwaway and live apart from the game.
+Follow the shared rules in `${CLAUDE_PLUGIN_ROOT}/references/rules.md` — profile first (run setup, then continue), end with one experiment suggestion, use design checks whenever something visual is involved, and leave a runnable test with anything you make.
 
 ## 1. Pin down the question
 If the idea is still vague, do not stop with only questions: give a first answer in at most 5 lines — the recommended level and why, an example success criterion, that any prototype lives in `prototypes/` apart from the game, and that it will be recorded as an experiment — then ask at most 2 questions (what the idea is, and want / understand / enjoy).

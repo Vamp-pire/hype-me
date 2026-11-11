@@ -7,6 +7,7 @@ argument-hint: "[what to promote: launch | update | event | demo]"
 # Promo plan
 
 Answer in the user's language. Be honest: virality cannot be promised — write it as "hypothesis → small test → check the numbers".
+Follow the shared rules in `${CLAUDE_PLUGIN_ROOT}/references/rules.md` — profile first (run setup, then continue), end with one experiment suggestion, use design checks whenever something visual is involved, and leave a runnable test with anything you make.
 
 ## 1. Gather inputs (do not ask what you can read)
 - `.hype-me/profile.json` (game, platforms, markets, audience, share moments, links).
@@ -14,9 +15,9 @@ Answer in the user's language. Be honest: virality cannot be promised — write 
 - **Past promotion** — read earlier plans in `docs/promo/*.md` (their channel tables and "Result" sections) and `.hype-me/links.json`:
   - do not plan the same place with the same kind of post within 30 days, unless that place's rules welcome it (e.g. a weekly showcase thread) — say so when you skip one;
   - put places that worked before first, and drop places that clearly did not (say why, with the numbers);
-  - if a past plan has no "Result" yet and its check date has passed, offer `promo-review` first in one line.
+  - if a past plan has no "Result" yet and its check date has passed, offer to review it first (`experiment review`) in one line.
 - What is being promoted (`$ARGUMENTS` or the request): launch, update, event, demo — and a date if there is one.
-- **Do not block on questions.** If there is no profile and little information, still write a short draft plan now with every assumption marked (e.g. "assuming a web game, Korea first"), covering all sections below, then ask at most 3 questions that would change the plan most (AskUserQuestion, recommended answer first) and offer `/hype-me:setup` for next time.
+- **Do not block on questions.** If details are missing (date, goal), write the draft plan with every assumption marked, then ask at most 3 questions that would change it most.
 
 ## 2. Write the plan
 Fill `${CLAUDE_PLUGIN_ROOT}/templates/promo-plan.md`:
@@ -35,4 +36,4 @@ Offer `launch-check` once: page up, share preview correct, visitor tracking pres
 Write a draft per channel following the table: that place's tone and length, the hook, the tracking link, an honest note that the developer made it if the place requires it. The user posts them — never post, schedule or DM.
 
 ## 5. Close
-One line with the check date and: "On <date>, ask 'how did the promo go?'" (promo-review).
+Record the plan as an experiment (`.hype-me/experiments/`, type "promotion", goal = main metric, check date) after a yes, and end with: "On <date>, ask 'how did the promo go?'".

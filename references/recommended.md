@@ -2,7 +2,7 @@
 
 Last checked: 2026-11-09
 
-hype-me does not rebuild these. `/hype-me:recommend` and the `guide` skill pick rows that match the game profile.
+hype-me does not rebuild these. The `recommend` skill picks rows that match the game profile.
 Install counts are skills.sh all-time totals, rounded, as of 2026-11-08/09 — recheck before quoting.
 
 Sources:
@@ -32,7 +32,7 @@ Sources:
 | media | review-animations, animation-vocabulary | skills.sh | `emilkowalski/skills` | UI motion polish for a landing page | optional | community |
 | meta | find-skills | skills.sh | `vercel-labs/skills` → `find-skills` (~4.3M) | searching for more skills | used by `tool-scout` | partner |
 
-## How to install (shared by /hype-me:recommend and the guide skill)
+## How to install (used by the recommend skill)
 - **Plugin**: give the `/plugin install <name>@<marketplace>` step; the user runs plugin installs in their client.
 - **skills.sh skill**: show `npx skills add <owner/repo> --skill <name>` and mention `DISABLE_TELEMETRY=1` to skip install statistics. Run it only after the user says yes. For community items, show the repository link (and skills.sh audit result if known) first.
 - Never install anything the user did not pick.

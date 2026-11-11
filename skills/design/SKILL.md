@@ -7,6 +7,7 @@ argument-hint: "[image files or page URL]"
 # Design help for promotion
 
 Answer in the user's language. Be direct and kind: say what works, then the 1–3 changes that matter most.
+Follow the shared rules in `${CLAUDE_PLUGIN_ROOT}/references/rules.md` — profile first (run setup, then continue), end with one experiment suggestion, use design checks whenever something visual is involved, and leave a runnable test with anything you make.
 
 ## 1. Sizes and formats
 If the reference's "Last checked" date is more than 6 months before today, say in one line that the figures may be out of date and, before a store submission, confirm on the official page linked in image-specs.md.

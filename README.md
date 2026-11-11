@@ -32,19 +32,24 @@ Everything else: just ask in plain words. Stuck? `/hype-me:help`. Looking for an
 | where should I promote? | `channels` |
 | how did similar games take off? | `cases` |
 | who is talking about my game? | `mentions` |
-| make a promo plan / how did it go? | `promo-plan`, `promo-review` |
+| make a promo plan / how did it go? | `promo-plan`, then `experiment` review |
 | is my page ready to share? | `launch-check` (page, share preview, tracking, links) |
 | check my thumbnail / store images | `design` |
 | find bugs players would hit | `bugs` (monkey test in several browsers at once, code reading, real player errors, rule checks) |
 | where do new players get stuck? | `ux` (first-time playtests by persona, Clarity, complaints, similar games) |
 | do players come back? what is the aha moment? | `retention` (event plan, cohorts, activation, funnels) |
 | run hypothesis → test → learn | `experiment`, and `prototype` for the cheapest test first |
-| find an existing tool for X | `/hype-me:recommend`, `guide` |
+| find an existing tool for X | `recommend` (also suggests one on its own when you need it) |
 
 Limits, honestly: Steam, itch.io and app-store analytics have no public API, so traffic reads their CSV exports; Reddit blocks automated reading, so those places come with links to check by hand; virality is never promised.
 
 ## Cost
 Research uses web lookups, so it is the expensive part. hype-me keeps it down by default: analytics and checks are plain scripts (no AI), research agents run on smaller models, and every limit is a range per effort level (light / normal / deep — say "quickly" or "in depth", or set it in the profile): agents start at the low end and go further only while results stay useful, never past the top. Recent results are reused instead of researched again.
+
+## Development
+- Script tests: `node --test tests/scripts.test.mjs` (browser tests run when Chrome/Edge and Node 22+ are present).
+- Trigger and safety evals: `claude plugin eval . --runs 1`.
+- Rule: every new skill or script ships with an eval case and a script test.
 
 ## Install
 ```
@@ -56,11 +61,11 @@ The repository is private for now, so you need access to it. For local developme
 ## Layout
 ```
 .claude-plugin/   plugin.json, marketplace.json, icon.png
-commands/         setup, report, help, recommend
-skills/           bugs, ux, retention, experiment, prototype, traffic, channels, cases, mentions, promo-plan, promo-review, launch-check, design, guide, notify
-agents/           bug-monkey, code-hunter, error-collector, rule-checker, ux-playtester, prototyper, traffic-analyst, channel-scout, case-researcher, mention-tracker, tool-scout
+commands/         setup, report, help
+skills/           bugs, ux, retention, experiment, prototype, traffic, channels, cases, mentions, promo-plan, launch-check, design, recommend, notify
+agents/           bug-monkey, code-hunter, error-collector, rule-checker, ux-playtester, prototyper, channel-scout, case-researcher, mention-tracker, tool-scout
 scripts/          monkey, snap (drive the installed Chrome/Edge — no downloads), retention, analytics, traffic-csv, steam-app, reddit-sub, utm, launch-check, mentions-seen, image-size, notify (Node 18+, no dependencies; monkey and snap need Node 22+)
-hooks/            one status line in projects that have a game profile
+hooks/            in projects with a game profile: one status line at start; at the end of a turn, a reminder (once) when code changed without a test
 templates/        profile, case, promo-plan, experiment
 references/       budget, channels, image-specs, design-resources, recommended
 evals/            trigger and safety cases (claude plugin eval)
