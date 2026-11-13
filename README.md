@@ -78,4 +78,6 @@ evals/            trigger and safety cases (claude plugin eval)
 docs/             plan.md (Korean)
 ```
 
+Privacy: [PRIVACY.md](PRIVACY.md) — no server, nothing sent to the developer, results stay in your project folder.
+
 License: MIT

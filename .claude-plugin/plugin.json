@@ -19,5 +19,7 @@
     "url": "https://github.com/Vamp-pire"
   },
   "repository": "https://github.com/Vamp-pire/hype-me",
+  "homepage": "https://github.com/Vamp-pire/hype-me",
+  "privacyPolicyUrl": "https://github.com/Vamp-pire/hype-me/blob/main/PRIVACY.md",
   "icon": ".claude-plugin/icon.png"
 }
