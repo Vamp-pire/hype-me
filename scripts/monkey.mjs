@@ -191,7 +191,7 @@ function record(e, worker, seed, viewport, step, trace, page) {
   page
     .screenshot()
     .then((png) => {
-      writeFileSync(join(outDir, `issue-${n}.png`), png);
+      writeFileSync(join(outDir, `issue-${n}.png`), png, 'base64');
       issue.screenshot = `issue-${n}.png`;
     })
     .catch(() => {});

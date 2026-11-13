@@ -12,7 +12,7 @@ Answer in the user's language, plain words, at most 10 lines. No jargon.
 2. **One next step** — the single most useful action for where the game is:
    - nothing done yet → "find how similar games took off" or "where should I promote?"
    - a promo plan exists and its date has passed → "how did the last promo go?"
-   - analytics connected and no recent report → `/hype-me:report`
+   - analytics data or a connector available and no recent report → `/hype-me:report`
 3. **What you can say** — short examples:
    "where do my players come from?" · "where should I promote?" · "how did similar games take off?" · "who's talking about my game?" · "make a promo plan" · "check my thumbnail/store image" · "find bugs" · "where do new players get stuck?" · "do players come back?" · "let's test this idea first".
 

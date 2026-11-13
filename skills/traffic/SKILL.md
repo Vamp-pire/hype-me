@@ -1,7 +1,7 @@
 ---
 name: traffic
-description: Answer "where do my players come from?" — visits, clicks or sessions by referrer, search term, source and tracking link vs the previous period, straight from Cloudflare Web Analytics, Google Search Console or GA4, or from CSV exports (Steamworks, itch.io, app stores, any analytics tool). Use for "유저 어디서 와?", "유입 경로", "which post brought people".
-argument-hint: "[cloudflare | search-console | ga4 | CSV files] [--days N]"
+description: Answer "where do my players come from?" — visits, clicks or sessions by referrer, search term, source and tracking link vs the previous period, from a connected analytics tool or from CSV exports (Cloudflare, Search Console, GA4, Steamworks, itch.io, app stores, any analytics tool). Use for "유저 어디서 와?", "유입 경로", "which post brought people".
+argument-hint: "[CSV files] [--days N]"
 ---
 
 # Where do players come from?
@@ -9,22 +9,16 @@ argument-hint: "[cloudflare | search-console | ga4 | CSV files] [--days N]"
 Answer in the user's language. Numbers with their metric name; no made-up figures.
 Follow the shared rules in `${CLAUDE_PLUGIN_ROOT}/references/rules.md` — profile first (run setup, then continue), end with one experiment suggestion, use design checks whenever something visual is involved, and leave a runnable test with anything you make.
 
-## 1. Direct connections first (cheap: one script call each, no agent)
-`node "${CLAUDE_PLUGIN_ROOT}/scripts/analytics.mjs" status --cwd "<project>"` shows what is connected (names only, never values).
-Then run each connected source (in parallel):
-- `analytics.mjs cloudflare --cwd "<project>" --days 7` — visits by referrer, top pages, countries
-- `analytics.mjs search-console --cwd "<project>" --days 28` — Google search clicks by search term
-- `analytics.mjs ga4 --cwd "<project>" --days 28` — sessions by source / medium, tracking-link campaigns
-- `analytics.mjs itch --cwd "<project>"` — views, downloads and purchases per itch.io game, change since the last check (totals only; referrers via the itch.io Analytics page as CSV)
-A `not connected` line comes with a one-line "how"; pass it on only if the user wants that source.
+## 1. Connected tools first
+If an analytics tool is connected in this Claude session (an MCP connector for Cloudflare, Google Analytics, Search Console, Plausible, PostHog or similar), ask it for visits/sessions/clicks by source, search term and campaign for this period and the one before. Use only what it returns.
 
-## 2. CSV for everything else
-Steam and app stores have no public analytics API (itch.io gives totals via `analytics.mjs itch`, but not referrers). Use exports in `$ARGUMENTS` or `.hype-me/data/`:
+## 2. CSV exports for everything else
+Use exports in `$ARGUMENTS` or `.hype-me/data/`:
 `node "${CLAUDE_PLUGIN_ROOT}/scripts/traffic-csv.mjs" <file> --cwd "<project>" [--before <older file> | --from … --to … --vs-from … --vs-to …]` (`--by` / `--metric` if it cannot tell the columns).
-Where to get them: Steamworks → UTM Analytics / Traffic Breakdown; itch.io → Analytics → referrers; App Store Connect → Sources; Play Console → Store performance. Save them in `.hype-me/data/` (git-ignored).
+Where to get them: Cloudflare Web Analytics → export; Search Console → Performance → Export; GA4 → Reports → Share → Download CSV; Steamworks → UTM Analytics / Traffic Breakdown; itch.io → Analytics → referrers; App Store Connect → Sources; Play Console → Store performance. Save them in `.hype-me/data/` (git-ignored).
 
 ## 3. Nothing connected and no files
-Say which one source would help most for their platform and how to connect it (two lines), then stop. Do not guess numbers.
+Say which one export or connector would help most for their platform and how to get it (two lines; `/hype-me:recommend` finds connectors), then stop. Do not guess numbers.
 
 ## 4. Reply
 ```

@@ -3,7 +3,7 @@
 **"Hype me" — help people find your game.**
 A Claude Code plugin for indie games and small projects (web, Steam/itch.io, mobile): it finds where your players come from, where to promote, how similar games took off, who is talking about you, and turns that into a promo plan you can actually run.
 
-> Status: **0.12 — early version.** Everything below works and is tested on sample pages; real-game use is just starting. Feedback welcome in [Issues](https://github.com/Vamp-pire/hype-me/issues).
+> Status: **0.14 — early version.** Everything below works and is tested on sample pages; real-game use is just starting. Feedback welcome in [Issues](https://github.com/Vamp-pire/hype-me/issues).
 
 ## The six questions it answers
 | ask it | what you get |
@@ -21,14 +21,14 @@ It never posts, DMs, installs or spends money without your yes, and it follows e
 
 ## Commands
 1. `/hype-me:setup` — once per game. A short game profile (at most 3 questions).
-2. `/hype-me:report` — a summary any time: traffic changes, new mentions, last promo results, three things to do this week. Add `--send` for Discord/Slack, `--schedule weekly` to run it every week.
+2. `/hype-me:report` — a summary any time: traffic changes, new mentions, last promo results, three things to do this week. Add `--send` to post it to Discord/Slack through a connector you added to Claude, `--schedule weekly` to run it every week.
 
 Everything else: just ask in plain words. Stuck? `/hype-me:help`. Tell us what worked and what did not: `/hype-me:feedback` (turns into a GitHub issue after a preview; personal data is hidden). Looking for an existing tool for something? `/hype-me:recommend`.
 
 ## What is inside
 | ask | skill |
 |---|---|
-| where do players come from? | `traffic` (Cloudflare Web Analytics, Search Console, GA4 and itch.io directly; CSV for Steam and app stores) |
+| where do players come from? | `traffic` (an analytics connector you added to Claude, or CSV exports from Cloudflare, Search Console, GA4, Steam, itch.io and app stores) |
 | where should I promote? | `channels` |
 | how did similar games take off? | `cases` |
 | who is talking about my game? | `mentions` |
@@ -41,7 +41,7 @@ Everything else: just ask in plain words. Stuck? `/hype-me:help`. Tell us what w
 | run hypothesis → test → learn | `experiment`, and `prototype` for the cheapest test first |
 | find an existing tool for X | `recommend` (also suggests one on its own when you need it) |
 
-Limits, honestly: Steam, itch.io and app-store analytics have no public API, so traffic reads their CSV exports; Reddit blocks automated reading, so those places come with links to check by hand; virality is never promised.
+Limits, honestly: hype-me never reads API keys or tokens from your computer, so live numbers need a connector you add to Claude; otherwise it reads CSV exports; Reddit blocks automated reading, so those places come with links to check by hand; virality is never promised.
 
 ## Cost
 Research uses web lookups, so it is the expensive part. hype-me keeps it down by default: analytics and checks are plain scripts (no AI), research agents run on smaller models, and every limit is a range per effort level (light / normal / deep — say "quickly" or "in depth", or set it in the profile): agents start at the low end and go further only while results stay useful, never past the top. Recent results are reused instead of researched again.
@@ -60,12 +60,18 @@ Needs Node.js 22+ for the browser tools (bug monkey, UX bots) and Chrome or Edge
 
 ## Layout
 ```
-.claude-plugin/   plugin.json, marketplace.json, icon.png
+.claude-plugin/   plugin manifest, marketplace listing and icon
 commands/         setup, report, help, feedback
 skills/           bugs, ux, retention, experiment, prototype, traffic, channels, cases, mentions, promo-plan, launch-check, design, recommend, notify
 agents/           bug-monkey, code-hunter, error-collector, rule-checker, ux-playtester, prototyper, channel-scout, case-researcher, mention-tracker, tool-scout
-scripts/          monkey, snap (drive the installed Chrome/Edge — no downloads), retention, analytics, traffic-csv, steam-app, reddit-sub, utm, launch-check, mentions-seen, image-size, notify, feedback (Node 18+, no dependencies; monkey and snap need Node 22+)
-hooks/            in projects with a game profile: one status line at start; at the end of a turn, a reminder (once) when code changed without a test
+scripts/          plain Node scripts that Claude runs when a skill needs them (Node 18+, no dependencies; monkey and snap need Node 22+):
+                  monkey, snap — open your game in the installed Chrome/Edge (headless, throwaway profile, no downloads), click around and save screenshots and errors
+                  retention, traffic-csv — read CSV exports you saved in .hype-me/data/
+                  steam-app, reddit-sub — read public Steam store and Reddit pages
+                  utm, launch-check, image-size — build tracking links, check your page and share preview, check image sizes
+                  mentions-seen — remember which mentions were already shown
+                  feedback — build a prefilled GitHub issue link (you submit it yourself)
+                  None of them read API keys, tokens or .env files, and none post anything.
 templates/        profile, case, promo-plan, experiment
 references/       budget, channels, image-specs, design-resources, recommended
 evals/            trigger and safety cases (claude plugin eval)

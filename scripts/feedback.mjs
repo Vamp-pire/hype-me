@@ -1,32 +1,21 @@
 #!/usr/bin/env node
 // Turns user feedback into a GitHub issue for hype-me.
-// Adds plugin version, OS and Node automatically, hides personal data, and either
-//   - prints a prefilled "new issue" link (default — the user submits it), or
-//   - posts it with the GitHub CLI when --create is given (only after the user said yes).
+// Adds plugin version, OS and Node automatically, hides personal data, and prints a
+// prefilled "new issue" link. The user opens it and submits it themselves.
 //
-//   node feedback.mjs --file feedback.json [--json] [--create]
+//   node feedback.mjs --file feedback.json [--json]
 //   feedback.json: { "kind": "bug|confusing|idea|praise|other", "skill": "setup",
 //                    "tried": "...", "stuck": "...", "helpful": "...", "extra": "..." }
 import { readFileSync, existsSync } from 'node:fs';
-import { execFileSync } from 'node:child_process';
-import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import os from 'node:os';
 
 const REPO = 'Vamp-pire/hype-me';
+const VERSION = '0.14.0'; // keep in step with .claude-plugin/plugin.json (a test checks it)
 const args = parseArgs(process.argv.slice(2));
 const fb = args.file && existsSync(args.file) ? JSON.parse(readFileSync(args.file, 'utf8')) : null;
 if (!fb) {
-  console.log('usage: feedback.mjs --file feedback.json [--json] [--create]');
+  console.log('usage: feedback.mjs --file feedback.json [--json]');
   process.exit(2);
-}
-
-const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-let version = '?';
-try {
-  version = JSON.parse(readFileSync(join(root, '.claude-plugin', 'plugin.json'), 'utf8')).version;
-} catch {
-  /* unknown */
 }
 
 const kind = ['bug', 'confusing', 'idea', 'praise', 'other'].includes(fb.kind) ? fb.kind : 'other';
@@ -38,29 +27,17 @@ const body = [
   section('Where I got stuck / what was confusing', fb.stuck),
   section('What helped', fb.helpful),
   section('Anything else', fb.extra),
-  `---\nhype-me ${version} · ${os.platform()} ${os.release()} · Node ${process.version}${fb.skill ? ` · skill: ${clean(fb.skill)}` : ''}\n_sent with /hype-me:feedback_`,
+  `---\nhype-me ${VERSION} · ${os.platform()} ${os.release()} · Node ${process.version}${fb.skill ? ` · skill: ${clean(fb.skill)}` : ''}\n_sent with /hype-me:feedback_`,
 ]
   .filter(Boolean)
   .join('\n');
 
 const url = `https://github.com/${REPO}/issues/new?${new URLSearchParams({ title, body: body.slice(0, 6000), labels: 'feedback' })}`;
 
-let posted = false;
-let issueUrl = null;
-if (args.create) {
-  try {
-    issueUrl = execFileSync('gh', ['issue', 'create', '--repo', REPO, '--title', title, '--body', body, '--label', 'feedback'], { encoding: 'utf8', timeout: 30000 }).trim();
-    posted = true;
-  } catch (err) {
-    issueUrl = null;
-    console.error(`could not post with gh (${String(err.message).split('\n')[0]}); use the link instead`);
-  }
-}
-
-if (args.json) console.log(JSON.stringify({ title, body, url, posted, issueUrl }, null, 2));
+if (args.json) console.log(JSON.stringify({ title, body, url }, null, 2));
 else {
   console.log(`${title}\n\n${body}\n`);
-  console.log(posted ? `posted: ${issueUrl}` : `open to submit (needs a GitHub account): ${url}`);
+  console.log(`open to submit (needs a GitHub account): ${url}`);
 }
 
 // Hide things that should not be in a public issue: home paths, emails, keys/tokens, IPs.

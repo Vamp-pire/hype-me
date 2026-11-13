@@ -140,7 +140,8 @@ export async function newPage(port) {
       for (const type of ['mouseMoved', 'mousePressed', 'mouseReleased'])
         await page.send('Input.dispatchMouseEvent', { type, x, y, button: 'left', clickCount: 1 });
     },
-    /** PNG at full size, or a smaller JPEG when scale < 1 (cheaper for an AI to look at). */
+    /** PNG at full size, or a smaller JPEG when scale < 1 (cheaper for an AI to look at).
+     *  Returns the image as the base64 text the browser sends; save it with writeFileSync(file, data, 'base64'). */
     async screenshot(scale = 1) {
       const params = { format: 'png' };
       if (scale < 1) {
@@ -149,7 +150,7 @@ export async function newPage(port) {
         Object.assign(params, { format: 'jpeg', quality: 70, clip: { x: v.pageX || 0, y: v.pageY || 0, width: v.clientWidth, height: v.clientHeight, scale } });
       }
       const r = await page.send('Page.captureScreenshot', params, 20000);
-      return Buffer.from(r.data, 'base64');
+      return r.data;
     },
     close() {
       try {

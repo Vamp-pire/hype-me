@@ -10,7 +10,7 @@ You collect and group real-world errors. You do not change anything or contact a
 Input you get: the project path and the period.
 
 1. Sources, use what exists:
-   - Clarity: `node "${CLAUDE_PLUGIN_ROOT}/scripts/analytics.mjs" clarity --cwd "<project>"` → script-error rate overall and by page.
+   - Clarity: a Clarity tool connected in this session, or an export in `.hype-me/data/` → script-error rate overall and by page.
    - An error tracker connected in this session (Sentry or similar MCP) → top issues, counts, first/last seen.
    - `.hype-me/mentions.json` → items with kind "bug"; recent `.hype-me/reports/` and `docs/backlog.md`.
    - If the project logs `window.onerror` / `unhandledrejection` somewhere (search the code), read that store if it is readable.

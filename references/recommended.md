@@ -19,6 +19,7 @@ Sources:
 | seo | seo-audit, ai-seo, schema-markup, programmatic-seo | skills.sh | `coreyhaines31/marketingskills` | web games and landing pages that need search traffic | deeper than `launch-check`; hype-me links results to traffic | community |
 | seo | SEO-AEO-GEO Ultimate | plugin directory | "SEO-AEO-GEO Ultimate" | deep SEO work | optional | community |
 | mobile | ASO Specialist | plugin directory | "ASO Specialist" | App Store / Google Play listings | store text and keywords; hype-me covers images (`design`) and traffic | community |
+| analytics | the analytics tool's own MCP connector (Cloudflare, Google Analytics, PostHog, …) | plugin directory / connectors | the tool's name | live numbers for `traffic`, `report`, `ux` without CSVs; hype-me never reads keys itself | official when offered |
 | analytics | Windsor.ai Ads and Marketing Data | plugin directory | "Windsor.ai" | GA4, Search Console and many sources in one place (paid service) | a connected source for `traffic` instead of CSVs | partner |
 | design | frontend-design | plugin directory, skills.sh | `anthropics/skills` → `frontend-design` (~1.1M) | landing page or web game UI | works with `design` feedback | official |
 | design | web-design-guidelines | skills.sh | `vercel-labs/agent-skills` → `web-design-guidelines` (~840K) | landing page rules incl. accessibility | works with `design` | partner |

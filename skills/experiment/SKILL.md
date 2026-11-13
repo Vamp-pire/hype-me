@@ -20,7 +20,7 @@ Follow the shared rules in `${CLAUDE_PLUGIN_ROOT}/references/rules.md` — profi
 4. Never change the game's code from here; building the change is separate and needs the user's go.
 
 ## review — did it work?
-1. Read the record (for a promotion, also its plan in `docs/promo/` and `.hype-me/links.json`). Get numbers for both periods: `retention.mjs` for activation/retention, `analytics.mjs` / `traffic` for visits.
+1. Read the record (for a promotion, also its plan in `docs/promo/` and `.hype-me/links.json`). Get numbers for both periods: `retention.mjs` for activation/retention, the `traffic` skill for visits.
    **Promotions:** per place — visits from its tracking link (GA4 campaigns or CSV), plays/wishlists, reactions from `mentions`, anything the user counted by hand (upvotes, comments, Discord joins) — as a table `place · visits · plays/wishlists · reactions · verdict`. Do not judge a place from one post; say so when numbers are small. Append the result to the promo plan too.
 2. Fill **Result**: before, after, change, people. Small numbers (< 30 per side, or under the minimum) → verdict "no clear effect yet", confidence low.
 3. Watch for other things that changed in the same period (a promo, a viral post, a holiday) and name them.

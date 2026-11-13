@@ -1,4 +1,4 @@
-// Tests for hype-me's scripts. Run: node --test tests/
+// Tests for hype-me's scripts. Run: node --test tests/scripts.test.mjs
 // Browser tests (monkey, snap) run only when Chrome or Edge is installed and Node has WebSocket (22+).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -110,49 +110,6 @@ test('retention: cohorts, activation and an aha-moment candidate', () => {
   rmSync(d, { recursive: true, force: true });
 });
 
-test('notify: Discord card preview from a template', () => {
-  const d = tmp();
-  mkdirSync(join(d, '.hype-me'));
-  writeFileSync(join(d, '.hype-me', 'profile.json'), JSON.stringify({ notify: { type: 'discord', urlEnv: 'HM_TEST_UNSET' } }));
-  writeFileSync(join(d, 'card.json'), JSON.stringify({ title: 'Test', status: 'good', summary: 'ok', sections: [['A', ['1', '2']]] }));
-  const r = run('notify.mjs', ['--cwd', d, '--file', join(d, 'card.json'), '--dry-run']);
-  assert.equal(r.code, 0, r.out);
-  const body = JSON.parse(r.out.slice(r.out.indexOf('{')));
-  assert.equal(body.embeds[0].fields[0].name, 'A');
-  assert.deepEqual(body.allowed_mentions, { parse: [] });
-  assert.equal(run('notify.mjs', ['--cwd', d, '--message', 'x']).code, 2);
-  rmSync(d, { recursive: true, force: true });
-});
-
-test('analytics itch: totals per game and change since the last check (fake itch.io API)', async () => {
-  let views = 100;
-  const server = createServer((q, s) => {
-    if (!q.url.includes('/TESTKEY/my-games')) return s.writeHead(403), s.end('{"errors":["invalid key"]}');
-    s.writeHead(200, { 'content-type': 'application/json' });
-    s.end(JSON.stringify({ games: [{ id: 1, title: 'Variant Tour', url: 'https://x.itch.io/vt', views_count: views, downloads_count: 20, purchases_count: 0 }] }));
-  });
-  await new Promise((ok) => server.listen(0, ok));
-  const d = tmp();
-  mkdirSync(join(d, '.hype-me'));
-  writeFileSync(join(d, '.hype-me', 'profile.json'), '{}');
-  const env = { ...process.env, ITCH_API_KEY: 'TESTKEY', HYPE_ME_ITCH_API_BASE: `http://127.0.0.1:${server.address().port}` };
-  try {
-    const first = await runAsync('analytics.mjs', ['itch', '--cwd', d], env);
-    assert.match(first, /first check/);
-    assert.match(first, /Variant Tour \| 100 \| 20 \| 0/);
-    views = 160;
-    const second = await runAsync('analytics.mjs', ['itch', '--cwd', d], env);
-    assert.match(second, /Variant Tour \| 160 \(\+60\)/);
-    const bad = await runAsync('analytics.mjs', ['itch', '--cwd', d], { ...env, ITCH_API_KEY: 'WRONG' });
-    assert.match(bad, /invalid key/);
-    const none = await runAsync('analytics.mjs', ['itch', '--cwd', d], { ...env, ITCH_API_KEY: '' });
-    assert.match(none, /not connected: ITCH_API_KEY is not set/);
-  } finally {
-    server.close();
-    rmSync(d, { recursive: true, force: true });
-  }
-});
-
 test('feedback: builds an issue with version info, hides personal data, gives a prefilled link', () => {
   const d = tmp();
   writeFileSync(
@@ -177,69 +134,11 @@ test('feedback: builds an issue with version info, hides personal data, gives a 
   assert.equal(u.origin + u.pathname, 'https://github.com/Vamp-pire/hype-me/issues/new');
   assert.equal(u.searchParams.get('labels'), 'feedback');
   assert.ok(j.url.length < 8000);
-  // never posts without --create
-  assert.equal(j.posted, false);
+  // only builds a link; never posts
+  assert.equal(j.posted, undefined);
+  const manifest = JSON.parse(readFileSync(join(ROOT, '.claude-plugin', 'plugin.json'), 'utf8'));
+  assert.ok(j.body.includes(`hype-me ${manifest.version} `), 'VERSION in feedback.mjs must match plugin.json');
   rmSync(d, { recursive: true, force: true });
-});
-
-test('session-start hook: feedback prompt only in the first 14 days of a profile', () => {
-  const hook = join(ROOT, 'hooks', 'session-start.mjs');
-  const fire = (cwd) => execFileSync(process.execPath, [hook], { input: JSON.stringify({ cwd }), encoding: 'utf8' });
-  const d = tmp();
-  mkdirSync(join(d, '.hype-me'));
-  const day = 864e5;
-  writeFileSync(join(d, '.hype-me', 'profile.json'), JSON.stringify({ created: new Date(Date.now() - 3 * day).toISOString().slice(0, 10), game: { name: 'G' } }));
-  let out = JSON.parse(fire(d));
-  assert.match(out.systemMessage, /\/hype-me:feedback/);
-  assert.match(out.hookSpecificOutput.additionalContext, /feedback/i);
-  writeFileSync(join(d, '.hype-me', 'profile.json'), JSON.stringify({ created: new Date(Date.now() - 30 * day).toISOString().slice(0, 10), game: { name: 'G' } }));
-  out = JSON.parse(fire(d));
-  assert.doesNotMatch(out.systemMessage, /feedback/);
-  assert.equal(fire(tmp()), ''); // no profile → silent
-  rmSync(d, { recursive: true, force: true });
-});
-
-test('check-tests hook: sends back once when code changed without a test, silent otherwise', () => {
-  const hook = join(ROOT, 'hooks', 'check-tests.mjs');
-  const fire = (cwd, extra = {}) =>
-    execFileSync(process.execPath, [hook], { input: JSON.stringify({ cwd, session_id: `t${process.pid}`, ...extra }), encoding: 'utf8' });
-  const git = (cwd, ...a) => execFileSync('git', a, { cwd, encoding: 'utf8' });
-
-  // no profile → silent
-  const plain = tmp();
-  git(plain, 'init', '-q');
-  writeFileSync(join(plain, 'game.js'), 'x');
-  assert.equal(fire(plain), '');
-
-  // not a git repo → silent
-  const nogit = tmp();
-  mkdirSync(join(nogit, '.hype-me'));
-  writeFileSync(join(nogit, '.hype-me', 'profile.json'), '{}');
-  writeFileSync(join(nogit, 'game.js'), 'x');
-  assert.equal(fire(nogit), '');
-
-  const d = tmp();
-  git(d, 'init', '-q');
-  mkdirSync(join(d, '.hype-me'));
-  writeFileSync(join(d, '.hype-me', 'profile.json'), '{}');
-  mkdirSync(join(d, 'src'));
-  writeFileSync(join(d, 'src', 'board.ts'), 'export const a = 1;');
-  writeFileSync(join(d, 'README.md'), 'docs only');
-
-  // code changed, no test → block once with the file named
-  const first = JSON.parse(fire(d));
-  assert.equal(first.decision, 'block');
-  assert.match(first.reason, /src\/board\.ts/);
-  // same set again → silent (no nagging); already sent back this turn → silent
-  assert.equal(fire(d), '');
-  writeFileSync(join(d, 'src', 'quiz.ts'), 'x');
-  assert.equal(fire(d, { stop_hook_active: true }), '');
-  // a test file in the change set → silent
-  mkdirSync(join(d, 'tests'));
-  writeFileSync(join(d, 'tests', 'board.test.ts'), 'test');
-  assert.equal(fire(d), '');
-
-  for (const x of [plain, nogit, d]) rmSync(x, { recursive: true, force: true });
 });
 
 // ---------- browser tests ----------

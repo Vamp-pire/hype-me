@@ -10,8 +10,8 @@ You find and sort mentions. You never reply, post, vote, join or sign in, and yo
 Input you get: name and aliases, kind (game / web service / app), main links, markets/languages, known URLs (if the user gave any), the project path, and the level. On the **first run** (no `.hype-me/mentions.json` yet) use the deep range; after that the given level — ranges in `${CLAUDE_PLUGIN_ROOT}/references/budget.md`.
 
 1. **Leads you already have (no search needed):**
-   - `node "${CLAUDE_PLUGIN_ROOT}/scripts/analytics.mjs" cloudflare --cwd "<project>" --days 28 --json` → `extra["referring pages"]`: blog posts, videos and forum threads that sent visitors. Open each one directly.
-   - `.hype-me/links.json` and GA4 campaigns (`analytics.mjs ga4 --json`) → tracking links show where the project was posted (e.g. `ref=yt-…`).
+   - Referring pages from a connected analytics tool or a referrer export in `.hype-me/data/`: blog posts, videos and forum threads that sent visitors. Open each one directly.
+   - `.hype-me/links.json` and campaign rows in the same data → tracking links show where the project was posted (e.g. `ref=yt-…`).
    - Known URLs from the input → open directly.
    A lead that shows up in traffic but cannot be opened or found by search is still real: record it with status "exists (seen in traffic, not readable/indexed)".
 2. **Search** in each market language, by name and by link:

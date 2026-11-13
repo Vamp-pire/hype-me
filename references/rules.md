@@ -4,7 +4,10 @@
 Before doing a skill's work, check `.hype-me/profile.json`.
 - **Missing:** run the setup first (`/hype-me:setup`, about a minute) — say in one line why ("so the answer fits your game"), draft what you can from the request and the folder, ask at most 3 questions in one round, save after "looks good", then **continue with the user's original request** without making them ask again.
 - If the user refuses setup, continue with marked assumptions and say the answer will be less specific.
-- Exceptions that never need a profile: `/hype-me:help`, the `recommend` skill, `notify` set-up.
+- Exceptions that never need a profile: `/hype-me:help`, `/hype-me:feedback`, the `recommend` skill.
+
+## Data and keys
+hype-me never reads API keys, tokens, `.env` files or other credentials from the user's machine, and never asks for them in chat. Live data comes from a tool the user has connected in this Claude session (an MCP connector for their analytics, Discord or Slack) or from files the user exports and puts in `.hype-me/data/`. If neither exists, say which export or connector would help (`/hype-me:recommend` finds connectors) and stop — never guess numbers.
 
 ## 2. End with the improvement loop
 After any finding (traffic, mentions, cases, channels, ux, bugs, retention, design, report), end with **one** suggested experiment in one line:
@@ -22,7 +25,7 @@ Whenever hype-me makes or changes something in the user's project, it leaves a c
 - **Tracking links / share preview** → `launch-check` covers them; save its result.
 - **Rule checks** → keep the rule-checker harness so it can be rerun.
 Say where the test is and the command to run it. Never mark something done without having run its check once.
-A Stop hook backs this up in projects with a profile: if a turn ends with changed code and no changed test or check file, it sends Claude back once.
+Before ending a turn in which you changed code in the user's project, check that a test or check file changed too; if not, add one now.
 
 ## 5. Early feedback (first two weeks)
 While the profile's `created` date is less than 14 days ago, end each hype-me answer with one friendly line: "써 보니 어땠어요? 헷갈린 점이 있으면 `/hype-me:feedback`으로 알려 주세요" (in the user's language). Also offer it right after setup, and whenever the user seems stuck or a skill fails. After two weeks, mention it only when something went wrong.

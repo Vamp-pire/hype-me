@@ -150,7 +150,7 @@ async function signature(page) {
 async function shot(page, vp, name) {
   const ext = scale < 1 ? 'jpg' : 'png';
   const file = join(outDir, `${vp}-${name}.${ext}`);
-  writeFileSync(file, await page.screenshot(scale));
+  writeFileSync(file, await page.screenshot(scale), 'base64');
   return file;
 }
 

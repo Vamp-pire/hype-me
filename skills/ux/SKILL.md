@@ -14,7 +14,7 @@ Do not stop with only a question. Show the plan in at most 4 lines — level, pe
 
 ## 1. Gather in parallel (level from the request or profile `budget`; ranges in `references/budget.md`)
 - **Bot playtests** — start one `ux-playtester` per persona (light: 1, normal: 2, deep: 3). Build personas from the profile's player groups and markets, e.g. "chess beginner, Korean, phone" and "variant fan, English, PC", and give each the goal text (the first fun moment). URL: a local/preview build if available, else the main link. Each agent builds a play bot once (`.hype-me/ux/bots/`) that the browser runs without AI — later runs reuse it, so a check after each update costs almost nothing; the agent only fixes steps that broke.
-- **Real behaviour** — `node "${CLAUDE_PLUGIN_ROOT}/scripts/analytics.mjs" clarity --cwd "<project>"` (dead clicks, quick backs, rage clicks by page) and, if events are tracked, the funnel from the `retention` skill (where the biggest drop is).
+- **Real behaviour** — a Clarity tool connected in this session, or a Clarity dashboard export in `.hype-me/data/` (dead clicks, quick backs, rage clicks by page) and, if events are tracked, the funnel from the `retention` skill (where the biggest drop is).
 - **What players say** — gripes and questions from `.hype-me/mentions.json` / the `mentions` skill ("어렵다", "모르겠다", "느리다", "how do I…").
 - **Similar games** (normal and deep) — first screens and onboarding of 1–2 similar games (store screenshots, their sites; Mobbin or getdesign.md for references). Compare: what do they show first, how fast is the first win.
 

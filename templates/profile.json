@@ -25,18 +25,7 @@
     "shareMoments": []
   },
   "data": {
-    "cloudflare": {
-      "accountId": null,
-      "siteTag": null
-    },
-    "searchConsole": {
-      "property": null
-    },
-    "ga4": {
-      "propertyId": null
-    },
-    "envFile": null,
-    "keys": {}
+    "sources": []
   },
   "launch": {
     "checkPaths": [
@@ -50,7 +39,7 @@
   },
   "notify": {
     "type": null,
-    "urlEnv": "HYPE_ME_WEBHOOK_URL"
+    "channel": null
   },
   "context": {
     "add": [],

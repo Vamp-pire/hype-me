@@ -16,9 +16,8 @@ In your first reply, say in one line how it will travel: a public GitHub issue a
 2. **Build** — write the answers to a JSON file in the scratchpad (`{ kind, skill, tried, stuck, helpful, extra }`) and run:
    `node "${CLAUDE_PLUGIN_ROOT}/scripts/feedback.mjs" --file <file>`
    It adds the hype-me version, OS and Node version, and hides paths, emails, keys and IPs.
-3. **Preview** — show the title and body exactly as they will appear in public, and ask: **[Post it / Edit / Cancel]**. Posting is public; never post without this yes.
-4. **Send**
-   - If `gh auth status` shows a logged-in GitHub account: run the same command with `--create` and give the issue link.
-   - Otherwise give the prefilled link ("open it and press Submit new issue" — needs a GitHub account).
-   - No GitHub account at all: give the preview text to copy and send to the developer another way.
+3. **Preview** — show the title and body exactly as they will appear in public, and ask: **[Looks good / Edit / Cancel]**. The issue is public once the user submits it.
+4. **Send** — the user submits it themselves; hype-me never posts with their accounts.
+   - Give the prefilled link ("open it and press Submit new issue" — needs a GitHub account).
+   - No GitHub account: give the preview text to copy and send to the developer another way.
 5. Thank them in one line.
