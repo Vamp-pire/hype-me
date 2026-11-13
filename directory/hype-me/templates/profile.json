@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "created": null,
+  "budget": "normal",
+  "game": {
+    "name": null,
+    "kind": "game",
+    "pitch": null,
+    "genre": [],
+    "tags": [],
+    "platforms": [],
+    "languages": [],
+    "markets": [],
+    "stage": null
+  },
+  "links": {
+    "site": null,
+    "store": {},
+    "community": {},
+    "press": null
+  },
+  "audience": {
+    "similarGames": [],
+    "playerGroups": [],
+    "shareMoments": []
+  },
+  "data": {
+    "sources": []
+  },
+  "launch": {
+    "checkPaths": [
+      "/"
+    ]
+  },
+  "report": {
+    "sections": [],
+    "schedule": "on-demand",
+    "notify": false
+  },
+  "notify": {
+    "type": null,
+    "channel": null
+  },
+  "context": {
+    "add": [],
+    "skip": []
+  },
+  "recommendations": {
+    "dismissed": []
+  }
+}

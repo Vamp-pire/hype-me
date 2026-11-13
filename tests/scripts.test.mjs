@@ -243,3 +243,8 @@ function png(w, h) {
   ihdr[9] = 2;
   return Buffer.concat([Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]), chunk('IHDR', ihdr), chunk('IDAT', deflateSync(raw)), chunk('IEND', Buffer.alloc(0))]);
 }
+
+test('directory edition is up to date and has no scripts', () => {
+  const r = execFileSync(process.execPath, [join(ROOT, 'tools', 'build-lite.mjs'), '--check'], { encoding: 'utf8' });
+  assert.equal(r.trim(), '');
+});

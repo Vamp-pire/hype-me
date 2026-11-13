@@ -1,0 +1,107 @@
+[
+  {
+    "file": "commands/feedback.md",
+    "find": "2. **Build** — write the answers to a JSON file in the scratchpad (`{ kind, skill, tried, stuck, helpful, extra }`) and run:\n   `node \"${CLAUDE_PLUGIN_ROOT}/scripts/feedback.mjs\" --file <file>`\n   It adds the hype-me version, OS and Node version, and hides paths, emails, keys and IPs.",
+    "replace": "2. **Build** — title `[<kind>] <feature>: <first sentence of where they got stuck>` (max 120 characters). Body: sections `### What I tried`, `### Where I got stuck / what was confusing`, `### What helped`, `### Anything else` (only the filled ones), then `---` and `hype-me <version from ${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json> (directory edition) · <OS>`. Replace home-folder paths with `<path>`, emails with `<email>`, anything that looks like a key or token with `<secret>`, IP addresses with `<ip>`. The link is `https://github.com/Vamp-pire/hype-me/issues/new?` with the URL-encoded `title`, `body` and `labels=feedback`."
+  },
+  {
+    "file": "commands/report.md",
+    "find": "a connected analytics tool, or `traffic-csv.mjs` for new files in `.hype-me/data/`",
+    "replace": "a connected analytics tool, or new CSV exports in `.hype-me/data/` read as in the `traffic` skill"
+  },
+  {
+    "file": "commands/report.md",
+    "find": "(`mentions-seen.mjs stats`)",
+    "replace": "(dates in `.hype-me/mentions.json`)"
+  },
+  {
+    "file": "commands/report.md",
+    "find": "`retention.mjs` on the newest export or connected events",
+    "replace": "the `retention` skill on the newest export or connected events"
+  },
+  {
+    "file": "skills/bugs/SKILL.md",
+    "find": "Without agents, run `monkey.mjs` yourself.",
+    "replace": "Without agents, do a short careless-player click-through yourself with a browser tool connected in this session."
+  },
+  {
+    "file": "skills/design/SKILL.md",
+    "find": "- `node \"${CLAUDE_PLUGIN_ROOT}/scripts/image-size.mjs\" <files> --expect <WxH>` using",
+    "replace": "- Read each image's width, height and format (open it, or a browser tool) and compare using"
+  },
+  {
+    "file": "skills/design/SKILL.md",
+    "find": "for Steam games, `node \"${CLAUDE_PLUGIN_ROOT}/scripts/steam-app.mjs\" info <appid>` gives their header image link;",
+    "replace": "for Steam games, their store page (`https://store.steampowered.com/app/<appid>`) shows the header image;"
+  },
+  {
+    "file": "skills/experiment/SKILL.md",
+    "find": "`retention.mjs` for activation/retention",
+    "replace": "the `retention` skill for activation/retention"
+  },
+  {
+    "file": "skills/promo-plan/SKILL.md",
+    "find": "run `node \"${CLAUDE_PLUGIN_ROOT}/scripts/utm.mjs\" add --channel \"<place>\" --campaign \"<name>\" --cwd \"<project>\"` and put the link in the table.",
+    "replace": "build `<main link>?utm_source=<place>&utm_medium=<community|video|social|press>&utm_campaign=<name>` (lowercase, dashes for spaces), put it in the table, and add it to `.hype-me/links.json` (`[{ \"place\", \"campaign\", \"url\", \"created\" }]`; keep existing entries)."
+  },
+  {
+    "file": "skills/prototype/SKILL.md",
+    "find": "the tracking link (`utm.mjs`)",
+    "replace": "the tracking link (a `utm_` link as in `promo-plan`)"
+  },
+  {
+    "file": "skills/retention/SKILL.md",
+    "find": "`node \"${CLAUDE_PLUGIN_ROOT}/scripts/retention.mjs\" <file> --aha <event> --funnel <a,b,c> --discover`\n(`--user` / `--time` / `--event` if it cannot guess the columns.)",
+    "replace": "Compute from it, with a small throwaway script in the scratchpad if the file is large: weekly cohorts by first day seen; day-1/7/30 retention (share of people old enough to reach that day who came back on it; mark groups under 30 people with `*`); activation (share of new people who did the aha event in their first session or day); the funnel drop between each step; and aha candidates (first-day events whose doers return on day 7 much more often than others). Say which columns you used for person, time and event."
+  },
+  {
+    "file": "skills/traffic/SKILL.md",
+    "find": "`node \"${CLAUDE_PLUGIN_ROOT}/scripts/traffic-csv.mjs\" <file> --cwd \"<project>\" [--before <older file> | --from … --to … --vs-from … --vs-to …]` (`--by` / `--metric` if it cannot tell the columns).",
+    "replace": "Read each file yourself: find the source/referrer (or campaign) column and the metric column; total per source for this period and the one before (from two files, or split by a date column); change in %; tracking-link names from `utm_source`/`utm_campaign` matched to `.hype-me/links.json`. Use a small throwaway script in the scratchpad for large files."
+  },
+  {
+    "file": "agents/case-researcher.md",
+    "find": "   - Steam games: `node \"${CLAUDE_PLUGIN_ROOT}/scripts/steam-app.mjs\" search \"<name>\"`, then `info <appid>` and `history <appid>` (reviews per month — spikes mark moments worth explaining).",
+    "replace": "   - Steam games: the store page (release date, review counts) and its news/update list — big updates and sales mark moments worth explaining."
+  },
+  {
+    "file": "agents/channel-scout.md",
+    "find": "try `node \"${CLAUDE_PLUGIN_ROOT}/scripts/reddit-sub.mjs\" <sub> [more]` for size and rules. If it reports an error (Reddit often blocks anonymous reads), read",
+    "replace": "read"
+  },
+  {
+    "file": "agents/mention-tracker.md",
+    "find": "then run `node \"${CLAUDE_PLUGIN_ROOT}/scripts/mentions-seen.mjs\" new <that file> --cwd \"<project>\"` — it returns only the ones not reported before.",
+    "replace": "then compare its links with `.hype-me/mentions.json` (ignore `utm_` tags, `#…` and a trailing slash) and keep only the ones not reported before; append those to `.hype-me/mentions.json`."
+  },
+  {
+    "file": "agents/prototyper.md",
+    "find": "`node \"${CLAUDE_PLUGIN_ROOT}/scripts/snap.mjs\" --url \"file:///<absolute path>/index.html\" --cwd \"<project>\"` and fix anything broken.",
+    "replace": "open `file:///<absolute path>/index.html` with a browser tool connected in this session, read the console, and fix anything broken (no browser tool: ask the user to open it once)."
+  },
+  {
+    "file": "references/rules.md",
+    "find": "or a `snap.mjs` step run that reads the network or dataLayer",
+    "replace": "or a browser-tool run that reads the network or dataLayer"
+  },
+  {
+    "file": "references/rules.md",
+    "find": "a smoke check that it opens without errors (`snap.mjs`), saved next to it",
+    "replace": "a smoke check that it opens without errors (a short check list next to it, run with a browser tool)"
+  },
+  {
+    "file": "PRIVACY.md",
+    "find": "- Its scripts make read-only requests to public pages and APIs (for example Steam store data and Reddit pages), using your game's name.",
+    "replace": "- The full edition's scripts make read-only requests to public pages and APIs (for example Steam store data and Reddit pages), using your game's name. The directory edition has no scripts; Claude reads public pages itself."
+  },
+  {
+    "file": "skills/ux/SKILL.md",
+    "find": "Each agent builds a play bot once (`.hype-me/ux/bots/`) that the browser runs without AI — later runs reuse it, so a check after each update costs almost nothing; the agent only fixes steps that broke.",
+    "replace": "Each agent saves the steps it took (`.hype-me/ux/runs/`) so the next run can follow them."
+  },
+  {
+    "file": "skills/bugs/SKILL.md",
+    "find": "a monkey test where several browsers play at once",
+    "replace": "a careless-player monkey test in the browser"
+  }
+]
