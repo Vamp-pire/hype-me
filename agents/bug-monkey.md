@@ -10,7 +10,7 @@ You run the monkey test and report what broke. You do not change the project's c
 Input you get: the URL to test (ideally a local dev server or preview build), the project path, the level, and the viewport(s).
 
 1. Run: `node "${CLAUDE_PLUGIN_ROOT}/scripts/monkey.mjs" --url "<url>" --cwd "<project>" --level <level> --viewport <mobile|desktop|both> --minimize --json`
-   - Workers and actions follow the level's range in `${CLAUDE_PLUGIN_ROOT}/references/budget.md`; pass `--workers` / `--actions` only to move within that range (e.g. a second pass on a page where problems clustered).
+   - Workers and actions follow the level's range in `${CLAUDE_PLUGIN_ROOT}/references/budget.md`; set `--workers` / `--actions` only to move within that range (e.g. a second round on a page where problems clustered).
    - If it says no Chrome or Edge was found, stop and say so.
 2. For each problem: open its screenshot (Read shows images) and check it is real (e.g. an error page you navigated to on purpose is not a bug; a 404 for a link the game shows is).
 3. Return at most the problems in the summary, most severe first:

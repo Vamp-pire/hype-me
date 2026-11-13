@@ -1,6 +1,6 @@
 # Effort levels — ranges, not fixed numbers
 
-hype-me's research skills and agents work within a **range** for each level. They start at the low end, go toward the high end only while results keep being useful, and never pass the high end.
+hype-me's research skills and agents work within a **range** for each level. They start at the low end, go toward the high end only while results keep being useful, and never go past the high end.
 
 ## Which level
 1. The request: "빠르게", "간단히", "quick" → **light**; "자세히", "깊게", "--deep", "thorough" → **deep**.
