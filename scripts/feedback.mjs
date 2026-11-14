@@ -10,7 +10,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import os from 'node:os';
 
 const REPO = 'Vamp-pire/hype-me';
-const VERSION = '0.14.0'; // keep in step with the plugin manifest (a test checks it)
+const VERSION = '0.14.1'; // keep in step with the plugin manifest (a test checks it)
 const args = parseArgs(process.argv.slice(2));
 const fb = args.file && existsSync(args.file) ? JSON.parse(readFileSync(args.file, 'utf8')) : null;
 if (!fb) {
