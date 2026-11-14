@@ -2,8 +2,9 @@
 // The Claude plugin directory accepts scripts only from Verified organizations,
 // so this edition replaces every script step with text Claude follows itself.
 //
-//   node tools/build-lite.mjs [--out directory/hype-me] [--check]
-//   --check  build into a temp folder and compare with --out (fails if out of date)
+//   node tools/build-lite.mjs [--out <folder>] [--check]
+//   without --out it builds into a temp folder and only checks it (--check: print problems only).
+//   To put the build on the `directory` branch: node tools/publish-lite.mjs [--push]
 //
 // Source of truth stays at the repo root. Change the lite text in tools/lite/
 // (overrides = whole files, edits.json = exact replacements that must match).
@@ -15,8 +16,7 @@ import { tmpdir } from 'node:os';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const LITE = join(ROOT, 'tools', 'lite');
 const argv = process.argv.slice(2);
-const outArg = argv.includes('--out') ? argv[argv.indexOf('--out') + 1] : 'directory/hype-me';
-const OUT = join(ROOT, outArg);
+const outArg = argv.includes('--out') ? argv[argv.indexOf('--out') + 1] : null;
 
 const COPY = ['.claude-plugin/plugin.json', '.claude-plugin/icon.png', 'commands', 'skills', 'agents', 'references', 'templates', 'LICENSE', 'PRIVACY.md'];
 const ALLOWED = new Set(['.md', '.json', '.png', '']); // '' = LICENSE
@@ -67,21 +67,10 @@ function walk(d) {
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
-  if (argv.includes('--check')) {
-    const tmp = mkdtempSync(join(tmpdir(), 'hype-me-lite-'));
-    const problems = build(tmp);
-    const a = walk(tmp).map((f) => relative(tmp, f)).sort();
-    const b = existsSync(OUT) ? walk(OUT).map((f) => relative(OUT, f)).sort() : [];
-    const stale = a.length !== b.length || a.some((r, i) => r !== b[i] || !readFileSync(join(tmp, r)).equals(readFileSync(join(OUT, r))));
-    rmSync(tmp, { recursive: true, force: true });
-    if (problems.length) console.log(problems.join('\n'));
-    if (stale) console.log(`${outArg} is out of date — run: node tools/build-lite.mjs`);
-    process.exit(problems.length || stale ? 1 : 0);
-  }
-  const problems = build(OUT);
-  if (problems.length) {
-    console.log(problems.join('\n'));
-    process.exit(1);
-  }
-  console.log(`built ${outArg} (${walk(OUT).length} files, no scripts)`);
+  const out = argv.includes('--out') ? join(ROOT, outArg) : mkdtempSync(join(tmpdir(), 'hype-me-lite-'));
+  const problems = build(out);
+  if (problems.length) console.log(problems.join('\n'));
+  else if (!argv.includes('--check')) console.log(`${outArg ? `built ${outArg}` : 'lite build ok'} (${walk(out).length} files, no scripts)`);
+  if (!argv.includes('--out')) rmSync(out, { recursive: true, force: true });
+  process.exit(problems.length ? 1 : 0);
 }

@@ -50,11 +50,11 @@ Research uses web lookups, so it is the expensive part. hype-me keeps it down by
 - Script tests: `node --test tests/scripts.test.mjs` (browser tests run when Chrome/Edge and Node 22+ are present).
 - Trigger and safety evals: `claude plugin eval . --runs 1`.
 - Rule: every new skill or script ships with an eval case and a script test.
-- After changing skills, commands, agents or references, rebuild the directory edition: `node tools/build-lite.mjs` (the tests fail if it is out of date).
+- After changing skills, commands, agents or references: commit, then `node tools/publish-lite.mjs --push` to update the `directory` branch (the tests check that the lite build still applies and has no scripts).
 
 ## Two editions
 - **Full edition** (this repository root, installed from GitHub as below): includes the Node scripts — the multi-browser monkey test, reusable UX play bots, CSV and retention calculators, link and image checks.
-- **Directory edition** (`directory/hype-me/`, listed in the Claude plugin directory): Markdown only, because the directory accepts scripts only from verified organizations. Claude does the script steps itself, using a browser tool you have connected. It is generated from this repository with `node tools/build-lite.mjs`; never edit it by hand (change `tools/lite/` instead).
+- **Directory edition** (the [`directory` branch](https://github.com/Vamp-pire/hype-me/tree/directory), listed in the Claude plugin directory): Markdown only, because the directory accepts scripts only from verified organizations. Claude does the script steps itself, using a browser tool you have connected. It is generated from `main` with `node tools/publish-lite.mjs --push`; never edit that branch by hand (change `tools/lite/` instead).
 
 ## Install
 ```
@@ -80,8 +80,7 @@ scripts/          plain Node scripts that Claude runs when a skill needs them (N
 templates/        profile, case, promo-plan, experiment
 references/       budget, channels, image-specs, design-resources, recommended
 evals/            trigger and safety cases (claude plugin eval)
-tools/            build-lite.mjs and lite/ (text for the directory edition)
-directory/        hype-me/ — the generated directory edition
+tools/            build-lite.mjs, publish-lite.mjs and lite/ (text for the directory edition)
 docs/             plan.md (Korean)
 ```
 
